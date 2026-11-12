@@ -23,6 +23,7 @@ Contents: [layout](#layout), [checkpoints](#checkpoints), [atlas runs](#atlas-ru
 | `atlas/gate_patch.py`, `atlas/make_blocks.py` | the 2 x 2 test of marin#9984 (section 1) |
 | `atlas/dare_probe_wide.py`, `atlas/v01_probe.py` | what the Campaign 2 merge `dare-ties-02` stores, and whether the released models still hold it (section 3) |
 | `atlas/grid_probe.py`, `atlas/grid_fit.py`, `atlas/ladder_check.py` | the BF16 rounding rule (section 4) |
+| `atlas/pin_check.py`, `results/pin_check.txt` | the weight files at the commits Marin's issues pin against those read here |
 | `results/atlas_step92/`, `atlas_lineage/`, `atlas_base12/`, `atlas_cooldown/` | the four atlas runs (`meta.json`, `log.txt`, `units.jsonl`) and the tables computed from them |
 | `results/family_probe/` | outputs of `family_probe.py` |
 | `results/dare_probe/` | outputs of `dare_probe_wide.py` and `v01_probe.py`, and the recipe parameters with the 27 rows read |
@@ -75,6 +76,12 @@ The commits of the first 23 rows are those in the `meta.json` files of the atlas
 those of v0.1 and v0.1.1 are printed in `results/dare_probe/v01_probe.txt`. The last six checkpoints appear only in
 `results/family_probe/`, whose outputs do not record commits; their commits are those of the tensor indexes taken for
 those runs.
+
+marin#9984 and the recipes of the merging campaigns pin earlier commits of seven of these repositories (Step92 at
+`fdc3c3c5`, E at `fb4f8051`, E2 at `acb97183`, Merge-TA0.5 at `07001c33`, Merge-TIES-d0.5 at `ffb5b685`, Step12 at
+`50fe2f48`, Step20 at `fd07ef0f`). `pin_check.py` compares the file lists at both commits: in all seven the
+safetensors files have the same SHA-256 and size, and only `README.md`, `LICENSE` and, for Step92,
+`chat_template.jinja` differ (`results/pin_check.txt`).
 
 ## Atlas runs
 
@@ -143,7 +150,8 @@ Displacement |x - B| / |B| in percent of Step92's norm in each family (selected 
   puts a parameter into the plain-Adam group when `"attn_gate" in path_lower`. The attention GatedNorm parameters
   (`attn_gated_norm.w_*`) contain that substring and the MLP GatedNorm parameters do not (the substring issue of
   marin#5639), so the attention GatedNorm takes Adam's absolute steps and the MLP GatedNorm takes AdamH's relative
-  ones.
+  ones. The training configuration of E and E2 was not read; #9984 names AdamH, and the equal absolute change per
+  scalar across the plain-Adam tensors is what this mask would produce.
 - Checkpoints trained another way do not show the difference: MOPD-Step100 (MarinSkyRL) moved the attention GatedNorm
   0.140% / 0.264% (up / down projection) and the MLP GatedNorm 0.122% / 0.146%; MixedRS-SFT-Step727 (AdamW at 1e-6)
   0.391% / 0.466% against 0.398% / 0.428%.
@@ -367,9 +375,9 @@ python atlas/pairwise.py results/atlas_base12 > results/atlas_base12/pairwise.tx
 ```
 
 **Limits.** 18 of the 5,115 supported expert rows were read, in three layers, and 6 of them in the released models.
-The classification tests a fixed list of multiples; every changed value matched one of them. The scores and the 6.04% are Campaign 2's own numbers, not
-measured here. Campaign 4 reports 9.47% changed for Adaptive-Delta-08; the sample of 24 experts is too small for
-per-recipe shares, so the 5.60% above is not an estimate of it.
+The classification tests a fixed list of multiples; every changed value matched one of them. The scores and the
+6.04% are Campaign 2's own numbers, not measured here. Campaign 4 reports 9.47% changed for Adaptive-Delta-08; the
+sample of 24 experts is too small for per-recipe shares, so the 5.60% above is not an estimate of it.
 
 ## 4. The BF16 rounding rule and its check against marin#10700
 
@@ -459,6 +467,7 @@ repository costs one API request and two range requests per safetensors file.
 | `dare_probe_wide.py` | 108 requests of 6,553,600 bytes, about 708 MB | not recorded |
 | `v01_probe.py` | per later checkpoint 24 requests (6 rows of 4 repositories): about 157 MB for a bfloat16 checkpoint, 197 MB for a float32 one | not recorded |
 | `grid_probe.py`, `grid_fit.py` | 13.1 MB per checkpoint for `q_proj` of layer 12 | not recorded |
+| `pin_check.py` | 14 API requests, no file content | not recorded |
 | `pairwise.py`, `ta_full_strength.py`, `gate_layers.py`, `expert_units.py`, `ladder_check.py`, `make_blocks.py` | none | |
 
 `atlas2.py` appends to `units.jsonl` and skips the units already there, so a new run needs a new output directory.
