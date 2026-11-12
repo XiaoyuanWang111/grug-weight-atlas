@@ -1,0 +1,17 @@
+read 60/520
+read 120/520
+read 180/520
+read 240/520
+read 300/520
+read 360/520
+read 420/520
+read 480/520
+
+family                                  scalars  TA0.5 differ  TIES differ |      E     E2  TA0.5   TIES   full   worst layer
+attn_gated_norm.down_proj.weight      8,519,680             0      236,537 |   2.87   2.79   2.32   3.26   4.61     6.61 L21
+attn_gated_norm.up_proj.weight        8,519,680             0      232,205 |   3.45   3.43   2.87   3.92   5.73     8.02 L21
+self_attn.attn_gate.weight            1,331,200             0       66,162 |   1.33   1.33   1.12   1.51   2.22     5.92 L24
+mlp.router.weight                    17,039,360             0    1,173,940 |   0.17   0.15   0.13   0.19   0.24     1.99 L25
+displacement columns: |x - B| / |B| in percent; 'full' is the stored (rounded) full-strength value
+
+wrote patch_2x2/gates_full_strength.safetensors (70,831,936 bytes, sha256 e8c7387ac84f01f3...) and manifest.json
