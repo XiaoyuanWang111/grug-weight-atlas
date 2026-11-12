@@ -1,0 +1,32 @@
+[project]
+name = "grug-weight-atlas"
+version = "0.1.0"
+description = "Tensor-level differences between public Snowball / Grug 67B MoE checkpoints, read over HTTP range requests."
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "Xiaoyuan Wang" }]
+requires-python = ">=3.12"
+dependencies = ["numpy"]
+
+[tool.pytest.ini_options]
+# The scripts in atlas/ import each other as top-level modules, the way they run from the command line.
+pythonpath = ["atlas"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 121
+target-version = "py312"
+src = ["atlas"]
+
+[tool.ruff.lint]
+# The rule set of marin-community/marin's pyproject.toml.
+select = [
+    "A", "B", "E", "F", "I", "NPY", "RUF", "UP", "W",
+    "N805", "PLR0124", "PLR1722", "RET502", "RET503", "SIM115", "PLC0415",
+    "TID252", "ICN001",
+]
+ignore = ["F722", "B008", "UP015", "UP046", "UP047", "A005", "E741"]
+
+[tool.black]
+line-length = 121
+target-version = ["py312"]
