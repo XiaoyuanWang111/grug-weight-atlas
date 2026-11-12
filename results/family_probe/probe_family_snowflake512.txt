@@ -1,0 +1,18 @@
+parent open-athena/Snowflake-d512-Base-262K-2026.10.19 | layers 6 | dtypes ['BF16']
+
+child open-athena/Snowflake-d512-Datakit-SFT-262K-2026.10.22 | dtypes ['BF16']
+  family                                   scalars  parent RMS  displacement %  changed %  worst layer %
+  self_attn.attn_gate.weight                12,288     0.02864          6.1008      97.31       7.602 L5
+  mlp_gated_norm.up_proj.weight            393,216     0.02185          3.7015      95.61       3.932 L5
+  mlp.router.weight                        786,432     0.13218          3.6927      95.18       6.770 L5
+  mlp_gated_norm.down_proj.weight          393,216     0.02176          3.6780      95.33       4.012 L5
+  self_attn.q_proj.weight                  786,432     0.02180          3.6143      95.04       4.009 L3
+  attn_gated_norm.up_proj.weight           393,216     0.02174          3.5731      95.08       3.961 L5
+  self_attn.o_proj.weight                  786,432     0.02182          3.5292      94.93       3.804 L5
+  attn_gated_norm.down_proj.weight         393,216     0.02181          3.4030      94.93       3.756 L5
+  final_gated_norm.down_proj.weight         65,536     0.02193          3.3557      95.27              -
+  mlp.experts.gate_proj.weight             393,216     0.02185          3.3269      94.32       3.707 L0
+  final_gated_norm.up_proj.weight           65,536     0.02173          3.2893      95.17              -
+  shared_expert.up_proj.weight             786,432     0.02183          3.2494      94.99       3.453 L3
+  embed_gated_norm.down_proj.weight         65,536     0.02183          2.4860      93.33              -
+  embed_gated_norm.up_proj.weight           65,536     0.02181          2.4010      96.45              -

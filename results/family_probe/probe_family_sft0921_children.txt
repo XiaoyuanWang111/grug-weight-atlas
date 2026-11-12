@@ -1,0 +1,52 @@
+parent open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 | layers 26 | dtypes ['BF16']
+
+child open-athena/Grug-67B-A2B-GLM53-RLVR-SFT-2026.09.23 | dtypes ['F32']
+  family                                   scalars  parent RMS  displacement %  changed %  worst layer %
+  embed_gated_norm.down_proj.weight        327,680     0.00975          4.0814     100.00              -
+  self_attn.q_proj.weight               19,660,800     0.00975          3.7940     100.00       4.003 L0
+  attn_gated_norm.up_proj.weight         8,519,680     0.00975          3.7638     100.00       4.067 L3
+  mlp_gated_norm.down_proj.weight        8,519,680     0.00975          3.7324     100.00      4.681 L24
+  mlp.experts.gate_proj.weight           9,830,400     0.01006          3.7003     100.00       3.882 L0
+  mlp_gated_norm.up_proj.weight          8,519,680     0.00975          3.6252     100.00       3.930 L2
+  shared_expert.up_proj.weight          19,660,800     0.00975          3.6186     100.00       4.139 L0
+  attn_gated_norm.down_proj.weight       8,519,680     0.00975          3.5405     100.00       4.233 L3
+  final_gated_norm.down_proj.weight        327,680     0.00976          3.5375     100.00              -
+  final_gated_norm.up_proj.weight          327,680     0.00972          3.4314     100.00              -
+  self_attn.o_proj.weight               19,660,800     0.00975          3.1820     100.00       3.515 L0
+  embed_gated_norm.up_proj.weight          327,680     0.00976          2.9095     100.00              -
+  self_attn.attn_gate.weight             1,331,200     0.02421          1.6205     100.00      4.043 L23
+  mlp.router.weight                     17,039,360     0.12868          0.3190     100.00      2.998 L25
+
+child open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21-dr-doom | dtypes ['BF16', 'F32']
+  family                                   scalars  parent RMS  displacement %  changed %  worst layer %
+  self_attn.o_proj.weight               19,660,800     0.00975          0.0768      22.32      0.100 L25
+  embed_gated_norm.down_proj.weight        327,680     0.00975          0.0757      57.98              -
+  shared_expert.up_proj.weight          19,660,800     0.00975          0.0729      23.26      0.094 L25
+  mlp_gated_norm.down_proj.weight        8,519,680     0.00975          0.0690      23.52      0.140 L25
+  embed_gated_norm.up_proj.weight          327,680     0.00976          0.0688      42.42              -
+  mlp_gated_norm.up_proj.weight          8,519,680     0.00975          0.0688      24.20      0.100 L25
+  attn_gated_norm.up_proj.weight         8,519,680     0.00975          0.0687      25.11      0.094 L25
+  self_attn.q_proj.weight               19,660,800     0.00975          0.0674      20.94      0.081 L25
+  attn_gated_norm.down_proj.weight       8,519,680     0.00975          0.0670      23.30      0.087 L17
+  final_gated_norm.down_proj.weight        327,680     0.00976          0.0649      25.46              -
+  final_gated_norm.up_proj.weight          327,680     0.00972          0.0529      21.85              -
+  self_attn.attn_gate.weight             1,331,200     0.02421          0.0224      13.78      0.089 L23
+  mlp.experts.gate_proj.weight           9,830,400     0.01006          0.0186       4.60       0.033 L0
+  mlp.router.weight                     17,039,360     0.12868          0.0018       3.83      0.026 L24
+
+child open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 | dtypes ['BF16', 'F32']
+  family                                   scalars  parent RMS  displacement %  changed %  worst layer %
+  self_attn.o_proj.weight               19,660,800     0.00975          0.1650      38.59      0.172 L25
+  shared_expert.up_proj.weight          19,660,800     0.00975          0.1621      39.90      0.183 L25
+  attn_gated_norm.down_proj.weight       8,519,680     0.00975          0.1590      41.23      0.188 L15
+  final_gated_norm.up_proj.weight          327,680     0.00972          0.1569      47.91              -
+  embed_gated_norm.up_proj.weight          327,680     0.00976          0.1551      58.79              -
+  final_gated_norm.down_proj.weight        327,680     0.00976          0.1523      43.25              -
+  mlp_gated_norm.down_proj.weight        8,519,680     0.00975          0.1501      39.69      0.184 L25
+  self_attn.q_proj.weight               19,660,800     0.00975          0.1486      36.23      0.157 L13
+  mlp_gated_norm.up_proj.weight          8,519,680     0.00975          0.1482      40.60      0.166 L25
+  attn_gated_norm.up_proj.weight         8,519,680     0.00975          0.1340      38.76       0.152 L1
+  embed_gated_norm.down_proj.weight        327,680     0.00975          0.1223      68.41              -
+  self_attn.attn_gate.weight             1,331,200     0.02421          0.0575      26.50      0.202 L23
+  mlp.experts.gate_proj.weight           9,830,400     0.01006          0.0457      14.93       0.060 L0
+  mlp.router.weight                     17,039,360     0.12868          0.0050       8.59      0.066 L24
