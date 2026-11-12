@@ -1,0 +1,9 @@
+sigma fitted to '69.6% erased at alpha = 1': 1.267e-05
+alpha  changed % of real deltas  erased %  changed % of all entries  kept   effective alpha  cosine  relative L2 error %
+0.25                    8.45     91.55                      8.28  0.206            0.051   0.394                92.80
+0.5                    16.47     83.53                     16.13  0.386            0.193   0.543                85.64
+0.75                   23.84     76.16                     23.35  0.537            0.403   0.645                78.72
+0.875                  27.22     72.78                     26.66  0.596            0.522   0.683                75.49
+0.9375                 28.84     71.16                     28.25  0.624            0.585   0.700                73.93
+1.0                    30.40     69.60                     29.77  0.650            0.650   0.716                72.41
+reported in #10700 at alpha = 0.5: changed 16.15% of all entries, erased 83.51%, relative L2 error 84.46%
