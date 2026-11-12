@@ -1,0 +1,19 @@
+12:13:40 indexed open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 502 tensors, sha 059f83373e03d146506a4be37513d45e6ec6b126
+12:13:40 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 502 tensors, sha 80975627aebeaec3ef946ad609d9c1d95458ebd8
+12:13:40 indexed open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04 502 tensors, sha 1515d17b22346106f9d9e549aaca65411fd70860
+12:13:40 indexed open-athena/Grug-67B-A2B-Merge-NUPA-BFCL-Shared100-2026.10.09 502 tensors, sha eabbade635ebb40871b135f87318008d0b3383c7
+12:13:40 indexed open-athena/Grug-67B-A2B-Merge-Campaign2-DARE-TIES-02-2026.10.10 502 tensors, sha 59931ee6b0222ff73cbd917c5a5c5ef626773aea
+12:13:40 indexed open-athena/Grug-67B-A2B-Merge-Campaign4-Serial-Transfer-06-2026.10.14 502 tensors, sha c1475d8d7a5df97afb437f8a040fba9ef57d0583
+12:13:40 indexed open-athena/Grug-67B-A2B-Merge-Campaign4-Adaptive-Delta-08-2026.10.14 502 tensors, sha bbb16f06b1a53006e45da8b1ce1cfbb9328f7779
+12:13:40 indexed open-athena/Grug-67B-A2B-BFCL-Recovery 502 tensors, sha 4d9dd199cc9467458bd7913804876f7ddeb7f8f7
+12:13:40 stored dtype differs from the parent's in open-athena/Grug-67B-A2B-BFCL-Recovery [('model.mlp.router.bias', 'F32', 'BF16')]
+12:13:40 units 128, done 0, to do 128, 5.7 GB to read over 8 checkpoints
+12:13:42 1/128 model.layers.0.mlp.router.bias | 0.00 GB in 0.0 min (0.0 MiB/s), eta 27296 min
+12:15:35 21/128 model.layers.0.mlp.experts.down_proj.weight[128] | 0.87 GB in 1.9 min (7.2 MiB/s), eta 11 min
+12:18:16 41/128 model.layers.12.mlp.router.bias | 1.87 GB in 4.6 min (6.5 MiB/s), eta 10 min
+12:20:29 61/128 model.layers.12.mlp.experts.down_proj.weight[128] | 2.74 GB in 6.8 min (6.4 MiB/s), eta 7 min
+12:23:23 81/128 model.layers.25.mlp.router.bias | 3.73 GB in 9.7 min (6.1 MiB/s), eta 5 min
+12:26:11 101/128 model.layers.25.mlp.experts.down_proj.weight[128] | 4.61 GB in 12.5 min (5.8 MiB/s), eta 3 min
+12:28:41 121/128 lm_head.weight[126976:128256] | 5.65 GB in 15.0 min (6.0 MiB/s), eta 0 min
+12:29:18 128/128 model.norm.weight | 5.73 GB in 15.6 min (5.8 MiB/s), eta 0 min
+12:29:18 finished

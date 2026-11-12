@@ -1,0 +1,25 @@
+{
+ "parent": "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02",
+ "children": [
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92",
+  "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04",
+  "open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21",
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR2-Sync-Step116",
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Async-Step92"
+ ],
+ "experts_per_layer": 8,
+ "layers": [
+  12,
+  0,
+  25
+ ],
+ "embed_blocks": "last",
+ "sha": {
+  "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02": "059f83373e03d146506a4be37513d45e6ec6b126",
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92": "80975627aebeaec3ef946ad609d9c1d95458ebd8",
+  "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04": "1515d17b22346106f9d9e549aaca65411fd70860",
+  "open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21": "fe666478454e79fe6027a0bab0388d9abd68f51a",
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR2-Sync-Step116": "bb4c56ba83c821478aece4979eaa12400404402c",
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Async-Step92": "929fc490219ed1f75883863518220270b40d0f2a"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "parent": "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02",
+ "children": [
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92",
+  "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04",
+  "open-athena/Grug-67B-A2B-Merge-NUPA-BFCL-Shared100-2026.10.09",
+  "open-athena/Grug-67B-A2B-Merge-Campaign2-DARE-TIES-02-2026.10.10",
+  "open-athena/Grug-67B-A2B-Merge-Campaign4-Serial-Transfer-06-2026.10.14",
+  "open-athena/Grug-67B-A2B-Merge-Campaign4-Adaptive-Delta-08-2026.10.14",
+  "open-athena/Grug-67B-A2B-BFCL-Recovery"
+ ],
+ "experts_per_layer": 8,
+ "layers": [
+  0,
+  12,
+  25
+ ],
+ "embed_blocks": "last",
+ "sha": {
+  "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02": "059f83373e03d146506a4be37513d45e6ec6b126",
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92": "80975627aebeaec3ef946ad609d9c1d95458ebd8",
+  "open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04": "1515d17b22346106f9d9e549aaca65411fd70860",
+  "open-athena/Grug-67B-A2B-Merge-NUPA-BFCL-Shared100-2026.10.09": "eabbade635ebb40871b135f87318008d0b3383c7",
+  "open-athena/Grug-67B-A2B-Merge-Campaign2-DARE-TIES-02-2026.10.10": "59931ee6b0222ff73cbd917c5a5c5ef626773aea",
+  "open-athena/Grug-67B-A2B-Merge-Campaign4-Serial-Transfer-06-2026.10.14": "c1475d8d7a5df97afb437f8a040fba9ef57d0583",
+  "open-athena/Grug-67B-A2B-Merge-Campaign4-Adaptive-Delta-08-2026.10.14": "bbb16f06b1a53006e45da8b1ce1cfbb9328f7779",
+  "open-athena/Grug-67B-A2B-BFCL-Recovery": "4d9dd199cc9467458bd7913804876f7ddeb7f8f7"
+ }
+}

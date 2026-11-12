@@ -1,0 +1,29 @@
+{
+ "parent": "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92",
+ "children": [
+  "open-athena/Snowball-67B-A2B-MOPD-Step100",
+  "open-athena/Snowball-67B-A2B-CruxEval-OPD-Step75",
+  "open-athena/Snowball-67B-A2B-CruxEval-RS-SFT-Step282",
+  "open-athena/Snowball-67B-A2B-CruxEval-Plain-SFT-Step399",
+  "open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272",
+  "open-athena/Snowball-67B-A2B-MixedRS-SFT-Step727",
+  "open-athena/Snowball-67B-A2B-MixedPlain-SFT-Step803",
+  "open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254",
+  "open-athena/Snowball-67B-A2B-Merge-TIES-d0.5",
+  "open-athena/Snowball-67B-A2B-Merge-TA0.5"
+ ],
+ "experts_per_layer": 8,
+ "sha": {
+  "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92": "80975627aebeaec3ef946ad609d9c1d95458ebd8",
+  "open-athena/Snowball-67B-A2B-MOPD-Step100": "f9c9bd62b68051442b34d8abebd2adde84873d1c",
+  "open-athena/Snowball-67B-A2B-CruxEval-OPD-Step75": "a99b40686bd3f5219c05542d0cbfa7086cc5c87a",
+  "open-athena/Snowball-67B-A2B-CruxEval-RS-SFT-Step282": "96a38958dde26d0fa57b9d16ede2f9ab53f029e3",
+  "open-athena/Snowball-67B-A2B-CruxEval-Plain-SFT-Step399": "0eaaf87090e6e1191c8db3d004fb84c4f9ba774e",
+  "open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272": "2eb988bb5df70378950d983ac8e70dae550cf6d5",
+  "open-athena/Snowball-67B-A2B-MixedRS-SFT-Step727": "ec071ccd7a2abee598de45b8423291269669eb0c",
+  "open-athena/Snowball-67B-A2B-MixedPlain-SFT-Step803": "a9e46a07bab138b14f966d39b0d649ebfbb03136",
+  "open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254": "0f22c03aff076f46c292196cf0d03a9bc4ab81c5",
+  "open-athena/Snowball-67B-A2B-Merge-TIES-d0.5": "a8ade36ffb263fee9e49c8a508b82845464e8804",
+  "open-athena/Snowball-67B-A2B-Merge-TA0.5": "cd0605de0ab76473b2262a9545596436e726b27d"
+ }
+}

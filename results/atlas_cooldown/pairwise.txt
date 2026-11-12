@@ -1,0 +1,129 @@
+units 128 | layers [0, 12, 25] | parent (marked *) open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02
+
+== attention gate + GatedNorm (2.1 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      2.6275      3.4782      0.0946      4.1274
+  open-athena/snow        2.6275      0.0000      2.3689      2.6259      3.5764
+  open-athena/snow        3.4782      2.3689      0.0000      3.4770      2.8284
+  Datakit-SFT-262K        0.0946      2.6259      3.4770      0.0000      4.1267
+  RLVR-Sync-Step92        4.1274      3.5764      2.8284      4.1267      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       87.25       94.54       41.92       95.28
+  open-athena/snow         87.25        0.00       93.48       86.43       94.98
+  open-athena/snow         94.54       93.48        0.00       94.49       91.30
+  Datakit-SFT-262K         41.92       86.43       94.49        0.00       95.26
+  RLVR-Sync-Step92         95.28       94.98       91.30       95.26        0.00
+
+== router (2.0 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      1.0163      1.8507      0.0030      4.9255
+  open-athena/snow        1.0163      0.0000      1.5667      1.0163      4.8424
+  open-athena/snow        1.8507      1.5667      0.0000      1.8507      4.9089
+  Datakit-SFT-262K        0.0030      1.0163      1.8507      0.0000      4.9255
+  RLVR-Sync-Step92        4.9255      4.8424      4.9089      4.9255      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       87.00       89.34        9.77       91.01
+  open-athena/snow         87.00        0.00       82.67       87.00       89.46
+  open-athena/snow         89.34       82.67        0.00       89.34       87.55
+  Datakit-SFT-262K          9.77       87.00       89.34        0.00       91.01
+  RLVR-Sync-Step92         91.01       89.46       87.55       91.01        0.00
+
+== attention q k v o (49.2 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      1.5043      3.3819      0.1565      3.7528
+  open-athena/snow        1.5043      0.0000      3.0607      1.4961      3.5477
+  open-athena/snow        3.3819      3.0607      0.0000      3.3783      1.8886
+  Datakit-SFT-262K        0.1565      1.4961      3.3783      0.0000      3.7497
+  RLVR-Sync-Step92        3.7528      3.5477      1.8886      3.7497      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       87.32       94.54       37.20       95.20
+  open-athena/snow         87.32        0.00       93.63       87.24       94.86
+  open-athena/snow         94.54       93.63        0.00       94.53       90.40
+  Datakit-SFT-262K         37.20       87.24       94.53        0.00       95.20
+  RLVR-Sync-Step92         95.20       94.86       90.40       95.20        0.00
+
+== shared expert (59.0 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      1.3997      3.0510      0.1622      3.3896
+  open-athena/snow        1.3997      0.0000      2.7447      1.3902      3.1858
+  open-athena/snow        3.0510      2.7447      0.0000      3.0466      1.7079
+  Datakit-SFT-262K        0.1622      1.3902      3.0466      0.0000      3.3857
+  RLVR-Sync-Step92        3.3896      3.1858      1.7079      3.3857      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       87.13       93.57       40.12       94.42
+  open-athena/snow         87.13        0.00       91.78       87.06       93.84
+  open-athena/snow         93.57       91.78        0.00       93.56       89.65
+  Datakit-SFT-262K         40.12       87.06       93.56        0.00       94.41
+  RLVR-Sync-Step92         94.42       93.84       89.65       94.41        0.00
+
+== routed experts (7,549.7 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      1.6318      3.4108      0.0745      4.0087
+  open-athena/snow        1.6318      0.0000      3.0090      1.6301      3.7773
+  open-athena/snow        3.4108      3.0090      0.0000      3.4100      2.3065
+  Datakit-SFT-262K        0.0745      1.6301      3.4100      0.0000      4.0081
+  RLVR-Sync-Step92        4.0087      3.7773      2.3065      4.0081      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       71.61       93.52       20.07       93.88
+  open-athena/snow         71.61        0.00       92.95       71.46       93.67
+  open-athena/snow         93.52       92.95        0.00       93.51       80.11
+  Datakit-SFT-262K         20.07       71.46       93.51        0.00       93.88
+  RLVR-Sync-Step92         93.88       93.67       80.11       93.88        0.00
+
+== other norms (3.3 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      0.2120      0.2153      0.0037      0.1926
+  open-athena/snow        0.2120      0.0000      0.1035      0.2120      0.2739
+  open-athena/snow        0.2153      0.1035      0.0000      0.2152      0.2573
+  Datakit-SFT-262K        0.0037      0.2120      0.2152      0.0000      0.1925
+  RLVR-Sync-Step92        0.1926      0.2739      0.2573      0.1925      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       86.10       93.96       48.42       94.77
+  open-athena/snow         86.10        0.00       92.97       84.47       94.48
+  open-athena/snow         93.96       92.97        0.00       93.90       90.55
+  Datakit-SFT-262K         48.42       84.47       93.90        0.00       94.75
+  RLVR-Sync-Step92         94.77       94.48       90.55       94.75        0.00
+
+== embedding + head (last rows) (6.6 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      0.9565      1.0695      0.0037      1.0600
+  open-athena/snow        0.9565      0.0000      0.5352      0.9565      0.5553
+  open-athena/snow        1.0695      0.5352      0.0000      1.0695      0.2125
+  Datakit-SFT-262K        0.0037      0.9565      1.0695      0.0000      1.0600
+  RLVR-Sync-Step92        1.0600      0.5553      0.2125      1.0600      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       65.91       75.50       11.24       77.39
+  open-athena/snow         65.91        0.00       70.66       65.85       73.41
+  open-athena/snow         75.50       70.66        0.00       75.49       51.53
+  Datakit-SFT-262K         11.24       65.85       75.49        0.00       77.38
+  RLVR-Sync-Step92         77.39       73.41       51.53       77.38        0.00
+
+== all (7,671.8 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                 0.0000      1.1970      2.4099      0.0523      3.0447
+  open-athena/snow        1.1970      0.0000      2.1045      1.1958      2.8800
+  open-athena/snow        2.4099      2.1045      0.0000      2.4093      2.0323
+  Datakit-SFT-262K        0.0523      1.1958      2.4093      0.0000      3.0442
+  RLVR-Sync-Step92        3.0447      2.8800      2.0323      3.0442      0.0000
+  stored scalars that differ, percent
+                         Step12* open-athena open-athena Datakit-SFT RLVR-Sync-S
+  Step12*                   0.00       71.84       93.51       20.34       93.88
+  open-athena/snow         71.84        0.00       92.93       71.69       93.66
+  open-athena/snow         93.51       92.93        0.00       93.51       80.23
+  Datakit-SFT-262K         20.34       71.69       93.51        0.00       93.88
+  RLVR-Sync-Step92         93.88       93.66       80.23       93.88        0.00

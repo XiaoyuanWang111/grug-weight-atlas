@@ -1,0 +1,30 @@
+tensor family                            scalars    B RMS |       E      E2   TA0.5    TIES  TA1.0* |    MOPD  RS-SFT | cos E,E2 TA1.0/max worst layer
+attn_gated_norm.up_proj.weight         8,519,680   0.0097 |   3.449   3.434   2.871   3.922   5.729 |   0.140   0.391 |    0.386      1.66   8.016 L21
+attn_gated_norm.down_proj.weight       8,519,680   0.0098 |   2.874   2.785   2.315   3.264   4.614 |   0.264   0.466 |    0.329      1.61   6.611 L21
+self_attn.attn_gate.weight             1,331,200   0.0242 |   1.327   1.332   1.122   1.513   2.218 |   0.085   0.188 |    0.391      1.66   5.925 L24
+mlp.router.weight                     17,039,360   0.1287 |   0.166   0.153   0.132   0.191   0.239 |   0.008   0.031 |    0.118      1.44   1.995 L25
+lm_head.weight                        328,335,360   0.0097 |   0.128   0.104   0.108   0.138   0.194 |   0.084   0.490 |    0.379      1.51     nan LNone
+final_gated_norm.down_proj.weight        327,680   0.0098 |   0.093   0.085   0.085   0.105   0.149 |   0.210   0.377 |    0.389      1.60     nan LNone
+embed_gated_norm.down_proj.weight        327,680   0.0098 |   0.074   0.072   0.068   0.083   0.127 |   0.055   0.353 |    0.525      1.72     nan LNone
+self_attn.o_proj.weight               170,393,600   0.0098 |   0.072   0.071   0.069   0.087   0.119 |   0.126   0.369 |    0.382      1.65   0.134 L25
+mlp_gated_norm.down_proj.weight        8,519,680   0.0097 |   0.072   0.070   0.067   0.086   0.116 |   0.146   0.428 |    0.337      1.62   0.216 L25
+shared_expert.down_proj.weight        170,393,600   0.0097 |   0.071   0.070   0.068   0.086   0.116 |   0.127   0.389 |    0.336      1.62   0.145 L24
+final_gated_norm.up_proj.weight          327,680   0.0097 |   0.072   0.075   0.068   0.092   0.111 |   0.158   0.349 |    0.155      1.49     nan LNone
+self_attn.v_proj.weight               42,598,400   0.0097 |   0.068   0.066   0.064   0.083   0.108 |   0.122   0.383 |    0.299      1.59   0.144 L25
+mlp_gated_norm.up_proj.weight          8,519,680   0.0098 |   0.070   0.067   0.064   0.084   0.107 |   0.122   0.398 |    0.233      1.54   0.137 L25
+shared_expert.up_proj.weight          170,393,600   0.0097 |   0.069   0.066   0.063   0.083   0.107 |   0.123   0.405 |    0.259      1.56   0.136 L25
+shared_expert.gate_proj.weight        170,393,600   0.0097 |   0.068   0.065   0.062   0.082   0.104 |   0.122   0.413 |    0.231      1.54   0.136 L25
+embed_gated_norm.up_proj.weight          327,680   0.0098 |   0.068   0.063   0.058   0.079   0.101 |   0.074   0.325 |    0.184      1.48     nan LNone
+self_attn.k_proj.weight               42,598,400   0.0097 |   0.060   0.058   0.055   0.074   0.092 |   0.126   0.391 |    0.210      1.53   0.119 L25
+self_attn.q_proj.weight               170,393,600   0.0098 |   0.060   0.058   0.055   0.073   0.092 |   0.127   0.400 |    0.207      1.54   0.118 L25
+mlp.experts.up_proj.weight            681,574,400   0.0097 |   0.050   0.045   0.043   0.060   0.069 |   0.100   0.407 |    0.064      1.38   0.083 L17
+mlp.experts.down_proj.weight          681,574,400   0.0097 |   0.050   0.045   0.043   0.060   0.069 |   0.102   0.411 |    0.064      1.38   0.081 L17
+mlp.experts.gate_proj.weight          681,574,400   0.0097 |   0.050   0.044   0.043   0.060   0.068 |   0.098   0.407 |    0.055      1.37   0.081 L17
+embed_norm.weight                          2,560   1.0468 |   0.024   0.021   0.021   0.028   0.034 |   0.000   0.000 |    0.144      1.42     nan LNone
+embed_tokens.weight                   328,335,360   0.2669 |   0.006   0.008   0.007   0.010   0.010 |   0.000   0.001 |    0.029      1.30     nan LNone
+input_layernorm.weight                    66,560   1.2989 |   0.002   0.002   0.002   0.003   0.004 |   0.000   0.000 |    0.231      1.57   0.013 L10
+post_attention_layernorm.weight           66,560   1.6355 |   0.001   0.001   0.001   0.001   0.002 |   0.000   0.000 |    0.066      1.15   0.006 L9
+mlp.router.bias                            6,656   0.4545 | unchanged in both experts
+norm.weight                                2,560  13.8987 | unchanged in both experts
+* computed from the two expert deltas; relative displacement in percent of the student's norm in that family
+routed experts: 8 of 256 experts per layer

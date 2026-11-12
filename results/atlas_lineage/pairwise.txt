@@ -1,0 +1,145 @@
+units 128 | layers [0, 12, 25] | parent (marked *) open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02
+
+== attention gate + GatedNorm (2.1 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      4.1274      0.1427      0.0946      4.1327      4.1261
+  RLVR-Sync-Step92        4.1274      0.0000      4.1302      4.1267      0.2019      0.4250
+  Reference-KL-Ste        0.1427      4.1302      0.0000      0.1642      4.1356      4.1282
+  Datakit-SFT-262K        0.0946      4.1267      0.1642      0.0000      4.1321      4.1251
+  RLVR2-Sync-Step1        4.1327      0.2019      4.1356      4.1321      0.0000      0.4713
+  RLVR-Async-Step9        4.1261      0.4250      4.1282      4.1251      0.4713      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       95.28       52.33       41.92       95.36       95.24
+  RLVR-Sync-Step92         95.28        0.00       95.30       95.26       54.97       77.52
+  Reference-KL-Ste         52.33       95.30        0.00       55.19       95.39       95.26
+  Datakit-SFT-262K         41.92       95.26       55.19        0.00       95.35       95.22
+  RLVR2-Sync-Step1         95.36       54.97       95.39       95.35        0.00       78.91
+  RLVR-Async-Step9         95.24       77.52       95.26       95.22       78.91        0.00
+
+== router (2.0 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      4.9255      0.0053      0.0030      4.9255      4.9255
+  RLVR-Sync-Step92        4.9255      0.0000      4.9255      4.9255      0.0097      0.0210
+  Reference-KL-Ste        0.0053      4.9255      0.0000      0.0061      4.9255      4.9255
+  Datakit-SFT-262K        0.0030      4.9255      0.0061      0.0000      4.9255      4.9255
+  RLVR2-Sync-Step1        4.9255      0.0097      4.9255      4.9255      0.0000      0.0226
+  RLVR-Async-Step9        4.9255      0.0210      4.9255      4.9255      0.0226      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       91.01       14.03        9.77       91.01       91.02
+  RLVR-Sync-Step92         91.01        0.00       91.02       91.01       14.16       31.55
+  Reference-KL-Ste         14.03       91.02        0.00       15.20       91.01       91.02
+  Datakit-SFT-262K          9.77       91.01       15.20        0.00       91.01       91.01
+  RLVR2-Sync-Step1         91.01       14.16       91.01       91.01        0.00       32.68
+  RLVR-Async-Step9         91.02       31.55       91.02       91.01       32.68        0.00
+
+== attention q k v o (49.2 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      3.7528      0.2045      0.1565      3.7604      3.7522
+  RLVR-Sync-Step92        3.7528      0.0000      3.7584      3.7497      0.2655      0.6449
+  Reference-KL-Ste        0.2045      3.7584      0.0000      0.2560      3.7660      3.7576
+  Datakit-SFT-262K        0.1565      3.7497      0.2560      0.0000      3.7573      3.7490
+  RLVR2-Sync-Step1        3.7604      0.2655      3.7660      3.7573      0.0000      0.6868
+  RLVR-Async-Step9        3.7522      0.6449      3.7576      3.7490      0.6868      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       95.20       43.25       37.20       95.21       95.20
+  RLVR-Sync-Step92         95.20        0.00       95.21       95.20       44.15       74.05
+  Reference-KL-Ste         43.25       95.21        0.00       48.64       95.22       95.21
+  Datakit-SFT-262K         37.20       95.20       48.64        0.00       95.21       95.20
+  RLVR2-Sync-Step1         95.21       44.15       95.22       95.21        0.00       75.45
+  RLVR-Async-Step9         95.20       74.05       95.21       95.20       75.45        0.00
+
+== shared expert (59.0 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      3.3896      0.1983      0.1622      3.3971      3.3880
+  RLVR-Sync-Step92        3.3896      0.0000      3.3952      3.3857      0.2540      0.6372
+  Reference-KL-Ste        0.1983      3.3952      0.0000      0.2557      3.4026      3.3938
+  Datakit-SFT-262K        0.1622      3.3857      0.2557      0.0000      3.3932      3.3842
+  RLVR2-Sync-Step1        3.3971      0.2540      3.4026      3.3932      0.0000      0.6743
+  RLVR-Async-Step9        3.3880      0.6372      3.3938      3.3842      0.6743      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       94.42       44.58       40.12       94.44       94.41
+  RLVR-Sync-Step92         94.42        0.00       94.43       94.41       45.45       74.84
+  Reference-KL-Ste         44.58       94.43        0.00       50.60       94.45       94.42
+  Datakit-SFT-262K         40.12       94.41       50.60        0.00       94.43       94.40
+  RLVR2-Sync-Step1         94.44       45.45       94.45       94.43        0.00       76.01
+  RLVR-Async-Step9         94.41       74.84       94.42       94.40       76.01        0.00
+
+== routed experts (7,549.7 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      4.0087      0.1471      0.0745      4.0129      4.0088
+  RLVR-Sync-Step92        4.0087      0.0000      4.0114      4.0081      0.2091      0.5980
+  Reference-KL-Ste        0.1471      4.0114      0.0000      0.1651      4.0156      4.0114
+  Datakit-SFT-262K        0.0745      4.0081      0.1651      0.0000      4.0123      4.0081
+  RLVR2-Sync-Step1        4.0129      0.2091      4.0156      4.0123      0.0000      0.6254
+  RLVR-Async-Step9        4.0088      0.5980      4.0114      4.0081      0.6254      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       93.88       33.18       20.07       93.90       93.88
+  RLVR-Sync-Step92         93.88        0.00       93.89       93.88       34.41       70.96
+  Reference-KL-Ste         33.18       93.89        0.00       34.93       93.90       93.89
+  Datakit-SFT-262K         20.07       93.88       34.93        0.00       93.89       93.88
+  RLVR2-Sync-Step1         93.90       34.41       93.90       93.89        0.00       72.02
+  RLVR-Async-Step9         93.88       70.96       93.89       93.88       72.02        0.00
+
+== other norms (3.3 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      0.1926      0.0050      0.0037      0.1927      0.1925
+  RLVR-Sync-Step92        0.1926      0.0000      0.1926      0.1925      0.0066      0.0153
+  Reference-KL-Ste        0.0050      0.1926      0.0000      0.0062      0.1928      0.1926
+  Datakit-SFT-262K        0.0037      0.1925      0.0062      0.0000      0.1927      0.1925
+  RLVR2-Sync-Step1        0.1927      0.0066      0.1928      0.1927      0.0000      0.0167
+  RLVR-Async-Step9        0.1925      0.0153      0.1926      0.1925      0.0167      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       94.77       56.55       48.42       94.88       94.75
+  RLVR-Sync-Step92         94.77        0.00       94.81       94.75       56.63       80.54
+  Reference-KL-Ste         56.55       94.81        0.00       60.60       94.91       94.78
+  Datakit-SFT-262K         48.42       94.75       60.60        0.00       94.87       94.72
+  RLVR2-Sync-Step1         94.88       56.63       94.91       94.87        0.00       81.75
+  RLVR-Async-Step9         94.75       80.54       94.78       94.72       81.75        0.00
+
+== embedding + head (last rows) (6.6 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      1.0600      0.0040      0.0037      1.0600      1.0600
+  RLVR-Sync-Step92        1.0600      0.0000      1.0600      1.0600      0.0038      0.0186
+  Reference-KL-Ste        0.0040      1.0600      0.0000      0.0054      1.0600      1.0600
+  Datakit-SFT-262K        0.0037      1.0600      0.0054      0.0000      1.0600      1.0600
+  RLVR2-Sync-Step1        1.0600      0.0038      1.0600      1.0600      0.0000      0.0189
+  RLVR-Async-Step9        1.0600      0.0186      1.0600      1.0600      0.0189      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       77.39        8.78       11.24       77.43       79.31
+  RLVR-Sync-Step92         77.39        0.00       77.40       77.38        4.34       32.45
+  Reference-KL-Ste          8.78       77.40        0.00       13.25       77.44       79.33
+  Datakit-SFT-262K         11.24       77.38       13.25        0.00       77.42       79.31
+  RLVR2-Sync-Step1         77.43        4.34       77.44       77.42        0.00       32.66
+  RLVR-Async-Step9         79.31       32.45       79.33       79.31       32.66        0.00
+
+== all (7,671.8 M scalars)
+  relative distance, percent of the parent's norm
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                 0.0000      3.0447      0.1012      0.0523      3.0473      3.0447
+  RLVR-Sync-Step92        3.0447      0.0000      3.0464      3.0442      0.1436      0.4094
+  Reference-KL-Ste        0.1012      3.0464      0.0000      0.1141      3.0490      3.0464
+  Datakit-SFT-262K        0.0523      3.0442      0.1141      0.0000      3.0469      3.0443
+  RLVR2-Sync-Step1        3.0473      0.1436      3.0490      3.0469      0.0000      0.4283
+  RLVR-Async-Step9        3.0447      0.4094      3.0464      3.0443      0.4283      0.0000
+  stored scalars that differ, percent
+                         Step12* RLVR-Sync-S Reference-K Datakit-SFT RLVR2-Sync- RLVR-Async-
+  Step12*                   0.00       93.88       33.32       20.34       93.89       93.88
+  RLVR-Sync-Step92         93.88        0.00       93.88       93.88       34.54       70.97
+  Reference-KL-Ste         33.32       93.88        0.00       35.13       93.90       93.89
+  Datakit-SFT-262K         20.34       93.88       35.13        0.00       93.89       93.88
+  RLVR2-Sync-Step1         93.89       34.54       93.90       93.89        0.00       72.04
+  RLVR-Async-Step9         93.88       70.97       93.89       93.88       72.04        0.00

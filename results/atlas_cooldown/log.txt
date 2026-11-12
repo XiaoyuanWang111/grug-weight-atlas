@@ -1,0 +1,18 @@
+13:16:47 indexed open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 502 tensors, sha 059f83373e03d146506a4be37513d45e6ec6b126
+13:16:47 indexed open-athena/snowball-67b-a2b-base-262k-qk175-skew8 502 tensors, sha 3bbf729f0555965c8667600ee91c3c109ac21b19
+13:16:47 indexed open-athena/snowball-67b-a2b-base-262k-qk175-skew4 502 tensors, sha 58926559098171aa2e2001296921ff5ac4caac94
+13:16:47 indexed open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 502 tensors, sha fe666478454e79fe6027a0bab0388d9abd68f51a
+13:16:47 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 502 tensors, sha 80975627aebeaec3ef946ad609d9c1d95458ebd8
+13:16:47 stored dtype differs from the parent's in open-athena/snowball-67b-a2b-base-262k-qk175-skew8 [('model.mlp.router.bias', 'F32', 'BF16')]
+13:16:47 stored dtype differs from the parent's in open-athena/snowball-67b-a2b-base-262k-qk175-skew4 [('model.mlp.router.bias', 'F32', 'BF16')]
+13:16:47 stored dtype differs from the parent's in open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 [('model.mlp.router.bias', 'F32', 'BF16')]
+13:16:47 units 128, done 0, to do 128, 3.6 GB to read over 5 checkpoints
+13:16:48 1/128 model.layers.0.mlp.router.bias | 0.00 GB in 0.0 min (0.0 MiB/s), eta 17069 min
+13:17:56 21/128 model.layers.0.mlp.experts.down_proj.weight[128] | 0.54 GB in 1.2 min (7.5 MiB/s), eta 6 min
+13:19:15 41/128 model.layers.12.mlp.router.bias | 1.17 GB in 2.5 min (7.5 MiB/s), eta 5 min
+13:20:13 61/128 model.layers.12.mlp.experts.down_proj.weight[128] | 1.71 GB in 3.4 min (7.9 MiB/s), eta 4 min
+13:21:47 81/128 model.layers.25.mlp.router.bias | 2.33 GB in 5.0 min (7.4 MiB/s), eta 3 min
+13:23:27 101/128 model.layers.25.mlp.experts.down_proj.weight[128] | 2.88 GB in 6.7 min (6.9 MiB/s), eta 2 min
+13:24:42 121/128 lm_head.weight[126976:128256] | 3.53 GB in 7.9 min (7.1 MiB/s), eta 0 min
+13:24:53 128/128 model.norm.weight | 3.58 GB in 8.1 min (7.0 MiB/s), eta 0 min
+13:24:53 finished

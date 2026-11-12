@@ -1,0 +1,20 @@
+12:08:04 indexed open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 502 tensors, sha 059f83373e03d146506a4be37513d45e6ec6b126
+12:08:04 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 502 tensors, sha 80975627aebeaec3ef946ad609d9c1d95458ebd8
+12:08:04 indexed open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04 502 tensors, sha 1515d17b22346106f9d9e549aaca65411fd70860
+12:11:41 indexed open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 502 tensors, sha 059f83373e03d146506a4be37513d45e6ec6b126
+12:11:41 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 502 tensors, sha 80975627aebeaec3ef946ad609d9c1d95458ebd8
+12:11:41 indexed open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04 502 tensors, sha 1515d17b22346106f9d9e549aaca65411fd70860
+12:12:38 indexed open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 502 tensors, sha fe666478454e79fe6027a0bab0388d9abd68f51a
+12:14:53 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR2-Sync-Step116 502 tensors, sha bb4c56ba83c821478aece4979eaa12400404402c
+12:17:08 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Async-Step92 502 tensors, sha 929fc490219ed1f75883863518220270b40d0f2a
+12:17:08 stored dtype differs from the parent's in open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 [('model.mlp.router.bias', 'F32', 'BF16')]
+12:17:08 units 128, done 0, to do 128, 4.3 GB to read over 6 checkpoints
+12:17:09 1/128 model.layers.12.mlp.router.bias | 0.00 GB in 0.0 min (0.0 MiB/s), eta 18151 min
+12:19:08 21/128 model.layers.12.mlp.experts.down_proj.weight[128] | 0.65 GB in 2.0 min (5.2 MiB/s), eta 11 min
+12:21:25 41/128 model.layers.0.mlp.router.bias | 1.40 GB in 4.3 min (5.2 MiB/s), eta 9 min
+12:23:50 61/128 model.layers.0.mlp.experts.down_proj.weight[128] | 2.05 GB in 6.7 min (4.9 MiB/s), eta 7 min
+12:26:06 81/128 model.layers.25.mlp.router.bias | 2.80 GB in 9.0 min (5.0 MiB/s), eta 5 min
+12:28:29 101/128 model.layers.25.mlp.experts.down_proj.weight[128] | 3.45 GB in 11.4 min (4.8 MiB/s), eta 3 min
+12:30:26 121/128 lm_head.weight[126976:128256] | 4.24 GB in 13.3 min (5.1 MiB/s), eta 0 min
+12:31:01 128/128 model.norm.weight | 4.30 GB in 13.9 min (4.9 MiB/s), eta 0 min
+12:31:01 finished

@@ -1,0 +1,106 @@
+09:20:21 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 502 tensors, sha 80975627aebeaec3ef946ad609d9c1d95458ebd8
+09:20:21 indexed open-athena/Snowball-67B-A2B-MOPD-Step100 502 tensors, sha f9c9bd62b68051442b34d8abebd2adde84873d1c
+09:21:23 indexed open-athena/Snowball-67B-A2B-CruxEval-OPD-Step75 502 tensors, sha a99b40686bd3f5219c05542d0cbfa7086cc5c87a
+09:22:27 indexed open-athena/Snowball-67B-A2B-CruxEval-RS-SFT-Step282 502 tensors, sha 96a38958dde26d0fa57b9d16ede2f9ab53f029e3
+09:23:28 indexed open-athena/Snowball-67B-A2B-CruxEval-Plain-SFT-Step399 502 tensors, sha 0eaaf87090e6e1191c8db3d004fb84c4f9ba774e
+09:24:26 indexed open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272 502 tensors, sha 2eb988bb5df70378950d983ac8e70dae550cf6d5
+09:25:25 indexed open-athena/Snowball-67B-A2B-MixedRS-SFT-Step727 502 tensors, sha ec071ccd7a2abee598de45b8423291269669eb0c
+09:26:25 indexed open-athena/Snowball-67B-A2B-MixedPlain-SFT-Step803 502 tensors, sha a9e46a07bab138b14f966d39b0d649ebfbb03136
+09:27:27 indexed open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254 502 tensors, sha 0f22c03aff076f46c292196cf0d03a9bc4ab81c5
+09:36:14 indexed open-athena/Snowball-67B-A2B-Merge-TIES-d0.5 502 tensors, sha a8ade36ffb263fee9e49c8a508b82845464e8804
+09:44:16 indexed open-athena/Snowball-67B-A2B-Merge-TA0.5 502 tensors, sha cd0605de0ab76473b2262a9545596436e726b27d
+09:45:07 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 502 tensors, sha 80975627aebeaec3ef946ad609d9c1d95458ebd8
+09:45:07 indexed open-athena/Snowball-67B-A2B-MOPD-Step100 502 tensors, sha f9c9bd62b68051442b34d8abebd2adde84873d1c
+09:45:07 indexed open-athena/Snowball-67B-A2B-CruxEval-OPD-Step75 502 tensors, sha a99b40686bd3f5219c05542d0cbfa7086cc5c87a
+09:45:07 indexed open-athena/Snowball-67B-A2B-CruxEval-RS-SFT-Step282 502 tensors, sha 96a38958dde26d0fa57b9d16ede2f9ab53f029e3
+09:45:07 indexed open-athena/Snowball-67B-A2B-CruxEval-Plain-SFT-Step399 502 tensors, sha 0eaaf87090e6e1191c8db3d004fb84c4f9ba774e
+09:45:07 indexed open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272 502 tensors, sha 2eb988bb5df70378950d983ac8e70dae550cf6d5
+09:45:07 indexed open-athena/Snowball-67B-A2B-MixedRS-SFT-Step727 502 tensors, sha ec071ccd7a2abee598de45b8423291269669eb0c
+09:45:07 indexed open-athena/Snowball-67B-A2B-MixedPlain-SFT-Step803 502 tensors, sha a9e46a07bab138b14f966d39b0d649ebfbb03136
+09:45:07 indexed open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254 502 tensors, sha 0f22c03aff076f46c292196cf0d03a9bc4ab81c5
+09:45:07 indexed open-athena/Snowball-67B-A2B-Merge-TIES-d0.5 502 tensors, sha a8ade36ffb263fee9e49c8a508b82845464e8804
+09:45:07 indexed open-athena/Snowball-67B-A2B-Merge-TA0.5 502 tensors, sha cd0605de0ab76473b2262a9545596436e726b27d
+09:45:07 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-CruxEval-RS-SFT-Step282 [('model.mlp.router.bias', 'F32', 'BF16')]
+09:45:07 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-CruxEval-Plain-SFT-Step399 [('model.mlp.router.bias', 'F32', 'BF16')]
+09:45:07 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272 [('model.mlp.router.bias', 'F32', 'BF16')]
+09:45:07 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-MixedRS-SFT-Step727 [('model.mlp.router.bias', 'F32', 'BF16')]
+09:45:07 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-MixedPlain-SFT-Step803 [('model.mlp.router.bias', 'F32', 'BF16')]
+09:45:07 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254 [('model.mlp.router.bias', 'F32', 'BF16')]
+09:45:07 units 1110, done 0, to do 1110, 81.2 GB to read over 11 checkpoints
+09:45:10 1/1110 model.layers.0.mlp.router.bias | 0.00 GB in 0.0 min (0.0 MiB/s), eta 256248 min
+09:45:54 21/1110 model.layers.10.mlp.router.bias | 0.14 GB in 0.8 min (2.9 MiB/s), eta 437 min
+09:47:43 41/1110 model.layers.20.mlp.router.bias | 0.29 GB in 2.6 min (1.8 MiB/s), eta 725 min
+09:49:16 61/1110 model.layers.1.self_attn.q_proj.weight | 1.06 GB in 4.1 min (4.1 MiB/s), eta 313 min
+09:51:14 81/1110 model.layers.5.self_attn.q_proj.weight | 2.51 GB in 6.1 min (6.5 MiB/s), eta 192 min
+09:53:17 101/1110 model.layers.9.self_attn.q_proj.weight | 3.95 GB in 8.2 min (7.7 MiB/s), eta 159 min
+09:55:21 121/1110 model.layers.13.self_attn.q_proj.weight | 5.40 GB in 10.2 min (8.4 MiB/s), eta 144 min
+09:58:03 141/1110 model.layers.17.self_attn.q_proj.weight | 6.85 GB in 12.9 min (8.4 MiB/s), eta 140 min
+10:00:08 161/1110 model.layers.21.self_attn.q_proj.weight | 8.29 GB in 15.0 min (8.8 MiB/s), eta 132 min
+10:02:07 181/1110 model.layers.25.self_attn.q_proj.weight | 9.74 GB in 17.0 min (9.1 MiB/s), eta 125 min
+10:05:29 201/1110 model.layers.6.shared_expert.down_proj.weight | 12.52 GB in 20.4 min (9.8 MiB/s), eta 112 min
+10:08:48 221/1110 model.layers.12.shared_expert.up_proj.weight | 15.40 GB in 23.7 min (10.3 MiB/s), eta 101 min
+10:12:44 241/1110 model.layers.19.shared_expert.gate_proj.weight | 18.28 GB in 27.6 min (10.5 MiB/s), eta 95 min
+10:15:57 261/1110 model.embed_gated_norm.down_proj.weight | 21.03 GB in 30.8 min (10.8 MiB/s), eta 88 min
+10:16:33 281/1110 model.layers.2.input_layernorm.weight | 21.12 GB in 31.4 min (10.7 MiB/s), eta 89 min
+10:17:53 301/1110 model.layers.5.mlp_gated_norm.up_proj.weight | 21.22 GB in 32.8 min (10.3 MiB/s), eta 93 min
+10:19:13 321/1110 model.layers.9.attn_gated_norm.down_proj.weight | 21.32 GB in 34.1 min (9.9 MiB/s), eta 96 min
+10:20:57 341/1110 model.layers.12.input_layernorm.weight | 21.41 GB in 35.8 min (9.5 MiB/s), eta 100 min
+10:21:58 361/1110 model.layers.15.mlp_gated_norm.up_proj.weight | 21.51 GB in 36.8 min (9.3 MiB/s), eta 102 min
+10:23:17 381/1110 model.layers.19.attn_gated_norm.down_proj.weight | 21.61 GB in 38.2 min (9.0 MiB/s), eta 105 min
+10:23:53 401/1110 model.layers.22.input_layernorm.weight | 21.70 GB in 38.8 min (8.9 MiB/s), eta 106 min
+10:25:12 421/1110 model.layers.25.mlp_gated_norm.up_proj.weight | 21.80 GB in 40.1 min (8.6 MiB/s), eta 109 min
+10:30:06 441/1110 lm_head.weight[49152:53248] | 26.03 GB in 45.0 min (9.2 MiB/s), eta 95 min
+10:34:58 461/1110 model.embed_tokens.weight[122880:126976] | 30.64 GB in 49.8 min (9.8 MiB/s), eta 82 min
+10:39:24 481/1110 model.embed_tokens.weight[81920:86016] | 35.10 GB in 54.3 min (10.3 MiB/s), eta 71 min
+10:42:05 501/1110 model.layers.4.mlp.experts.up_proj.weight[0] | 37.33 GB in 57.0 min (10.4 MiB/s), eta 67 min
+10:44:31 521/1110 model.layers.11.mlp.experts.gate_proj.weight[0] | 38.77 GB in 59.4 min (10.4 MiB/s), eta 65 min
+10:46:46 541/1110 model.layers.18.mlp.experts.down_proj.weight[0] | 40.22 GB in 61.6 min (10.4 MiB/s), eta 63 min
+10:48:49 561/1110 model.layers.24.mlp.experts.up_proj.weight[0] | 41.66 GB in 63.7 min (10.4 MiB/s), eta 61 min
+10:51:20 581/1110 model.layers.5.mlp.experts.gate_proj.weight[32] | 43.10 GB in 66.2 min (10.3 MiB/s), eta 59 min
+10:53:38 601/1110 model.layers.12.mlp.experts.down_proj.weight[32] | 44.54 GB in 68.5 min (10.3 MiB/s), eta 56 min
+10:55:49 621/1110 model.layers.18.mlp.experts.up_proj.weight[32] | 45.98 GB in 70.7 min (10.3 MiB/s), eta 54 min
+10:58:13 641/1110 model.layers.25.mlp.experts.gate_proj.weight[32] | 47.42 GB in 73.1 min (10.3 MiB/s), eta 52 min
+11:00:32 661/1110 model.layers.6.mlp.experts.down_proj.weight[64] | 48.87 GB in 75.4 min (10.3 MiB/s), eta 50 min
+11:02:56 681/1110 model.layers.12.mlp.experts.up_proj.weight[64] | 50.31 GB in 77.8 min (10.3 MiB/s), eta 48 min
+11:05:27 701/1110 model.layers.19.mlp.experts.gate_proj.weight[64] | 51.75 GB in 80.3 min (10.2 MiB/s), eta 46 min
+11:07:35 721/1110 model.layers.0.mlp.experts.down_proj.weight[96] | 53.19 GB in 82.5 min (10.3 MiB/s), eta 43 min
+11:09:37 741/1110 model.layers.6.mlp.experts.up_proj.weight[96] | 54.63 GB in 84.5 min (10.3 MiB/s), eta 41 min
+11:11:47 761/1110 model.layers.13.mlp.experts.gate_proj.weight[96] | 56.08 GB in 86.7 min (10.3 MiB/s), eta 39 min
+11:14:12 781/1110 model.layers.20.mlp.experts.down_proj.weight[96] | 57.52 GB in 89.1 min (10.3 MiB/s), eta 37 min
+11:16:18 801/1110 model.layers.0.mlp.experts.up_proj.weight[128] | 58.96 GB in 91.2 min (10.3 MiB/s), eta 34 min
+11:18:44 821/1110 model.layers.7.mlp.experts.gate_proj.weight[128] | 60.40 GB in 93.6 min (10.3 MiB/s), eta 32 min
+11:20:50 841/1110 model.layers.14.mlp.experts.down_proj.weight[128] | 61.84 GB in 95.7 min (10.3 MiB/s), eta 30 min
+11:23:09 861/1110 model.layers.20.mlp.experts.up_proj.weight[128] | 63.28 GB in 98.0 min (10.3 MiB/s), eta 28 min
+11:25:16 881/1110 model.layers.1.mlp.experts.gate_proj.weight[160] | 64.73 GB in 100.1 min (10.3 MiB/s), eta 26 min
+11:27:28 901/1110 model.layers.8.mlp.experts.down_proj.weight[160] | 66.17 GB in 102.3 min (10.3 MiB/s), eta 23 min
+11:29:28 921/1110 model.layers.14.mlp.experts.up_proj.weight[160] | 67.61 GB in 104.3 min (10.3 MiB/s), eta 21 min
+11:31:41 941/1110 model.layers.21.mlp.experts.gate_proj.weight[160] | 69.05 GB in 106.6 min (10.3 MiB/s), eta 19 min
+11:34:26 961/1110 model.layers.2.mlp.experts.down_proj.weight[192] | 70.49 GB in 109.3 min (10.3 MiB/s), eta 17 min
+11:36:33 981/1110 model.layers.8.mlp.experts.up_proj.weight[192] | 71.93 GB in 111.4 min (10.3 MiB/s), eta 14 min
+11:39:02 1001/1110 model.layers.15.mlp.experts.gate_proj.weight[192] | 73.38 GB in 113.9 min (10.2 MiB/s), eta 12 min
+11:41:34 1021/1110 model.layers.22.mlp.experts.down_proj.weight[192] | 74.82 GB in 116.4 min (10.2 MiB/s), eta 10 min
+11:44:09 1041/1110 model.layers.2.mlp.experts.up_proj.weight[224] | 76.26 GB in 119.0 min (10.2 MiB/s), eta 8 min
+11:48:36 1061/1110 model.layers.9.mlp.experts.gate_proj.weight[224] | 77.70 GB in 123.5 min (10.0 MiB/s), eta 6 min
+11:52:38 1081/1110 model.layers.16.mlp.experts.down_proj.weight[224] | 79.14 GB in 127.5 min (9.9 MiB/s), eta 3 min
+11:55:47 indexed open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 502 tensors, sha 80975627aebeaec3ef946ad609d9c1d95458ebd8
+11:55:47 indexed open-athena/Snowball-67B-A2B-MOPD-Step100 502 tensors, sha f9c9bd62b68051442b34d8abebd2adde84873d1c
+11:55:47 indexed open-athena/Snowball-67B-A2B-CruxEval-OPD-Step75 502 tensors, sha a99b40686bd3f5219c05542d0cbfa7086cc5c87a
+11:55:47 indexed open-athena/Snowball-67B-A2B-CruxEval-RS-SFT-Step282 502 tensors, sha 96a38958dde26d0fa57b9d16ede2f9ab53f029e3
+11:55:47 indexed open-athena/Snowball-67B-A2B-CruxEval-Plain-SFT-Step399 502 tensors, sha 0eaaf87090e6e1191c8db3d004fb84c4f9ba774e
+11:55:47 indexed open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272 502 tensors, sha 2eb988bb5df70378950d983ac8e70dae550cf6d5
+11:55:47 indexed open-athena/Snowball-67B-A2B-MixedRS-SFT-Step727 502 tensors, sha ec071ccd7a2abee598de45b8423291269669eb0c
+11:55:47 indexed open-athena/Snowball-67B-A2B-MixedPlain-SFT-Step803 502 tensors, sha a9e46a07bab138b14f966d39b0d649ebfbb03136
+11:55:47 indexed open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254 502 tensors, sha 0f22c03aff076f46c292196cf0d03a9bc4ab81c5
+11:55:47 indexed open-athena/Snowball-67B-A2B-Merge-TIES-d0.5 502 tensors, sha a8ade36ffb263fee9e49c8a508b82845464e8804
+11:55:47 indexed open-athena/Snowball-67B-A2B-Merge-TA0.5 502 tensors, sha cd0605de0ab76473b2262a9545596436e726b27d
+11:55:47 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-CruxEval-RS-SFT-Step282 [('model.mlp.router.bias', 'F32', 'BF16')]
+11:55:47 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-CruxEval-Plain-SFT-Step399 [('model.mlp.router.bias', 'F32', 'BF16')]
+11:55:47 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272 [('model.mlp.router.bias', 'F32', 'BF16')]
+11:55:47 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-MixedRS-SFT-Step727 [('model.mlp.router.bias', 'F32', 'BF16')]
+11:55:47 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-MixedPlain-SFT-Step803 [('model.mlp.router.bias', 'F32', 'BF16')]
+11:55:47 stored dtype differs from the parent's in open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254 [('model.mlp.router.bias', 'F32', 'BF16')]
+11:55:47 units 1110, done 1086, to do 24, 1.7 GB to read over 11 checkpoints
+11:55:54 1/24 model.layers.18.mlp.experts.down_proj.weight[224] | 0.07 GB in 0.1 min (10.4 MiB/s), eta 3 min
+12:01:27 21/24 model.layers.24.mlp.experts.up_proj.weight[224] | 1.51 GB in 5.7 min (4.2 MiB/s), eta 1 min
+12:01:50 24/24 model.layers.25.mlp.experts.up_proj.weight[224] | 1.73 GB in 6.0 min (4.6 MiB/s), eta 0 min
+12:01:50 finished
