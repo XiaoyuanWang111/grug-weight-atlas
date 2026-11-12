@@ -1,0 +1,7 @@
+Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92: pinned fdc3c3c5 vs read 80975627 | safetensors files 79 / 79 | weight files identical: True | other files that differ: ['LICENSE', 'README.md', 'chat_template.jinja']
+Snowball-67B-A2B-CruxEval-Expert-E-Step272: pinned fb4f8051 vs read 2eb988bb | safetensors files 39 / 39 | weight files identical: True | other files that differ: ['README.md']
+Snowball-67B-A2B-MMLUPro-Expert-E2-Step254: pinned acb97183 vs read 0f22c03a | safetensors files 39 / 39 | weight files identical: True | other files that differ: ['README.md']
+Snowball-67B-A2B-Merge-TA0.5: pinned 07001c33 vs read cd0605de | safetensors files 502 / 502 | weight files identical: True | other files that differ: ['README.md']
+Snowball-67B-A2B-Merge-TIES-d0.5: pinned ffb5b685 vs read a8ade36f | safetensors files 502 / 502 | weight files identical: True | other files that differ: ['README.md']
+Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02: pinned 50fe2f48 vs read 059f8337 | safetensors files 39 / 39 | weight files identical: True | other files that differ: ['LICENSE', 'README.md']
+Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04: pinned fd07ef0f vs read 1515d17b | safetensors files 39 / 39 | weight files identical: True | other files that differ: ['README.md']
