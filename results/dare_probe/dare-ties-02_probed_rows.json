@@ -1,0 +1,158 @@
+{
+ "source": {
+  "dataset": "open-athena/Snowball-67B-A2B-Model-Merging-Artifacts-2026.10.09",
+  "revision": "1ef199578aeec9f08e142a8dd760d44658264be4",
+  "path": "campaign2-recipes/dare-ties-02.json",
+  "bytes": 31562,
+  "git_blob_sha1": "2233e192a4e9238e480b68b0b683ae5a6861afa6",
+  "sha256": "76604818afce91d78bdd1e1767a71f7663a3adeb96f3b8678f1ea735e72276b5"
+ },
+ "parameters": {
+  "method": "dare_ties",
+  "coefficients": [
+   0.5,
+   0.5
+  ],
+  "density": 0.2,
+  "scale": 1,
+  "seed": 0,
+  "ties_density": 0.2
+ },
+ "probed": [
+  {
+   "tensor": "model.layers.0.mlp.experts.gate_proj.weight",
+   "row": 216,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.gate_proj.weight",
+   "row": 70,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.gate_proj.weight",
+   "row": 0,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.up_proj.weight",
+   "row": 216,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.up_proj.weight",
+   "row": 70,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.up_proj.weight",
+   "row": 0,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.down_proj.weight",
+   "row": 216,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.down_proj.weight",
+   "row": 70,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.0.mlp.experts.down_proj.weight",
+   "row": 0,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.gate_proj.weight",
+   "row": 7,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.gate_proj.weight",
+   "row": 64,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.gate_proj.weight",
+   "row": 0,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.up_proj.weight",
+   "row": 7,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.up_proj.weight",
+   "row": 64,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.up_proj.weight",
+   "row": 0,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.down_proj.weight",
+   "row": 7,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.down_proj.weight",
+   "row": 64,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.12.mlp.experts.down_proj.weight",
+   "row": 0,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.gate_proj.weight",
+   "row": 66,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.gate_proj.weight",
+   "row": 95,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.gate_proj.weight",
+   "row": 3,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.up_proj.weight",
+   "row": 66,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.up_proj.weight",
+   "row": 95,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.up_proj.weight",
+   "row": 3,
+   "in_support": false
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.down_proj.weight",
+   "row": 66,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.down_proj.weight",
+   "row": 95,
+   "in_support": true
+  },
+  {
+   "tensor": "model.layers.25.mlp.experts.down_proj.weight",
+   "row": 3,
+   "in_support": false
+  }
+ ]
+}

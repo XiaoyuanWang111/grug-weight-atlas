@@ -1,0 +1,38 @@
+merge open-athena/Grug-67B-A2B-Merge-Campaign2-DARE-TIES-02-2026.10.10
+recipe: density 0.2, coefficients [0.5, 0.5], support rows in 78 tensors, 5115 rows in all
+tensor                                         row in support changed % 5x NUPA % 5x BFCL % 5x mean % other k % unexpl. |   NUPA   BFCL  merge
+layers.0.mlp.experts.gate_proj.weight          216        yes     22.43     84.21     14.06      1.73      0.00       0 |   4.74   0.07  10.51
+layers.0.mlp.experts.gate_proj.weight           70        yes     24.13     76.81     20.69      2.50      0.00       0 |   3.89   0.13   8.61
+layers.0.mlp.experts.gate_proj.weight            0         no      0.00      0.00      0.00      0.00      0.00       0 |   3.37   0.13   0.00
+layers.0.mlp.experts.up_proj.weight            216        yes     22.43     84.33     13.96      1.71      0.00       0 |   4.72   0.07  10.48
+layers.0.mlp.experts.up_proj.weight             70        yes     24.14     76.86     20.65      2.48      0.00       0 |   3.90   0.13   8.63
+layers.0.mlp.experts.up_proj.weight              0         no      0.00      0.00      0.00      0.00      0.00       0 |   3.37   0.13   0.00
+layers.0.mlp.experts.down_proj.weight          216        yes     22.42     83.97     14.28      1.75      0.00       0 |   4.56   0.07  10.13
+layers.0.mlp.experts.down_proj.weight           70        yes     24.55     75.39     21.98      2.63      0.00       0 |   3.84   0.15   8.50
+layers.0.mlp.experts.down_proj.weight            0         no      0.00      0.00      0.00      0.00      0.00       0 |   3.18   0.14   0.00
+layers.12.mlp.experts.gate_proj.weight           7        yes     23.27     77.28     20.35      2.37      0.00       0 |   2.27   0.12   5.04
+layers.12.mlp.experts.gate_proj.weight          64        yes     24.14     75.83     21.62      2.54      0.00       0 |   3.07   0.14   6.80
+layers.12.mlp.experts.gate_proj.weight           0         no      0.00      0.00      0.00      0.00      0.00       0 |   3.32   0.13   0.00
+layers.12.mlp.experts.up_proj.weight             7        yes     23.47     76.74     20.80      2.46      0.00       0 |   2.31   0.13   5.11
+layers.12.mlp.experts.up_proj.weight            64        yes     24.36     75.15     22.19      2.66      0.00       0 |   3.17   0.15   7.00
+layers.12.mlp.experts.up_proj.weight             0         no      0.00      0.00      0.00      0.00      0.00       0 |   3.21   0.13   0.00
+layers.12.mlp.experts.down_proj.weight           7        yes     23.47     76.49     21.03      2.48      0.00       0 |   2.28   0.13   5.05
+layers.12.mlp.experts.down_proj.weight          64        yes     24.42     74.92     22.40      2.68      0.00       0 |   3.18   0.15   7.04
+layers.12.mlp.experts.down_proj.weight           0         no      0.00      0.00      0.00      0.00      0.00       0 |   3.21   0.13   0.00
+layers.25.mlp.experts.gate_proj.weight          66        yes     23.66     74.00     23.31      2.69      0.00       0 |   1.80   0.16   4.00
+layers.25.mlp.experts.gate_proj.weight          95        yes     23.86     76.26     21.26      2.48      0.00       0 |   2.82   0.14   6.24
+layers.25.mlp.experts.gate_proj.weight           3         no      0.00      0.00      0.00      0.00      0.00       0 |   2.15   0.19   0.00
+layers.25.mlp.experts.up_proj.weight            66        yes     23.72     73.84     23.51      2.65      0.00       0 |   1.76   0.16   3.91
+layers.25.mlp.experts.up_proj.weight            95        yes     23.80     76.20     21.29      2.51      0.00       0 |   2.69   0.14   5.96
+layers.25.mlp.experts.up_proj.weight             3         no      0.00      0.00      0.00      0.00      0.00       0 |   2.06   0.18   0.00
+layers.25.mlp.experts.down_proj.weight          66        yes     23.62     73.50     23.83      2.67      0.00       0 |   1.63   0.16   3.63
+layers.25.mlp.experts.down_proj.weight          95        yes     23.93     75.70     21.74      2.56      0.00       0 |   2.65   0.14   5.85
+layers.25.mlp.experts.down_proj.weight           3         no      0.00      0.00      0.00      0.00      0.00       0 |   1.74   0.17   0.00
+
+support rows read: 18; changed values 13,953,740 of 58,982,400 (23.66%)
+  Base + 5 x (NUPA - Base)        10,745,502  77.01%
+  Base + 5 x (BFCL - Base)         2,869,608  20.57%
+  Base + 5 x mean of both            338,630   2.43%
+  other multiples of one delta             0   0.00%
+  unexplained                              0   0.00%
+rows outside the support with any changed value: 0

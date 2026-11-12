@@ -1,0 +1,515 @@
+[
+ {
+  "tensor": "model.layers.0.mlp.experts.gate_proj.weight",
+  "row": 216,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 735062,
+  "nupa5": 619026,
+  "bfcl5": 103321,
+  "mean5": 12715,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3153226,
+  "donor_differs_bfcl": 647233,
+  "displacement_percent": {
+   "nupa": 4.7402449662689286,
+   "bfcl": 0.06776418011871348,
+   "merge": 10.514372948174708
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.gate_proj.weight",
+  "row": 70,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 790753,
+  "nupa5": 607412,
+  "bfcl5": 163588,
+  "mean5": 19753,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3125575,
+  "donor_differs_bfcl": 1033769,
+  "displacement_percent": {
+   "nupa": 3.8919075032415784,
+   "bfcl": 0.1288611834813268,
+   "merge": 8.605930601685866
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.gate_proj.weight",
+  "row": 0,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3102326,
+  "donor_differs_bfcl": 1077126,
+  "displacement_percent": {
+   "nupa": 3.370977558770733,
+   "bfcl": 0.1341661360841633,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.up_proj.weight",
+  "row": 216,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 734918,
+  "nupa5": 619776,
+  "bfcl5": 102585,
+  "mean5": 12557,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3152546,
+  "donor_differs_bfcl": 646738,
+  "displacement_percent": {
+   "nupa": 4.724025458355503,
+   "bfcl": 0.06765254687083992,
+   "merge": 10.482795655321443
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.up_proj.weight",
+  "row": 70,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 791056,
+  "nupa5": 608018,
+  "bfcl5": 163384,
+  "mean5": 19654,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3126319,
+  "donor_differs_bfcl": 1034251,
+  "displacement_percent": {
+   "nupa": 3.8976056191369666,
+   "bfcl": 0.12888244759456907,
+   "merge": 8.632897052434426
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.up_proj.weight",
+  "row": 0,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3101383,
+  "donor_differs_bfcl": 1079081,
+  "displacement_percent": {
+   "nupa": 3.3673407982302033,
+   "bfcl": 0.1341671962743283,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.down_proj.weight",
+  "row": 216,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 734604,
+  "nupa5": 616882,
+  "bfcl5": 104896,
+  "mean5": 12826,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3144624,
+  "donor_differs_bfcl": 663579,
+  "displacement_percent": {
+   "nupa": 4.564211872105221,
+   "bfcl": 0.07291683903227893,
+   "merge": 10.129946551989308
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.down_proj.weight",
+  "row": 70,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 804534,
+  "nupa5": 606525,
+  "bfcl5": 176868,
+  "mean5": 21141,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3119310,
+  "donor_differs_bfcl": 1119851,
+  "displacement_percent": {
+   "nupa": 3.841097638968132,
+   "bfcl": 0.14748197747897582,
+   "merge": 8.502649058953665
+  }
+ },
+ {
+  "tensor": "model.layers.0.mlp.experts.down_proj.weight",
+  "row": 0,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3084907,
+  "donor_differs_bfcl": 1102446,
+  "displacement_percent": {
+   "nupa": 3.1790445274904657,
+   "bfcl": 0.14267972863752787,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.gate_proj.weight",
+  "row": 7,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 762609,
+  "nupa5": 589354,
+  "bfcl5": 155163,
+  "mean5": 18092,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3021516,
+  "donor_differs_bfcl": 987401,
+  "displacement_percent": {
+   "nupa": 2.2742906228706774,
+   "bfcl": 0.11894986203327662,
+   "merge": 5.036152392733133
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.gate_proj.weight",
+  "row": 64,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 791096,
+  "nupa5": 599895,
+  "bfcl5": 171074,
+  "mean5": 20127,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3085421,
+  "donor_differs_bfcl": 1085526,
+  "displacement_percent": {
+   "nupa": 3.074389142914276,
+   "bfcl": 0.13944549923376068,
+   "merge": 6.798188628892272
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.gate_proj.weight",
+  "row": 0,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3099292,
+  "donor_differs_bfcl": 1013374,
+  "displacement_percent": {
+   "nupa": 3.315188210343429,
+   "bfcl": 0.12687636420893744,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.up_proj.weight",
+  "row": 7,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 769008,
+  "nupa5": 590151,
+  "bfcl5": 159960,
+  "mean5": 18897,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3023466,
+  "donor_differs_bfcl": 1019024,
+  "displacement_percent": {
+   "nupa": 2.305403429897751,
+   "bfcl": 0.12520055829375681,
+   "merge": 5.11067804817743
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.up_proj.weight",
+  "row": 64,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 798172,
+  "nupa5": 599861,
+  "bfcl5": 177079,
+  "mean5": 21232,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3089361,
+  "donor_differs_bfcl": 1125702,
+  "displacement_percent": {
+   "nupa": 3.1703698786933283,
+   "bfcl": 0.14862948363463582,
+   "merge": 7.001392049991363
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.up_proj.weight",
+  "row": 0,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3094129,
+  "donor_differs_bfcl": 1013196,
+  "displacement_percent": {
+   "nupa": 3.2113704558526392,
+   "bfcl": 0.1259997351282022,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.down_proj.weight",
+  "row": 7,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 769121,
+  "nupa5": 588339,
+  "bfcl5": 161743,
+  "mean5": 19039,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3021710,
+  "donor_differs_bfcl": 1031386,
+  "displacement_percent": {
+   "nupa": 2.280693361442939,
+   "bfcl": 0.1270218537445613,
+   "merge": 5.045253953163864
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.down_proj.weight",
+  "row": 64,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 800190,
+  "nupa5": 599521,
+  "bfcl5": 179229,
+  "mean5": 21440,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3087918,
+  "donor_differs_bfcl": 1136014,
+  "displacement_percent": {
+   "nupa": 3.1814662826576052,
+   "bfcl": 0.15106378457666642,
+   "merge": 7.0384352070784
+  }
+ },
+ {
+  "tensor": "model.layers.12.mlp.experts.down_proj.weight",
+  "row": 0,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3093961,
+  "donor_differs_bfcl": 1056650,
+  "displacement_percent": {
+   "nupa": 3.2146495719815404,
+   "bfcl": 0.13438318191839244,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.gate_proj.weight",
+  "row": 66,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 775277,
+  "nupa5": 573714,
+  "bfcl5": 180731,
+  "mean5": 20832,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 2949858,
+  "donor_differs_bfcl": 1159995,
+  "displacement_percent": {
+   "nupa": 1.803961665153788,
+   "bfcl": 0.1581176495874489,
+   "merge": 3.9968660846672
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.gate_proj.weight",
+  "row": 95,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 781819,
+  "nupa5": 596192,
+  "bfcl5": 166227,
+  "mean5": 19400,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3068744,
+  "donor_differs_bfcl": 1053403,
+  "displacement_percent": {
+   "nupa": 2.821746643270085,
+   "bfcl": 0.1369196958847231,
+   "merge": 6.2432690473801635
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.gate_proj.weight",
+  "row": 3,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3004547,
+  "donor_differs_bfcl": 1323666,
+  "displacement_percent": {
+   "nupa": 2.1508543918078975,
+   "bfcl": 0.1870364311102792,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.up_proj.weight",
+  "row": 66,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 777290,
+  "nupa5": 573928,
+  "bfcl5": 182729,
+  "mean5": 20633,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 2942838,
+  "donor_differs_bfcl": 1177007,
+  "displacement_percent": {
+   "nupa": 1.760726806807859,
+   "bfcl": 0.1603288051379835,
+   "merge": 3.906185258190626
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.up_proj.weight",
+  "row": 95,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 779961,
+  "nupa5": 594335,
+  "bfcl5": 166029,
+  "mean5": 19597,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3057867,
+  "donor_differs_bfcl": 1054257,
+  "displacement_percent": {
+   "nupa": 2.691829593473753,
+   "bfcl": 0.1356276806095373,
+   "merge": 5.957787476171378
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.up_proj.weight",
+  "row": 3,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 2992329,
+  "donor_differs_bfcl": 1304908,
+  "displacement_percent": {
+   "nupa": 2.0630361118217526,
+   "bfcl": 0.18213303013914037,
+   "merge": 0.0
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.down_proj.weight",
+  "row": 66,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 773996,
+  "nupa5": 568866,
+  "bfcl5": 184480,
+  "mean5": 20650,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 2920184,
+  "donor_differs_bfcl": 1190990,
+  "displacement_percent": {
+   "nupa": 1.6342513655750814,
+   "bfcl": 0.16408059618679105,
+   "merge": 3.626091086255212
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.down_proj.weight",
+  "row": 95,
+  "in_support": true,
+  "scalars": 3276800,
+  "changed": 784274,
+  "nupa5": 593707,
+  "bfcl5": 170522,
+  "mean5": 20045,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 3055712,
+  "donor_differs_bfcl": 1084115,
+  "displacement_percent": {
+   "nupa": 2.6480334324762893,
+   "bfcl": 0.13991591215354426,
+   "merge": 5.854607101471133
+  }
+ },
+ {
+  "tensor": "model.layers.25.mlp.experts.down_proj.weight",
+  "row": 3,
+  "in_support": false,
+  "scalars": 3276800,
+  "changed": 0,
+  "nupa5": 0,
+  "bfcl5": 0,
+  "mean5": 0,
+  "other": 0,
+  "unexplained": 0,
+  "donor_differs_nupa": 2942170,
+  "donor_differs_bfcl": 1246947,
+  "displacement_percent": {
+   "nupa": 1.7426426367054069,
+   "bfcl": 0.17084000365418087,
+   "merge": 0.0
+  }
+ }
+]
