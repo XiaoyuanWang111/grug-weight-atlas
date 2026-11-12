@@ -21,11 +21,11 @@ Contents: [layout](#layout), [checkpoints](#checkpoints), [atlas runs](#atlas-ru
 | `atlas/pairwise.py`, `atlas/ta_full_strength.py`, `atlas/gate_layers.py`, `atlas/expert_units.py` | tables computed from an atlas run, offline |
 | `atlas/family_probe.py` | displacement by tensor family between a parent and its children |
 | `atlas/gate_patch.py`, `atlas/make_blocks.py` | the 2 x 2 test of marin#9984 (section 1) |
-| `atlas/dare_probe_wide.py` | what the Campaign 2 merge `dare-ties-02` stores (section 3) |
+| `atlas/dare_probe_wide.py`, `atlas/v01_probe.py` | what the Campaign 2 merge `dare-ties-02` stores, and whether the released models still hold it (section 3) |
 | `atlas/grid_probe.py`, `atlas/grid_fit.py`, `atlas/ladder_check.py` | the BF16 rounding rule (section 4) |
 | `results/atlas_step92/`, `atlas_lineage/`, `atlas_base12/`, `atlas_cooldown/` | the four atlas runs (`meta.json`, `log.txt`, `units.jsonl`) and the tables computed from them |
 | `results/family_probe/` | outputs of `family_probe.py` |
-| `results/dare_probe/` | output of `dare_probe_wide.py`, and the recipe parameters with the 27 rows it read |
+| `results/dare_probe/` | outputs of `dare_probe_wide.py` and `v01_probe.py`, and the recipe parameters with the 27 rows read |
 | `results/rounding/ladder_check.txt` | output of `ladder_check.py` |
 | `patch_2x2/` | `manifest.json` and `build_log.txt` of the full-strength patch; the patch file is attached to the release |
 | `recipes_2x2/` | `tensor_coefficients` blocks that build the two missing cells of the 2 x 2 as new merges |
@@ -62,6 +62,8 @@ All repositories are in the `open-athena` organisation. `atlas2.py`, `family_pro
 | Campaign4-Adaptive-Delta-08 | `Grug-67B-A2B-Merge-Campaign4-Adaptive-Delta-08-2026.10.14` | `bbb16f06b1a53006e45da8b1ce1cfbb9328f7779` |
 | Merge-NUPA-BFCL-Shared100 | `Grug-67B-A2B-Merge-NUPA-BFCL-Shared100-2026.10.09` | `eabbade635ebb40871b135f87318008d0b3383c7` |
 | BFCL-Recovery | `Grug-67B-A2B-BFCL-Recovery` | `4d9dd199cc9467458bd7913804876f7ddeb7f8f7` |
+| v0.1 | `Marin-Snowball-67B-A2B-v0.1` | `adc0078a19a4383bc998fcdb43867b3360baf5f3` |
+| v0.1.1 | `Marin-Snowball-67B-A2B-v0.1.1` | `59852d6f07261722bbec1edb6ab148317156b58e` |
 | GLM53-RLVR-SFT | `Grug-67B-A2B-GLM53-RLVR-SFT-2026.09.23` | `f1aebb65b4d0f0437a6bfd3d7bea9357641b201c` |
 | Datakit SFT 09.21 dr-doom | `Grug-67B-A2B-Datakit-SFT-262K-2026.09.21-dr-doom` | `fd4a272b78d4c224851aaeae7f51987c5d19649c` |
 | Snowflake d512 Base | `Snowflake-d512-Base-262K-2026.10.19` | `557d177660e2d700ab069c6f5713d066a645f59d` |
@@ -69,9 +71,10 @@ All repositories are in the `open-athena` organisation. `atlas2.py`, `family_pro
 | Snowflake d768 Base | `Snowflake-d768-Base-262K-2026.10.19` | `3b68348ab43aa87ea3ffa538ae1caa9bfd5ace38` |
 | Snowflake d768 SFT | `Snowflake-d768-Datakit-SFT-262K-2026.10.22` | `7aea4a95619ac418e54ab1795e614dbb5dc54525` |
 
-The commits of the first 23 rows are those in the `meta.json` files of the atlas runs and in `patch_2x2/manifest.json`.
-The last six checkpoints appear only in `results/family_probe/`, whose outputs do not record commits; their commits
-are those of the tensor indexes taken for those runs.
+The commits of the first 23 rows are those in the `meta.json` files of the atlas runs and in `patch_2x2/manifest.json`;
+those of v0.1 and v0.1.1 are printed in `results/dare_probe/v01_probe.txt`. The last six checkpoints appear only in
+`results/family_probe/`, whose outputs do not record commits; their commits are those of the tensor indexes taken for
+those runs.
 
 ## Atlas runs
 
@@ -325,6 +328,14 @@ Changed values in the 18 supported rows (`results/dare_probe/dare_probe_wide.txt
   routed-expert scalars and sits 2.97% from Base there; the cosine of its delta is 0.15 with Step92 - Step12 and 0.006
   with Step20 - Step12. Campaign4-Adaptive-Delta-08 changed 5.60% and sits 0.18% from Base; Step20 itself changed
   33.18% and sits 0.15% from Base.
+- The released models still hold the written values (`results/dare_probe/v01_probe.txt`; six rows: `gate_proj` of
+  layers 0, 12 and 25, the first two support rows each). At the positions where the merge holds
+  Base + 5 x (Step92 - Base), 17.51% to 18.89% of each row, v0.1 (bfloat16) equals the merge in 71.23% to 96.94% of
+  the values; |v0.1 - merge| / |merge - Base| there is 0.0004 to 0.0057, and the regression coefficient of
+  (v0.1 - Base) on (merge - Base) is 1.0000. For v0.1.1 (float32) the ratio is 0.0042 to 0.0202 and the coefficient
+  0.9999 to 1.0000. On the positions of the same rows that the merge left at Base, v0.1 equals Base in 73.40% to
+  97.44% of the values and moved 0.0044% to 0.0916% of their norm; v0.1.1 moved 0.0997% to 0.1828%. So v0.1
+  descends from the merge, and the written 5 x deltas are still in both releases.
 
 `results/dare_probe/dare-ties-02_probed_rows.json` records the recipe's `parameters`, the 27 (tensor, row) pairs read
 and the source of the recipe. The recipe is `campaign2-recipes/dare-ties-02.json` of the dataset
@@ -337,10 +348,12 @@ fetch that one file and run the probe:
 curl -L -o dare-ties-02.json https://huggingface.co/datasets/open-athena/Snowball-67B-A2B-Model-Merging-Artifacts-2026.10.09/resolve/1ef199578aeec9f08e142a8dd760d44658264be4/campaign2-recipes/dare-ties-02.json
 sha256sum dare-ties-02.json
 python atlas/dare_probe_wide.py dare-ties-02.json > results/dare_probe/dare_probe_wide.txt
+python atlas/v01_probe.py dare-ties-02.json open-athena/Marin-Snowball-67B-A2B-v0.1 \
+  open-athena/Marin-Snowball-67B-A2B-v0.1.1 > results/dare_probe/v01_probe.txt
 ```
 
-The script also writes `results/dare_probe/dare_probe_wide.json` (per row: counts by category, changed values,
-displacements). The `atlas_base12` run:
+`dare_probe_wide.py` also writes `results/dare_probe/dare_probe_wide.json` (per row: counts by category, changed
+values, displacements). The `atlas_base12` run:
 
 ```
 python atlas/atlas2.py --out results/atlas_base12 --parent open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 \
@@ -353,8 +366,8 @@ python atlas/atlas2.py --out results/atlas_base12 --parent open-athena/Grug-67B-
 python atlas/pairwise.py results/atlas_base12 > results/atlas_base12/pairwise.txt
 ```
 
-**Limits.** 18 of the 5,115 supported expert rows were read, in three layers. The classification tests a fixed list
-of multiples; every changed value matched one of them. The scores and the 6.04% are Campaign 2's own numbers, not
+**Limits.** 18 of the 5,115 supported expert rows were read, in three layers, and 6 of them in the released models.
+The classification tests a fixed list of multiples; every changed value matched one of them. The scores and the 6.04% are Campaign 2's own numbers, not
 measured here. Campaign 4 reports 9.47% changed for Adaptive-Delta-08; the sample of 24 experts is too small for
 per-recipe shares, so the 5.60% above is not an estimate of it.
 
@@ -444,6 +457,7 @@ repository costs one API request and two range requests per safetensors file.
 | `family_probe.py` | 122,572,800 values, about 245 MB, per Grug 67B checkpoint | not recorded |
 | `gate_patch.py` | 520 requests, about 354 MB | not recorded |
 | `dare_probe_wide.py` | 108 requests of 6,553,600 bytes, about 708 MB | not recorded |
+| `v01_probe.py` | per later checkpoint 24 requests (6 rows of 4 repositories): about 157 MB for a bfloat16 checkpoint, 197 MB for a float32 one | not recorded |
 | `grid_probe.py`, `grid_fit.py` | 13.1 MB per checkpoint for `q_proj` of layer 12 | not recorded |
 | `pairwise.py`, `ta_full_strength.py`, `gate_layers.py`, `expert_units.py`, `ladder_check.py`, `make_blocks.py` | none | |
 
