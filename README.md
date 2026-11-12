@@ -24,7 +24,7 @@ Contents: [layout](#layout), [checkpoints](#checkpoints), [atlas runs](#atlas-ru
 | `atlas/dare_probe_wide.py`, `atlas/v01_probe.py` | what the Campaign 2 merge `dare-ties-02` stores, and whether the released models still hold it (section 3) |
 | `atlas/grid_probe.py`, `atlas/grid_fit.py`, `atlas/ladder_check.py` | the BF16 rounding rule (section 4) |
 | `atlas/pin_check.py`, `results/pin_check.txt` | the weight files at the commits Marin's issues pin against those read here |
-| `results/atlas_step92/`, `atlas_lineage/`, `atlas_base12/`, `atlas_cooldown/` | the four atlas runs (`meta.json`, `log.txt`, `units.jsonl`) and the tables computed from them |
+| `results/atlas_step92/`, `atlas_lineage/`, `atlas_base12/`, `atlas_lce/` | the four atlas runs (`meta.json`, `log.txt`, `units.jsonl`) and the tables computed from them |
 | `results/family_probe/` | outputs of `family_probe.py` |
 | `results/dare_probe/` | outputs of `dare_probe_wide.py` and `v01_probe.py`, and the recipe parameters with the 27 rows read |
 | `results/rounding/ladder_check.txt` | output of `ladder_check.py` |
@@ -46,8 +46,8 @@ All repositories are in the `open-athena` organisation. `atlas2.py`, `family_pro
 | Step92 (NUPA donor of the campaigns; B of #9984) | `Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92` | `80975627aebeaec3ef946ad609d9c1d95458ebd8` |
 | RLVR2-Sync-Step116 | `Snowball-67B-A2B-10T-Mixed-RLVR2-Sync-Step116` | `bb4c56ba83c821478aece4979eaa12400404402c` |
 | RLVR-Async-Step92 | `Snowball-67B-A2B-10T-Mixed-RLVR-Async-Step92` | `929fc490219ed1f75883863518220270b40d0f2a` |
-| skew8 (cooldown) | `snowball-67b-a2b-base-262k-qk175-skew8` | `3bbf729f0555965c8667600ee91c3c109ac21b19` |
-| skew4 (cooldown) | `snowball-67b-a2b-base-262k-qk175-skew4` | `58926559098171aa2e2001296921ff5ac4caac94` |
+| skew8 (long-context extension) | `snowball-67b-a2b-base-262k-qk175-skew8` | `3bbf729f0555965c8667600ee91c3c109ac21b19` |
+| skew4 (long-context extension) | `snowball-67b-a2b-base-262k-qk175-skew4` | `58926559098171aa2e2001296921ff5ac4caac94` |
 | E | `Snowball-67B-A2B-CruxEval-Expert-E-Step272` | `2eb988bb5df70378950d983ac8e70dae550cf6d5` |
 | E2 | `Snowball-67B-A2B-MMLUPro-Expert-E2-Step254` | `0f22c03aff076f46c292196cf0d03a9bc4ab81c5` |
 | Merge-TA0.5 | `Snowball-67B-A2B-Merge-TA0.5` | `cd0605de0ab76473b2262a9545596436e726b27d` |
@@ -98,7 +98,7 @@ values. Distances between any two checkpoints of a run follow from the Gram matr
 | `atlas_step92` | Step92 | MOPD-Step100, CruxEval-OPD-Step75, CruxEval-RS-SFT-Step282, CruxEval-Plain-SFT-Step399, E, MixedRS-SFT-Step727, MixedPlain-SFT-Step803, E2, Merge-TIES-d0.5, Merge-TA0.5 | all 26 | 1,110 | all |
 | `atlas_lineage` | Step12 | Step92, Step20, Datakit SFT 09.21, RLVR2-Sync-Step116, RLVR-Async-Step92 | 12, 0, 25 | 128 | last 1,280 |
 | `atlas_base12` | Step12 | Step92, Step20, Merge-NUPA-BFCL-Shared100, Campaign2-DARE-TIES-02, Campaign4-Serial-Transfer-06, Campaign4-Adaptive-Delta-08, BFCL-Recovery | 0, 12, 25 | 128 | last 1,280 |
-| `atlas_cooldown` | Step12 | skew8, skew4, Datakit SFT 09.21, Step92 | 0, 12, 25 | 128 | last 1,280 |
+| `atlas_lce` | Step12 | skew8, skew4, Datakit SFT 09.21, Step92 | 0, 12, 25 | 128 | last 1,280 |
 
 `pairwise.py` prints, per group of tensors, the distance matrix in percent of the parent's norm in that group and the
 share of stored scalars that differ. It weights each sampled routed expert by 32 so that the routed experts count at
@@ -107,7 +107,7 @@ their true size in the group "all".
 `atlas_step92` was recorded by an earlier version of `atlas2.py` that wrote the same fields except the step histogram
 and the count of equal stored values per pair of children. In `results/atlas_step92/pairwise.txt` the child-to-child
 entries of the "stored scalars that differ" matrices therefore read 100.00 and carry no information; the
-parent-to-child entries are measured. In `results/atlas_cooldown/pairwise.txt` the columns of skew8 and skew4 are both
+parent-to-child entries are measured. In `results/atlas_lce/pairwise.txt` the columns of skew8 and skew4 are both
 labelled `open-athena/snow`, because their repository names do not match the name-shortening rule of `pairwise.py`;
 they appear in the order of `meta.json`, skew8 first.
 
@@ -170,7 +170,7 @@ Displacement |x - B| / |B| in percent of Step92's norm in each family (selected 
 | three families at 0.5 | Merge-TA0.5 (public) | cell C: the withheld merge with the 78 tensors of Merge-TA0.5 |
 | three families at 1.0 | cell D: Merge-TA0.5 with the 78 tensors of the patch | the withheld merge (`ta-a1.0-b1.0`) |
 
-`gate_patch.py` reads the 78 tensors of the three families and the 26 router weights (the other 2-D family of the
+`gate_patch.py` reads the 78 tensors of the three families and the 26 router weights (another 2-D family of the
 plain-Adam group) from B, E, E2, Merge-TA0.5 and Merge-TIES-d0.5. It recomputes the half-strength merge with the
 arithmetic of `marin.merging.arithmetic.merge_tensor` (float32, each update scaled, then summed, base added last, cast
 to bfloat16): in all 35,409,920 stored values of the 104 tensors it equals the public Merge-TA0.5. The recomputed TIES
@@ -191,7 +191,7 @@ The patch file `gates_full_strength.safetensors` is attached to the release of t
 `e8c7387ac84f01f3f1b1569397db07f99b9a4221ec78d411e86d84aa022b5946`. Each tensor is
 bfloat16(float32(B) + 1.0 (float32(E) - float32(B)) + 1.0 (float32(E2) - float32(B))). `patch_2x2/manifest.json`
 lists the source commits, the tensor names in two groups (`attention_gates`, 78 tensors, for cell D;
-`router_weights`, 26 tensors, to swap the whole plain-Adam group) and the checks above. Cell D is Merge-TA0.5 at
+`router_weights`, 26 tensors, to swap the router weights as well) and the checks above. Cell D is Merge-TA0.5 at
 commit `cd0605de0ab76473b2262a9545596436e726b27d` with every tensor of the `attention_gates` group replaced by the
 patch's tensor of the same name. To rebuild the file:
 
@@ -230,8 +230,10 @@ run, so the link between the three families and the long outputs is untested.
 **Question.** How far apart are Step12 (Base of the merging campaigns) and Step92 (their NUPA donor), and how much of
 that distance was already there before post-training? The family tree on Marin's main branch
 (`infra/marina/apps/snowball_family_tree/graph-data.json` at `a5e98ff2b`) puts Step12 under Datakit SFT 09.21 and the
-skew8 cooldown, and Step92 under Datakit SFT 09.11 and the skew4 cooldown; Step20 starts from the public Step12, and
-Step92, RLVR-Async-Step92 and RLVR2-Sync-Step116 all start from Datakit SFT 09.11.
+skew8 long-context extension, and Step92 under Datakit SFT 09.11 and the skew4 long-context extension. The two
+extensions are sibling runs of 1,000 updates each from the final cooldown of the shared pretraining run (step 156,000
+to 157,000), and the tree names the public skew8 and skew4 repositories as their models. Step20 starts from the
+public Step12, and Step92, RLVR-Async-Step92 and RLVR2-Sync-Step116 all start from Datakit SFT 09.11.
 
 **Method.** Two atlas runs with parent Step12 on the same units (layers 0, 12 and 25; every tensor of those layers
 outside the routed experts, 8 of 256 routed experts per layer, the last 1,280 rows of `embed_tokens` and `lm_head`),
@@ -240,19 +242,20 @@ stored routed-expert scalars that differ.
 
 | pair | routed experts | attention q, k, v, o | shared expert | routed scalars that differ | source |
 |---|---:|---:|---:|---:|---|
-| skew8, skew4 | 3.01 | 3.06 | 2.74 | 92.95% | `atlas_cooldown` |
-| skew8, Step12 | 1.63 | 1.50 | 1.40 | 71.61% | `atlas_cooldown` |
-| skew4, Step92 | 2.31 | 1.89 | 1.71 | 80.11% | `atlas_cooldown` |
-| skew8, Step92 | 3.78 | 3.55 | 3.19 | 93.67% | `atlas_cooldown` |
-| skew4, Step12 | 3.41 | 3.38 | 3.05 | 93.52% | `atlas_cooldown` |
+| skew8, skew4 | 3.01 | 3.06 | 2.74 | 92.95% | `atlas_lce` |
+| skew8, Step12 | 1.63 | 1.50 | 1.40 | 71.61% | `atlas_lce` |
+| skew4, Step92 | 2.31 | 1.89 | 1.71 | 80.11% | `atlas_lce` |
+| skew8, Step92 | 3.78 | 3.55 | 3.19 | 93.67% | `atlas_lce` |
+| skew4, Step12 | 3.41 | 3.38 | 3.05 | 93.52% | `atlas_lce` |
 | Step12, Step92 | 4.01 | 3.75 | 3.39 | 93.88% | both |
 | Step12, Datakit SFT 09.21 | 0.07 | 0.16 | 0.16 | 20.07% | both |
 | Step12, Step20 | 0.15 | 0.20 | 0.20 | 33.18% | `atlas_lineage` |
 | Step92, RLVR2-Sync-Step116 | 0.21 | 0.27 | 0.25 | 34.41% | `atlas_lineage` |
 | Step92, RLVR-Async-Step92 | 0.60 | 0.64 | 0.64 | 70.96% | `atlas_lineage` |
 
-- The two lines were already 3% apart at the cooldown, and each line's post-training added 1.4% to 2.3%. In the routed
-  experts, 3.01^2 + 1.63^2 + 2.31^2 = 17.1 against 4.01^2 = 16.1: the cooldown gap is a bit over half of the squared
+- The two lines were already 3% apart after the long-context extension, and each line's post-training added 1.4% to
+  2.3%. In the routed experts, 3.01^2 + 1.63^2 + 2.31^2 = 17.1 against 4.01^2 = 16.1: the gap between the two
+  extensions is a bit over half of the squared
   distance between Step12 and Step92, and the two post-training legs the rest (slightly correlated).
 - The two RLVR arms that started from Datakit SFT 09.11 are 0.60% apart in the routed experts. If they moved
   independently and equally far, each moved about 0.42% (0.598 / sqrt 2), and Step92's own RLVR training is about
@@ -274,12 +277,12 @@ python atlas/atlas2.py --out results/atlas_lineage --parent open-athena/Grug-67B
   open-athena/Grug-67B-A2B-Antidoom-RLVR1-Reference-KL-Step20-2026.10.04 open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 \
   open-athena/Snowball-67B-A2B-10T-Mixed-RLVR2-Sync-Step116 open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Async-Step92 \
   --layers 12,0,25 --embed-blocks last
-python atlas/atlas2.py --out results/atlas_cooldown --parent open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 \
+python atlas/atlas2.py --out results/atlas_lce --parent open-athena/Grug-67B-A2B-Antidoom-RLVR1-Step12-2026.10.02 \
   --children open-athena/snowball-67b-a2b-base-262k-qk175-skew8 open-athena/snowball-67b-a2b-base-262k-qk175-skew4 \
   open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92 \
   --layers 0,12,25 --embed-blocks last
 python atlas/pairwise.py results/atlas_lineage > results/atlas_lineage/pairwise.txt
-python atlas/pairwise.py results/atlas_cooldown > results/atlas_cooldown/pairwise.txt
+python atlas/pairwise.py results/atlas_lce > results/atlas_lce/pairwise.txt
 python atlas/expert_units.py results/atlas_base12 Sync-Step92 > results/atlas_base12/expert_units_Sync-Step92.txt
 python atlas/family_probe.py open-athena/snowball-67b-a2b-base-262k-qk175-skew8 \
   open-athena/snowball-67b-a2b-base-262k-qk175-skew4 open-athena/Grug-67B-A2B-Datakit-SFT-262K-2026.09.21 \
@@ -461,7 +464,7 @@ repository costs one API request and two range requests per safetensors file.
 | `atlas2.py`, `atlas_step92` (11 checkpoints, 1,110 units) | 81.2 GB | 79.1 GB in 127.5 min (about 10 MiB/s), the last 1.7 GB in 6.0 min after a restart; first indexing of the 11 repositories 25 min |
 | `atlas2.py`, `atlas_lineage` (6 checkpoints, 128 units) | 4.3 GB | 13.9 min |
 | `atlas2.py`, `atlas_base12` (8 checkpoints, 128 units) | 5.7 GB | 15.6 min |
-| `atlas2.py`, `atlas_cooldown` (5 checkpoints, 128 units) | 3.6 GB | 8.1 min |
+| `atlas2.py`, `atlas_lce` (5 checkpoints, 128 units) | 3.6 GB | 8.1 min |
 | `family_probe.py` | 122,572,800 values, about 245 MB, per Grug 67B checkpoint | not recorded |
 | `gate_patch.py` | 520 requests, about 354 MB | not recorded |
 | `dare_probe_wide.py` | 108 requests of 6,553,600 bytes, about 708 MB | not recorded |
@@ -480,7 +483,7 @@ Offline, from the committed atlas runs:
 python atlas/pairwise.py results/atlas_step92 > results/atlas_step92/pairwise.txt
 python atlas/pairwise.py results/atlas_lineage > results/atlas_lineage/pairwise.txt
 python atlas/pairwise.py results/atlas_base12 > results/atlas_base12/pairwise.txt
-python atlas/pairwise.py results/atlas_cooldown > results/atlas_cooldown/pairwise.txt
+python atlas/pairwise.py results/atlas_lce > results/atlas_lce/pairwise.txt
 python atlas/ta_full_strength.py results/atlas_step92 > results/atlas_step92/ta_full_strength.txt
 python atlas/gate_layers.py results/atlas_step92 > results/atlas_step92/gate_layers.txt
 python atlas/expert_units.py results/atlas_base12 Sync-Step92 > results/atlas_base12/expert_units_Sync-Step92.txt

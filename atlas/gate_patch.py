@@ -4,7 +4,7 @@
 E = CruxEval-Expert-E-Step272 and E2 = MMLUPro-Expert-E2-Step254. a = b = 0.5 is public (Merge-TA0.5); a = b = 1.0
 was withheld. One cell of the 2 x 2 holds the attention GatedNorm projections and the attention gate (78 tensors) at
 a = b = 1.0 and every other tensor at 0.5: it is Merge-TA0.5 with these 78 tensors replaced. The 26 router weights,
-the other 2-D tensors of the plain-Adam optimizer group, are written to the same file as a second group. The script
+another 2-D family of the plain-Adam optimizer group, are written to the same file as a second group. The script
 
   1. reads the 104 tensors of B, E, E2, Merge-TA0.5 and Merge-TIES-d0.5 at the commits the index records,
   2. recomputes the half-strength merge with the arithmetic of marin.merging.arithmetic.merge_tensor
@@ -43,7 +43,7 @@ REPOS = {
 }
 LAYERS = 26
 GATE_FAMILIES = ("attn_gated_norm.down_proj.weight", "attn_gated_norm.up_proj.weight", "self_attn.attn_gate.weight")
-# The router weight is the other 2-D tensor family of the plain-Adam group; it goes into the same file so that
+# The router weight is another 2-D tensor family of the plain-Adam group; it goes into the same file so that
 # the whole group can be swapped, and is listed apart in the manifest.
 FAMILIES = (*GATE_FAMILIES, "mlp.router.weight")
 NAMES = [f"model.layers.{layer}.{family}" for layer in range(LAYERS) for family in FAMILIES]
