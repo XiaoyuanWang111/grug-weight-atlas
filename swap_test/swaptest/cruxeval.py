@@ -19,10 +19,11 @@ answer. As in the harness, an input answer without a call of `f` and an output a
 `f(<input>)` itself are wrong.
 
 Grading: the program `{code}\\nassert {output} == {answer}` runs in a fresh Python process: the standard library
-only (no site-packages), an environment holding only PATH and a fixed hash seed (so set iteration order is reproducible), a temporary
-working directory, a 10-second limit (Marin's canonical CRUXEval limit) and, on Linux, limits on memory, CPU time
-and file size. It passes when the process exits with status 0 and its last output is a random receipt
-that the program prints after the assertion, so an answer that ends the process early (`exit(0)`) fails.
+only (no site-packages), an environment holding only PATH and a fixed hash seed (so set iteration order is
+reproducible), a temporary working directory, a 10-second limit (Marin's canonical CRUXEval limit) and, on POSIX
+systems, limits on address space and CPU time. It passes when the process exits with status 0 and its last output
+is a random receipt that the program prints after the assertion, so an answer that ends the process early
+(`os._exit(0)`) fails.
 """
 
 from __future__ import annotations
@@ -42,8 +43,7 @@ DIRECTIONS = ("input", "output")
 ANSWER_OPEN, ANSWER_CLOSE = "[ANSWER]", "[/ANSWER]"
 CALL = re.compile(r"(?<![\w.])f\(")
 TIMEOUT_S = 10.0
-MEMORY_LIMIT = 2 << 30
-FILE_LIMIT = 1 << 20
+MEMORY_LIMIT_KIB = 2 << 20  # 2 GiB of address space
 ROWS = 800
 
 
@@ -88,17 +88,18 @@ def extract_answer(text: str, direction: str, call_input: str) -> str | None:
     return None if f"f({call_input})" in answer else answer
 
 
-def limit_resources() -> None:
-    """Runs in the child before the program (Linux): memory, CPU seconds and file size."""
-    import resource
-
-    resource.setrlimit(resource.RLIMIT_AS, (MEMORY_LIMIT, MEMORY_LIMIT))
-    resource.setrlimit(resource.RLIMIT_CPU, (int(TIMEOUT_S) + 1, int(TIMEOUT_S) + 1))
-    resource.setrlimit(resource.RLIMIT_FSIZE, (FILE_LIMIT, FILE_LIMIT))
+def command(path: Path) -> list[str]:
+    """The command that runs a check program; on POSIX the shell first lowers the memory and CPU-time limits
+    (set by `ulimit` rather than in the child process, which is not safe while the grader runs threads)."""
+    python = [sys.executable, "-S", "-s", str(path)]
+    if os.name != "posix":
+        return python
+    limits = f"ulimit -v {MEMORY_LIMIT_KIB} && ulimit -t {int(TIMEOUT_S) + 1}"
+    return ["/bin/sh", "-c", f'{limits} && exec "$0" "$@"', *python]
 
 
 def passes(program: str, timeout: float = TIMEOUT_S) -> bool:
-    """Run `program` in a fresh isolated Python process; True when it exits 0 after printing its receipt."""
+    """Run `program` in a fresh Python process; True when it exits 0 after printing its receipt."""
     receipt = secrets.token_hex(16)
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "check.py"
@@ -108,13 +109,7 @@ def passes(program: str, timeout: float = TIMEOUT_S) -> bool:
             env["SYSTEMROOT"] = os.environ.get("SYSTEMROOT", "")
         try:
             done = subprocess.run(
-                [sys.executable, "-S", "-s", str(path)],
-                cwd=tmp,
-                env=env,
-                stdin=subprocess.DEVNULL,
-                capture_output=True,
-                timeout=timeout,
-                preexec_fn=limit_resources if os.name == "posix" else None,
+                command(path), cwd=tmp, env=env, stdin=subprocess.DEVNULL, capture_output=True, timeout=timeout
             )
         except subprocess.TimeoutExpired:
             return False

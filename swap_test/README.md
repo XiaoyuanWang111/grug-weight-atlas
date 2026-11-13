@@ -24,6 +24,7 @@ cache. The tests check it against Marin's Levanter oracle and a transcription of
 ```
 pyproject.toml          package metadata, the extras "run" and "test", pytest and ruff settings
 PREREG.md               the pre-registration
+PREREG_phase2.md        the draft pre-registration of phase 2
 swaptest/
   config.py             model configuration from config.json; stop tokens from generation_config.json
   checkpoint.py         shards loaded into memory; expected tensor names, shapes and dtypes
@@ -46,19 +47,30 @@ swaptest/
   skyrl_crosscheck.py   logits of Marin's reference model, for the parity checks
   verify_download.py    downloaded files against the saved and the live repository listings
   hashes.py             the two hashes the pre-registration records
-  data/                 the patch manifest and two saved repository listings
+  merge.py              phase 2: task-arithmetic merge built in memory with Marin's arithmetic; --check-against
+  answers.py            phase 2: the part of a reply the capability graders read (final content)
+  cruxeval.py           phase 2: CRUXEval prompts, answer reading and grading by execution
+  mmlu_pro.py           phase 2: MMLU-Pro chain-of-thought prompts and answer extraction
+  taskprompts.py        phase 2: the capability prompt file (seeded draw, rendering, checks)
+  selfcheck_phase2.py   phase 2, plan step 17: checks, memory and timing on the merge built in memory
+  analyze_phase2.py     phase 2: quick look, runaway decisions (necessity) and the capability comparison
+  jsonfield.py          one field of a JSON file, for the scripts
+  data/                 the patch manifest, five saved repository listings, the two CRUXEval prompt templates
 scripts/
   bootstrap.sh          Python environment on a fresh Ubuntu 24.04 machine, CPU report, unit tests
   download.sh           pinned downloads and their verification
   run_phase1.sh         plan steps 5 to 12, resumable, one exit code per stop condition
-tests/                  unit and end-to-end tests on tiny random checkpoints, and their fixtures
+  download_phase2.sh    phase 2's pinned downloads (B, E, E2, CRUXEval, MMLU-Pro) and their verification
+  run_phase2.sh         phase 2, plan steps 14 to 24, resumable, one exit code per stop condition
+tests/                  unit and end-to-end tests on tiny random checkpoints and made-up data, and their fixtures
 ```
 
 ## Tests
 
 The tests need `torch`, `safetensors`, `numpy`, `pytest`, `jinja2` and `pyarrow`. They need neither
 `transformers` nor network access nor model weights: they render the checkpoint's chat template
-(`tests/fixtures/chat_template.jinja`) with jinja2 through a small byte-level tokenizer. From this directory:
+(`tests/fixtures/chat_template.jinja`) with jinja2 through a small byte-level tokenizer. The smoke test of
+`run_phase2.sh` also needs `bash` (on Windows, Git's) and is skipped without it. From this directory:
 
 ```
 python -m pip install -e ".[test]"
@@ -223,3 +235,70 @@ The outcomes in `analysis_96.txt` are final for the extended arms; the other arm
 
 Copy `/data/phase1` (and `/data/run_phase1.out`) to your own computer, for example with
 `scp -r USER@HOST:/data/phase1 .`, and check the copy with `sha256sum -c SHA256SUMS` inside it.
+
+## Phase 2: plan steps 13 to 24
+
+Phase 2 rebuilds the withheld full-strength merge P = B + 1.0 (E - B) + 1.0 (E2 - B) in memory, checks the same
+code against the published Merge-TA0.5, and runs three arms over it: P, N (the 78 attention-gate tensors from
+Merge-TA0.5) and G (the same tensors from B; G0 in the plan). It decides whether the gates are necessary for the
+failure to stop, and whether an arm that stops normally scores higher than Merge-TA0.5 on CRUXEval and MMLU-Pro.
+`PREREG_phase2.md` fixes the rules. Phase 1 must have finished with V1 passed, on the same data directory.
+
+```
+nohup bash ~/harness/scripts/download_phase2.sh /data > /data/download_phase2.log 2>&1 &
+DATA_DIR=/data nohup bash ~/harness/scripts/run_phase2.sh > /data/run_phase2.out 2>&1 &
+```
+
+`download_phase2.sh` fetches the CRUXEval test file and the MMLU-Pro splits (stage `small`) and B, E and E2
+(stage `large`, 402.5 GB; it needs 410 GB free), each pinned by commit and checked like phase 1's downloads. The
+run script may start while the large stage is still running; it waits for each input.
+
+| step | what the script does | output under `/data/phase2` |
+|---|---|---|
+| 14 | writes the merge spec; rebuilds Merge-TA0.5 (0.5, 0.5) and compares it bit for bit with the download | `merge_spec.json`, `merge_check.json`, `merge_check.txt` |
+| 15 | task prompts (270 per target) and quick-look prompts (6 per task) | `task_prompts.jsonl`, `quick_prompts.jsonl` |
+| 16 | arm A on the quick-look prompts, graded; then a pause for reading | `step16_review.txt`, `quick.json` |
+| 17 | builds P with arms N and G; memory, cache, template, cached-decode and mixed-arm checks; timing; projections | `step17_selfcheck.json` |
+| 18 | fills in `PREREG_phase2.md` and records the SHA-256 of the filled copy | `prereg_phase2.md`, `prereg_hashes.txt` |
+| 19 | runaway run: P, N, G on phase 1's 48 GSM8K prompts | `runaway/replies.jsonl` |
+| 20 | teacher-forced pass of arm A's phase-1 replies under P, N, G | `teacher_forced.jsonl` |
+| 21 | runaway analysis: V2, necessity, eligibility; projection of the capability runs; then a pause | `runaway.txt`, `runaway.json`, `runaway_decisions.txt` |
+| 22 | capability run of arm A | `tasks_A/replies.jsonl` |
+| 23 | capability run of the scored arms (the candidate, and P when eligible) | `tasks_merge/replies.jsonl` |
+| 24 | grading and the capability decision; checksums | `capability.txt`, `capability.json`, `capability_decisions.txt`, `grades.jsonl`, `SHA256SUMS` |
+
+| exit | meaning | what to do |
+|---:|---|---|
+| 0 | all steps done | read `runaway.txt` and `capability.txt` |
+| 1 | unexpected error or a crashed program | read the step's log, fix the cause, run the same command again |
+| 2 | missing input or bad setting, or prompts, spec or harness changed after step 18 | fix the setting; a change after step 18 is a deviation |
+| 20 | an input is not downloaded | read `/data/download_phase2.log`, rerun the download script |
+| 21 | phase 1 has not finished, or its V1 failed | finish phase 1; with V1 failed phase 2 does not run |
+| 30 | stop S3: the rebuilt Merge-TA0.5 differs from the download | read `merge_check.json` (first difference); P would not be the withheld merge |
+| 31 | the merge, its arms or the memory check failed | read `logs/step17_selfcheck.log`; for the caches, lower `BATCH_SIZE` or `TASK_BATCH_SIZE` |
+| 32 | another step-17 check failed | read `logs/step17_selfcheck.log` |
+| 33 | stop S4: projected runaway run over `MAX_HOURS` (8) | decide; `ACCEPT_PROJECTION=1` continues |
+| 34 | stop S5: quick look outside its limits | read `step16_review.txt`; debug the template, extraction or grader |
+| 35 | pause after step 16 | read `step16_review.txt`; continue with `TASKS_APPROVED=1` |
+| 36, 37 | runaway run or teacher-forced pass not finished | run the same command again; it resumes |
+| 38 | runaway analysis failed | read `runaway.txt` |
+| 39 | no arm stops normally enough for capability scoring | the runaway result is final |
+| 40 | stop S6: projected capability runs over `MAX_TASK_HOURS` (20) | decide; `ACCEPT_TASK_PROJECTION=1` continues |
+| 41 | a capability run not finished | run the same command again; it resumes |
+| 42 | capability analysis failed | read `capability.txt` |
+| 43 | V3 failed | no capability claim; the analysis is written |
+| 44 | pause after step 21 | read `runaway.txt` and the projection; continue with `CAPABILITY_APPROVED=1` |
+
+Every finished step leaves `/data/phase2/markers/STEP.done`; after an interruption the same command continues.
+Settings are environment variables listed at the top of `scripts/run_phase2.sh`; the main ones are `N_TASK`
+(270), `TASK_CAP` (4096), `TASK_BATCH_SIZE` (384), `BATCH_SIZE` (144) and `MMLU_PRO_IDS` (a file of question
+ids to draw MMLU-Pro from; empty means all 12,032 documents, because marin#9984's 1,606-document subset is not
+public).
+
+The merge check alone, outside the script:
+
+```
+PY=~/.venvs/swaptest/bin/python
+$PY -m swaptest.merge --spec /data/phase2/merge_spec.json --coefficients 0.5,0.5 --check-against /data/merge-ta0.5 \
+    --json /data/phase2/merge_check.json
+```

@@ -31,6 +31,21 @@ def test_saved_listings_match_the_planned_checkpoints():
     assert saved_listing(MERGE[0], "0" * 40) is None
 
 
+def test_saved_listings_of_phase_2_sources():
+    prefix = "open-athena/Snowball-67B-A2B-"
+    sources = {
+        ("10T-Mixed-RLVR-Sync-Step92", "80975627aebeaec3ef946ad609d9c1d95458ebd8"): (79, 134_157_838_912),
+        ("CruxEval-Expert-E-Step272", "2eb988bb5df70378950d983ac8e70dae550cf6d5"): (39, 134_157_827_064),
+        ("MMLUPro-Expert-E2-Step254", "0f22c03aff076f46c292196cf0d03a9bc4ab81c5"): (39, 134_157_827_064),
+    }
+    for (name, revision), (count, total) in sources.items():
+        listing = saved_listing(prefix + name, revision)
+        shards = {n: v for n, v in listing.items() if n.endswith(".safetensors")}
+        assert len(shards) == count and sum(size for size, _ in shards.values()) == total
+        assert all(sha is not None and len(sha) == 64 for _, sha in shards.values())
+        assert listing["model.safetensors.index.json"][1] is None
+
+
 def test_restrict_and_compare_listings():
     listing = {"main/test-00000-of-00001.parquet": (10, "a" * 64), "main/train-00000-of-00001.parquet": (20, None)}
     assert list(restrict(listing, ["main/test-*"])) == ["main/test-00000-of-00001.parquet"]

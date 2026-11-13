@@ -88,6 +88,13 @@ def test_cruxeval_grading_stops_a_slow_answer():
     assert result["correct"] is False
 
 
+def test_cruxeval_limits_come_from_the_shell_on_posix(monkeypatch, tmp_path):
+    monkeypatch.setattr(cruxeval.os, "name", "posix")
+    cmd = cruxeval.command(tmp_path / "check.py")
+    assert cmd[:2] == ["/bin/sh", "-c"] and cmd[2] == 'ulimit -v 2097152 && ulimit -t 11 && exec "$0" "$@"'
+    assert cmd[4:] == ["-S", "-s", str(tmp_path / "check.py")]
+
+
 def test_cruxeval_rows_are_checked(tmp_path):
     path = tmp_path / "crux.jsonl"
     path.write_text(json.dumps({"id": "x1", "code": "", "input": "", "output": ""}) + "\n")
@@ -152,8 +159,12 @@ def test_task_prompt_file(tmp_path):
     crux, test, validation = write_task_data(tmp_path / "data")
     out = tmp_path / "tasks.jsonl"
     args = ["--cruxeval", str(crux), "--mmlu-pro-test", str(test), "--mmlu-pro-validation", str(validation)]
-    assert taskprompts.main([*args, "--checkpoint", str(tmp_path), "--out", str(out), "--count", "3"],
-                            tokenizer=FakeTokenizer()) == 0
+    assert (
+        taskprompts.main(
+            [*args, "--checkpoint", str(tmp_path), "--out", str(out), "--count", "3"], tokenizer=FakeTokenizer()
+        )
+        == 0
+    )
     prompts = read_jsonl(out)
     assert sorted(p["task"] for p in prompts) == ["cruxeval_input"] * 3 + ["cruxeval_output"] * 3 + ["mmlu_pro"] * 3
     assert [len(p["prompt_ids"]) for p in prompts] == sorted(len(p["prompt_ids"]) for p in prompts)
@@ -162,19 +173,24 @@ def test_task_prompt_file(tmp_path):
     crux_groups = {p["group"] for p in prompts if p["task"].startswith("cruxeval")}
     assert len(crux_groups) == 3  # both directions of a problem share its group
     again = tmp_path / "again.jsonl"
-    taskprompts.main([*args, "--checkpoint", str(tmp_path), "--out", str(again), "--count", "3"],
-                     tokenizer=FakeTokenizer())
+    taskprompts.main(
+        [*args, "--checkpoint", str(tmp_path), "--out", str(again), "--count", "3"], tokenizer=FakeTokenizer()
+    )
     assert again.read_bytes() == out.read_bytes()
     ext = tmp_path / "ext.jsonl"
-    taskprompts.main([*args, "--checkpoint", str(tmp_path), "--out", str(ext), "--count", "3", "--offset", "3"],
-                     tokenizer=FakeTokenizer())
+    taskprompts.main(
+        [*args, "--checkpoint", str(tmp_path), "--out", str(ext), "--count", "3", "--offset", "3"],
+        tokenizer=FakeTokenizer(),
+    )
     assert not {p["idx"] for p in read_jsonl(ext)} & {p["idx"] for p in prompts}
 
     ids = tmp_path / "ids.txt"
     ids.write_text("71\n73\n75\n77\n")
     listed = tmp_path / "listed.jsonl"
-    taskprompts.main([*args, "--checkpoint", str(tmp_path), "--out", str(listed), "--count", "2",
-                      "--mmlu-pro-ids", str(ids)], tokenizer=FakeTokenizer())
+    taskprompts.main(
+        [*args, "--checkpoint", str(tmp_path), "--out", str(listed), "--count", "2", "--mmlu-pro-ids", str(ids)],
+        tokenizer=FakeTokenizer(),
+    )
     mmlu = [p for p in read_jsonl(listed) if p["task"] == "mmlu_pro"]
     assert {p["source_id"] for p in mmlu} <= {71, 73, 75, 77} and {p["pool"] for p in mmlu} == {"listed"}
     assert taskprompts.main([*args, "--check-data"]) == 1  # made-up files do not have the published row counts

@@ -1,13 +1,13 @@
 """Print the two SHA-256 values the pre-registration records: the prompts file and the harness tree.
 
-The harness tree hash covers every file under the harness directory except `PREREG.md` (which receives the
-hashes) and caches (`__pycache__`, `.pytest_cache`, `.ruff_cache`, `*.egg-info`, `build`, `dist`, `.git`). It is
-the SHA-256 of the lines "<file SHA-256>  <relative path>\\n", sorted by path, which is what this shell command
-prints from inside the harness directory:
+The harness tree hash covers every file under the harness directory except the two pre-registration documents
+`PREREG.md` and `PREREG_phase2.md` (which receive the hashes) and caches (`__pycache__`, `.pytest_cache`,
+`.ruff_cache`, `*.egg-info`, `build`, `dist`, `.git`). It is the SHA-256 of the lines "<file SHA-256>  <relative
+path>\\n", sorted by path, which is what this shell command prints from inside the harness directory:
 
-  find . -type f ! -path './PREREG.md' ! -path '*/__pycache__/*' ! -path '*/.pytest_cache/*' \\
-      ! -path '*/.ruff_cache/*' ! -path '*.egg-info/*' ! -path './build/*' ! -path './dist/*' ! -path './.git/*' \\
-      | sed 's|^\\./||' | LC_ALL=C sort | xargs sha256sum | sha256sum
+  find . -type f ! -path './PREREG.md' ! -path './PREREG_phase2.md' ! -path '*/__pycache__/*' \\
+      ! -path '*/.pytest_cache/*' ! -path '*/.ruff_cache/*' ! -path '*.egg-info/*' ! -path './build/*' \\
+      ! -path './dist/*' ! -path './.git/*' | sed 's|^\\./||' | LC_ALL=C sort | xargs sha256sum | sha256sum
 
 Usage: python -m swaptest.hashes --prompts prompts.jsonl [--harness DIR]
 Output: "prompts_sha256 <hex>" and "harness_tree_sha256 <hex>", one per line.
@@ -22,7 +22,7 @@ from pathlib import Path
 from swaptest.records import sha256_file
 
 EXCLUDED_DIRS = {"__pycache__", ".pytest_cache", ".ruff_cache", ".git"}
-EXCLUDED_TOP = {"PREREG.md", "build", "dist"}
+EXCLUDED_TOP = {"PREREG.md", "PREREG_phase2.md", "build", "dist"}
 
 
 def tree_files(root: Path) -> list[str]:

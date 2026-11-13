@@ -17,7 +17,7 @@ test = ["pytest", "jinja2", "pyarrow"]
 include = ["swaptest*"]
 
 [tool.setuptools.package-data]
-swaptest = ["data/*.json", "data/listings/*.json"]
+swaptest = ["data/*.json", "data/*.txt", "data/listings/*.json"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

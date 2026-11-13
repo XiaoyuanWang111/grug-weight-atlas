@@ -1,33 +1,22 @@
-"""Tiny random Grug checkpoints, fake patches and a byte-level tokenizer with the real chat template, for tests."""
+"""Tiny random Grug checkpoints, fake patches, made-up task data and (from `fake_tokenizer`) a byte-level tokenizer
+with the real chat template, for tests."""
 
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any
 
-import jinja2
 import torch
-from jinja2 import nodes
-from jinja2.ext import Extension
-from jinja2.sandbox import ImmutableSandboxedEnvironment
+from fake_tokenizer import FIXTURES as FIXTURES
+from fake_tokenizer import SPECIALS
+from fake_tokenizer import FakeTokenizer as FakeTokenizer
 from safetensors.torch import save_file
 
 from swaptest.checkpoint import expected_shapes
 from swaptest.config import ModelConfig
 from swaptest.patch import GROUP_PATTERNS
 
-FIXTURES = Path(__file__).parent / "fixtures"
-SPECIALS = {
-    "<|begin_of_text|>": 256,
-    "<|end_of_text|>": 257,
-    "<|start_header_id|>": 258,
-    "<|end_header_id|>": 259,
-    "<|eot_id|>": 260,
-    "<|start_think|>": 261,
-    "<|end_think|>": 262,
-}
 STOP_IDS = [257, 260]
 
 
@@ -136,9 +125,18 @@ CRUX_ROWS = [
     {"id": "sample_1", "code": "def f(s):\n    return s + '=='", "input": "'a'", "output": "'a=='"},
     {"id": "sample_2", "code": "def f(a, b):\n    return a + sum(b)", "input": "2, [1, 3]", "output": "6"},
     {"id": "sample_3", "code": "def f(text):\n    return text.upper()", "input": "'hi'", "output": "'HI'"},
-    {"id": "sample_4", "code": "def f(n):\n    return [i * i for i in range(n)]", "input": "4", "output": "[0, 1, 4, 9]"},
-    {"id": "sample_5", "code": "def f(d):\n    return sorted(d.items())", "input": "{'b': 2, 'a': 1}",
-     "output": "[('a', 1), ('b', 2)]"},
+    {
+        "id": "sample_4",
+        "code": "def f(n):\n    return [i * i for i in range(n)]",
+        "input": "4",
+        "output": "[0, 1, 4, 9]",
+    },
+    {
+        "id": "sample_5",
+        "code": "def f(d):\n    return sorted(d.items())",
+        "input": "{'b': 2, 'a': 1}",
+        "output": "[('a', 1), ('b', 2)]",
+    },
 ]
 
 
@@ -173,66 +171,3 @@ def write_task_data(directory: Path) -> tuple[Path, Path, Path]:
     for path, rows in zip(files, (CRUX_ROWS, mmlu_rows(8, False), mmlu_rows(6, True, first_id=1)), strict=True):
         path.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
     return files
-
-
-class _GenerationTag(Extension):
-    """`{% generation %}` ... `{% endgeneration %}` as a pass-through block, as transformers renders it."""
-
-    tags: ClassVar[set[str]] = {"generation"}
-
-    def parse(self, parser: jinja2.parser.Parser) -> nodes.Node:
-        lineno = next(parser.stream).lineno
-        body = parser.parse_statements(("name:endgeneration",), drop_needle=True)
-        return nodes.CallBlock(self.call_method("_render"), [], [], body).set_lineno(lineno)
-
-    def _render(self, caller: Any) -> str:
-        return caller()
-
-
-class FakeTokenizer:
-    """Bytes as ids 0-255 and the chat special tokens as ids 256-262; renders a chat template like transformers."""
-
-    bos_token_id = SPECIALS["<|begin_of_text|>"]
-    _split = re.compile("(" + "|".join(re.escape(s) for s in SPECIALS) + ")")
-
-    def __init__(self, template_path: Path = FIXTURES / "chat_template.jinja") -> None:
-        env = ImmutableSandboxedEnvironment(
-            trim_blocks=True, lstrip_blocks=True, extensions=[_GenerationTag, "jinja2.ext.loopcontrols"]
-        )
-        self._template = env.from_string(template_path.read_text(encoding="utf-8"))
-
-    def apply_chat_template(
-        self,
-        conversation: list[dict[str, str]],
-        tokenize: bool = True,
-        add_generation_prompt: bool = False,
-        **kwargs: Any,
-    ) -> str:
-        assert not tokenize
-        return self._template.render(
-            messages=conversation,
-            add_generation_prompt=add_generation_prompt,
-            bos_token="<|begin_of_text|>",
-            eos_token="<|end_of_text|>",
-            **kwargs,
-        )
-
-    def encode(self, text: str, add_special_tokens: bool = True) -> list[int]:
-        ids = [self.bos_token_id] if add_special_tokens else []
-        for piece in self._split.split(text):
-            ids += [SPECIALS[piece]] if piece in SPECIALS else list(piece.encode("utf-8"))
-        return ids
-
-    def decode(self, ids: list[int], skip_special_tokens: bool = False) -> str:
-        names = {v: k for k, v in SPECIALS.items()}
-        out, buf = [], bytearray()
-        for i in ids:
-            if i < 256:
-                buf.append(i)
-                continue
-            out.append(buf.decode("utf-8", errors="replace"))
-            buf = bytearray()
-            if not skip_special_tokens:
-                out.append(names.get(i, f"<|id{i}|>"))
-        out.append(buf.decode("utf-8", errors="replace"))
-        return "".join(out)

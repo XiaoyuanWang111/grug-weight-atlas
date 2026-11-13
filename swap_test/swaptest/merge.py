@@ -25,12 +25,13 @@ on disk, reporting the first difference.
 Usage:
   python -m swaptest.merge --base DIR --donor DIR [--donor DIR ...] --coefficients C1,C2,...
       [--widen PATTERN=bfloat16 ...] [--tensor-coefficients PATTERN=C1,C2,... ...]
-      [--arm LETTER=none | --arm LETTER=GROUP:DIR ...] --write-spec SPEC.json
+      [--arm LETTER ...] [--override LETTER GROUP DIR ...] --write-spec SPEC.json
   python -m swaptest.merge --spec SPEC.json [--coefficients C1,C2,...] --check-against DIR [--json OUT.json]
       [--first-only] [--threads N]
---widen applies to every donor. Exit codes: 0 the spec was written, or the check found every stored value equal;
-1 the check found a difference; 2 bad input; 3 the only differences are router biases whose reference values
-equal the anchor's (the case for which the pre-registration rebuilds with router-bias coefficients 0).
+--widen applies to every donor; --arm defines an arm without overrides, --override an arm whose tensors of patch
+group GROUP come from the checkpoint in DIR. Exit codes: 0 the spec was written, or the check found every stored
+value equal; 1 the check found a difference; 2 bad input; 3 the only differences are router biases whose reference
+values equal the anchor's (the case for which the pre-registration rebuilds with router-bias coefficients 0).
 """
 
 from __future__ import annotations
@@ -213,7 +214,9 @@ class MergeSpec:
             "donors": [source(d) for d in self.donors],
             "coefficients": list(self.coefficients),
             "tensor_coefficients": {p: list(c) for p, c in self.tensor_coefficients.items()},
-            "arms": {a: None if o is None else {"group": o.group, "source": str(o.source)} for a, o in self.arms.items()},
+            "arms": {
+                a: None if o is None else {"group": o.group, "source": str(o.source)} for a, o in self.arms.items()
+            },
         }
 
     @classmethod
@@ -250,7 +253,8 @@ class MergePlan:
                 diff = sorted(set(donor.tensors) ^ names)
                 raise ValueError(f"tensor names of {donor.directory} and the anchor differ: {diff[:5]}")
         self.names = self.base.names()
-        self.widened = [self._widened(s, c) for s, c in zip((spec.base, *spec.donors), (self.base, *self.donors))]
+        sources = zip((spec.base, *spec.donors), (self.base, *self.donors), strict=True)
+        self.widened = [self._widened(source, checkpoint) for source, checkpoint in sources]
         for name in self.names:
             infos = [c.tensors[name] for c in (self.base, *self.donors)]
             dtypes = {torch.float32 if name in w else i.dtype for i, w in zip(infos, self.widened, strict=True)}
@@ -399,11 +403,8 @@ def check_against(
             if ref_info.shape != base_info.shape or ref_info.dtype != base_info.dtype:
                 differing.append(TensorDifference(name, shard, -1, False))
                 if first is None:
-                    first = {
-                        "tensor": name,
-                        "shard": shard,
-                        "reason": f"reference {ref_info.dtype} {ref_info.shape}, merge {base_info.dtype} {base_info.shape}",
-                    }
+                    reason = f"reference {ref_info.dtype} {ref_info.shape}, merge {base_info.dtype} {base_info.shape}"
+                    first = {"tensor": name, "shard": shard, "reason": reason}
                 continue
             count = 0
             for start, stop in plan.slices(name):
@@ -466,7 +467,8 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--coefficients", type=parse_coefficients, help="one per donor, comma-separated")
     parser.add_argument("--widen", action="append", default=[], metavar="PATTERN=DTYPE")
     parser.add_argument("--tensor-coefficients", action="append", default=[], metavar="PATTERN=C1,C2")
-    parser.add_argument("--arm", action="append", default=[], metavar="LETTER=GROUP:DIR")
+    parser.add_argument("--arm", action="append", default=[], metavar="LETTER", help="an arm without overrides")
+    parser.add_argument("--override", action="append", default=[], nargs=3, metavar=("LETTER", "GROUP", "DIR"))
     parser.add_argument("--write-spec", type=Path)
     parser.add_argument("--check-against", type=Path)
     parser.add_argument("--json", type=Path, help="write the check summary here")
@@ -477,8 +479,11 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
         parser.error("give exactly one of --write-spec and --check-against")
     if args.spec is None and (args.base is None or not args.donor or args.coefficients is None):
         parser.error("give --spec, or --base, --donor and --coefficients")
-    if args.spec is not None and (args.base or args.donor or args.widen or args.tensor_coefficients or args.arm):
-        parser.error("--spec cannot be combined with --base, --donor, --widen, --tensor-coefficients or --arm")
+    building = (args.base, args.donor, args.widen, args.tensor_coefficients, args.arm, args.override)
+    if args.spec is not None and any(building):
+        parser.error(
+            "--spec cannot be combined with --base, --donor, --widen, --tensor-coefficients, --arm or --override"
+        )
     return args
 
 
@@ -490,14 +495,9 @@ def spec_from_args(args: argparse.Namespace) -> MergeSpec:
     tensor_coefficients = {
         pattern: parse_coefficients(values) for pattern, values in (i.rsplit("=", 1) for i in args.tensor_coefficients)
     }
-    arms: dict[str, ArmSource | None] = {}
-    for item in args.arm:
-        letter, target = item.split("=", 1)
-        if target == "none":
-            arms[letter] = None
-        else:
-            group, directory = target.split(":", 1)
-            arms[letter] = ArmSource(group, Path(directory))
+    arms: dict[str, ArmSource | None] = dict.fromkeys(args.arm)
+    for letter, group, directory in args.override:
+        arms[letter] = ArmSource(group, Path(directory))
     return MergeSpec(
         Source(args.base), tuple(Source(d, widen) for d in args.donor), args.coefficients, tensor_coefficients, arms
     )
@@ -523,18 +523,23 @@ def main(argv: list[str] | None = None) -> int:
     if args.json is not None:
         write_json_atomic(args.json, summary)
     if summary["missing_in_reference"] or summary["only_in_reference"]:
-        print(f"names only in the merge: {summary['missing_in_reference'][:5]}; only in the reference: "
-              f"{summary['only_in_reference'][:5]}")
+        print(
+            f"names only in the merge: {summary['missing_in_reference'][:5]}; only in the reference: "
+            f"{summary['only_in_reference'][:5]}"
+        )
     if summary["first_difference"] is not None:
         print(f"first difference: {json.dumps(summary['first_difference'])}")
+    if summary["equal"]:
+        verdict, code = "EQUAL in every stored value", 0
+    elif summary["router_bias_kept_at_anchor"]:
+        verdict, code = "DIFFERENT (only router biases, which the reference keeps at the anchor's values)", 3
+    else:
+        verdict, code = "DIFFERENT", 1
     print(
         f"{summary['tensors_compared']} tensors, {summary['values_compared']:,} values compared in "
-        f"{summary['seconds']} s: {'EQUAL in every stored value' if summary['equal'] else 'DIFFERENT'}"
-        f"{' (only router biases that the reference keeps at the anchor)' if summary['router_bias_kept_at_anchor'] else ''}"
+        f"{summary['seconds']} s: {verdict}"
     )
-    if summary["equal"]:
-        return 0
-    return 3 if summary["router_bias_kept_at_anchor"] else 1
+    return code
 
 
 if __name__ == "__main__":

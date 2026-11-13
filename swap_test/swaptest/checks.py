@@ -49,11 +49,11 @@ def compare_logits(a: torch.Tensor, b: torch.Tensor) -> dict[str, Any]:
     }
 
 
-def mixed_vs_alone(model: GrugModel, prompt: list[int], steps: int, arms: str) -> dict[str, Any]:
-    """Arm A decoded alone against arm A inside a batch of `arms`, on the same tokens.
+def mixed_vs_alone(model: GrugModel, prompt: list[int], steps: int, arms: str, reference: str = "A") -> dict[str, Any]:
+    """The reference arm decoded alone against the reference arm inside a batch of `arms`, on the same tokens.
 
-    Arm A alone decodes greedily for `steps` tokens; the batch is then fed the same tokens in every row.
-    Returns the comparison for arm A, and for each other arm its largest logit difference from arm A.
+    The reference arm alone decodes greedily for `steps` tokens; the batch is then fed the same tokens in every
+    row. Returns the comparison for the reference arm, and for each other arm its largest logit difference from it.
     """
 
     def decode(rows: str, forced: list[int] | None) -> tuple[torch.Tensor, list[int]]:
@@ -70,12 +70,12 @@ def mixed_vs_alone(model: GrugModel, prompt: list[int], steps: int, arms: str) -
             logits.append(model.logits(model.forward(step_ids, cache, len(prompt) + s, pad, arm)[:, -1]).float())
         return torch.stack(logits, dim=1), tokens
 
-    alone, tokens = decode("A", None)
+    alone, tokens = decode(reference, None)
     mixed, _ = decode(arms, tokens)
-    a = arms.index("A")
+    a = arms.index(reference)
     result = compare_logits(alone[0], mixed[a])
-    result["other_arms_max_abs_diff_from_A"] = {
-        arm: float((mixed[i] - mixed[a]).abs().max()) for i, arm in enumerate(arms) if arm != "A"
+    result[f"other_arms_max_abs_diff_from_{reference}"] = {
+        arm: float((mixed[i] - mixed[a]).abs().max()) for i, arm in enumerate(arms) if arm != reference
     }
     return result
 
@@ -201,30 +201,40 @@ class SpeedModel:
         runaway: Sequence[float],
         per_arm: int,
         cap: int,
-        prompt_len: int,
+        prompt_len: int | Sequence[int],
         prefill_tokens_per_s: float,
         batch_size: int | None = None,
         seed: int = 0,
+        median: float = 600.0,
+        sigma: float = 0.7,
     ) -> float:
-        """Simulated hours of the main run: each arm's replies run to the cap with that arm's probability in
-        `runaway`, otherwise have a log-normal length (median 600 tokens, sigma 0.7).
+        """Simulated hours of a run: each arm's replies run to the cap with that arm's probability in `runaway`,
+        otherwise have a log-normal length (default median 600 tokens, sigma 0.7).
 
+        `prompt_len` is one length for every prompt, or the length of each of the `per_arm` prompts in run order.
         Rows are ordered as the run orders them (prompt by prompt, arms adjacent) and decoded in waves of
-        `batch_size` rows (default: all rows in one wave); the waves run one after the other.
+        `batch_size` rows (default: all rows in one wave); the waves run one after the other. A wave prefills
+        every row to the length of its longest prompt (left padding is computed too), and its decode steps read
+        the cache over that length plus the tokens generated so far.
         """
         rng = random.Random(seed)
         lengths = [
-            cap if rng.random() < p else min(cap, int(math.exp(rng.gauss(math.log(600), 0.7))))
+            cap if rng.random() < p else min(cap, int(math.exp(rng.gauss(math.log(median), sigma))))
             for _ in range(per_arm)
             for p in runaway
         ]
+        prompts = [prompt_len] * per_arm if isinstance(prompt_len, int) else list(prompt_len)
+        if len(prompts) != per_arm:
+            raise ValueError(f"{len(prompts)} prompt lengths for {per_arm} prompts")
+        row_prompts = [n for n in prompts for _ in runaway]
         size = batch_size or len(lengths)
-        seconds, stride = len(lengths) * prompt_len / prefill_tokens_per_s, 16
+        seconds, stride = 0.0, 16
         for w0 in range(0, len(lengths), size):
-            wave = lengths[w0 : w0 + size]
+            wave, padded = lengths[w0 : w0 + size], max(row_prompts[w0 : w0 + size])
+            seconds += len(wave) * padded / prefill_tokens_per_s
             for t in range(1, cap + 1, stride):
                 active = sum(x >= t for x in wave)
                 if not active:
                     break
-                seconds += stride * self.step_seconds([prompt_len + t] * active)
+                seconds += stride * self.step_seconds([padded + t] * active)
         return seconds / 3600

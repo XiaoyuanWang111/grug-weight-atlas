@@ -2,8 +2,9 @@
 
 Every listed file must exist with the listed size; with --sha256, every LFS file must also have the listed
 SHA-256. Two listings are used when available, and both must match the directory:
-  - the listing saved with this package (`swaptest/data/listings/`) for the two model repositories of the
-    experiment, read from the Hub API with file metadata before the experiment was planned;
+  - the listing saved with this package (`swaptest/data/listings/`) for the model repositories of the experiment
+    (the two of phase 1 and the base and the two experts of phase 2), read from the Hub API with file metadata
+    before the experiment was planned;
   - the listing the Hub API returns now for the pinned revision (skipped with --no-hub).
 When both exist they must also agree with each other. --include restricts the comparison to file names that
 match one of the given shell patterns and --exclude drops names that match one (for a repository of which only

@@ -169,4 +169,5 @@ Filled in on the machine before the main run:
 - GSM8K dataset revision: ________________________________________ (gsm8k_revision)
 
 The two hashes are printed by `python -m swaptest.hashes --prompts PROMPTS_FILE`. The harness tree hash covers
-every file of the harness except this document and caches; `swaptest/hashes.py` gives its exact definition.
+every file of the harness except this document, the draft pre-registration of phase 2 (`PREREG_phase2.md`) and
+caches; `swaptest/hashes.py` gives its exact definition.

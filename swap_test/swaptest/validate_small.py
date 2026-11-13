@@ -166,7 +166,8 @@ def main(argv: list[str] | None = None, tokenizer: ChatTokenizer | None = None) 
             print(f"      ours: {c['our_text'][:200]!r}\n      vLLM: {c['vllm_text'][:200]!r}")
         results["d"] = matches >= MIN_MATCHING_SAMPLES and wide_margins == 0
         print(
-            f"(d) {matches} of {len(samples)} greedy samples match, {wide_margins} diverge at a margin of {NEAR_TIE_MARGIN} or more -> {'PASS' if results['d'] else 'FAIL'}"
+            f"(d) {matches} of {len(samples)} greedy samples match, {wide_margins} diverge at a margin of "
+            f"{NEAR_TIE_MARGIN} or more -> {'PASS' if results['d'] else 'FAIL'}"
         )
 
         ids = torch.tensor([long_text_ids(tokenizer, read_jsonl(args.prompts), args.long_len)])

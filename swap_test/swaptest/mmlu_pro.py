@@ -37,7 +37,10 @@ INITIAL_PROMPT = (
 )
 MAX_SHOTS = 5
 FIT_LIMIT = 32768 - 30720  # #9984's context window minus its generation cap
-FIRST_PATTERNS = (re.compile(r"answer is \(?([A-J])\)?", re.IGNORECASE), re.compile(r"Answer:\s*([A-J])", re.IGNORECASE))
+FIRST_PATTERNS = (
+    re.compile(r"answer is \(?([A-J])\)?", re.IGNORECASE),
+    re.compile(r"Answer:\s*([A-J])", re.IGNORECASE),
+)
 LAST_LETTER = re.compile(r"\b[A-J]\b(?!.*\b[A-J]\b)", re.DOTALL)
 COLUMNS = ("question_id", "question", "options", "answer", "answer_index", "cot_content", "category", "src")
 TEST_ROWS, VALIDATION_ROWS = 12032, 70

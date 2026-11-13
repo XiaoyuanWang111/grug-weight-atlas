@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import random
 import sys
 from pathlib import Path
 from typing import Any
@@ -139,8 +138,10 @@ def main(argv: list[str] | None = None, tokenizer: ChatTokenizer | None = None) 
     for problem in problems:
         print(problem)
     if args.check_data:
-        print(f"CRUXEval {len(crux)} rows, MMLU-Pro test {len(test)}, validation {len(validation)}: "
-              f"{'as expected' if not problems else 'NOT as expected'}")
+        print(
+            f"CRUXEval {len(crux)} rows, MMLU-Pro test {len(test)}, validation {len(validation)}: "
+            f"{'as expected' if not problems else 'NOT as expected'}"
+        )
         return 1 if problems else 0
     if problems:
         return 1
@@ -163,11 +164,15 @@ def main(argv: list[str] | None = None, tokenizer: ChatTokenizer | None = None) 
     write_jsonl_atomic(args.out, prompts)
     for task in TASKS:
         lengths = [len(p["prompt_ids"]) for p in prompts if p["task"] == task]
-        print(f"{task}: {len(lengths)} prompts, prompt tokens min {min(lengths)}, max {max(lengths)}, "
-              f"mean {sum(lengths) / len(lengths):.0f}")
+        print(
+            f"{task}: {len(lengths)} prompts, prompt tokens min {min(lengths)}, max {max(lengths)}, "
+            f"mean {sum(lengths) / len(lengths):.0f}"
+        )
     shots = [p["shots"] for p in prompts if p["task"] == "mmlu_pro"]
-    print(f"MMLU-Pro pool {pool}; worked examples per prompt: " +
-          ", ".join(f"{k}: {shots.count(k)}" for k in range(mmlu_pro.MAX_SHOTS, -1, -1)))
+    print(
+        f"MMLU-Pro pool {pool}; worked examples per prompt: "
+        + ", ".join(f"{k}: {shots.count(k)}" for k in range(mmlu_pro.MAX_SHOTS, -1, -1))
+    )
     print(f"wrote {len(prompts)} prompts to {args.out}")
     return 0
 

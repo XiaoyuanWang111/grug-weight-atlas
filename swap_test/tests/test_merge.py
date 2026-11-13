@@ -82,7 +82,9 @@ def test_merge_values_is_marin_arithmetic_and_order_matters():
     anchor_first = anchor.float().clone()
     for c, d in zip((0.3, 0.7, 0.1), donors, strict=True):
         anchor_first.add_((d.float() - anchor.float()).mul_(c))
-    assert not torch.equal(bits(anchor_first.to(torch.bfloat16)), bits(merge_values(anchor, donors, (0.3, 0.7, 0.1), "t")))
+    assert not torch.equal(
+        bits(anchor_first.to(torch.bfloat16)), bits(merge_values(anchor, donors, (0.3, 0.7, 0.1), "t"))
+    )
 
 
 def test_merge_values_rejects_bad_input():
@@ -96,7 +98,7 @@ def test_merge_values_rejects_bad_input():
 
 
 def test_reader_matches_safetensors(tmp_path):
-    dirs, base, _ = make_sources(tmp_path)
+    dirs, _, _ = make_sources(tmp_path)
     checkpoint = Checkpoint(dirs[0])
     loaded = {}
     for path in sorted(dirs[0].glob("*.safetensors")):
@@ -129,10 +131,21 @@ def test_check_against_finds_equality_and_a_planted_one_value_difference(tmp_pat
     spec = tmp_path / "spec.json"
     widen = f"{BIAS}=bfloat16"
     args = ["--base", str(dirs[0]), "--donor", str(dirs[1]), "--donor", str(dirs[2]), "--coefficients", "1,1"]
-    assert merge.main([*args, "--widen", widen, "--arm", "P=none", "--write-spec", str(spec)]) == 0
+    arms = ["--arm", "P", "--override", "N", "attention_gates", str(dirs[0])]
+    assert merge.main([*args, "--widen", widen, *arms, "--write-spec", str(spec)]) == 0
+    assert MergeSpec.load(spec).arms == {"P": None, "N": merge.ArmSource("attention_gates", dirs[0])}
     summary = tmp_path / "check.json"
-    code = merge.main(["--spec", str(spec), "--coefficients", "0.5,0.5", "--check-against", str(reference)] +
-                      ["--json", str(summary)])
+    check = [
+        "--spec",
+        str(spec),
+        "--coefficients",
+        "0.5,0.5",
+        "--check-against",
+        str(reference),
+        "--json",
+        str(summary),
+    ]
+    code = merge.main(check)
     assert code == 0 and json.loads(summary.read_text())["equal"]
     assert "EQUAL in every stored value" in capsys.readouterr().out
 
@@ -140,8 +153,7 @@ def test_check_against_finds_equality_and_a_planted_one_value_difference(tmp_pat
     planted = half | {name: half[name].clone()}
     planted[name].view(torch.int16)[2, 5] ^= 1  # one bit of one stored value
     write_checkpoint(reference, tiny_config(), planted, shards=len(planted))
-    code = merge.main(["--spec", str(spec), "--coefficients", "0.5,0.5", "--check-against", str(reference)] +
-                      ["--json", str(summary)])
+    code = merge.main(check)
     result = json.loads(summary.read_text())
     assert code == 1 and not result["equal"]
     assert result["differing"] == [
@@ -190,8 +202,21 @@ def test_spec_validation(tmp_path):
     write_checkpoint(tmp_path / "short", tiny_config(), smaller)
     with pytest.raises(ValueError, match="names"):
         merge.MergePlan(spec_for([dirs[0], dirs[1], tmp_path / "short"], (1.0, 1.0)))
-    assert merge.main(["--base", str(dirs[0]), "--donor", str(dirs[1]), "--coefficients", "1",
-                       "--write-spec", str(tmp_path / "s.json")]) == 2  # bias dtypes differ without --widen
+    assert (
+        merge.main(
+            [
+                "--base",
+                str(dirs[0]),
+                "--donor",
+                str(dirs[1]),
+                "--coefficients",
+                "1",
+                "--write-spec",
+                str(tmp_path / "s.json"),
+            ]
+        )
+        == 2
+    )  # bias dtypes differ without --widen
     spec = spec_for(dirs, (1.0, 1.0), tensor_coefficients={BIAS: (0.0, 0.0)})
     assert MergeSpec.from_json(json.loads(json.dumps(spec.to_json()))) == spec
 
@@ -200,11 +225,15 @@ def test_merged_arms_take_their_gates_from_other_checkpoints(tmp_path):
     dirs, base, experts = make_sources(tmp_path)
     half = direct(base, experts, (0.5, 0.5))
     write_checkpoint(tmp_path / "ta05", tiny_config(), half)
-    spec = spec_for(dirs, (1.0, 1.0), arms={
-        "P": None,
-        "N": merge.ArmSource("attention_gates", tmp_path / "ta05"),
-        "G": merge.ArmSource("attention_gates", dirs[0]),
-    })
+    spec = spec_for(
+        dirs,
+        (1.0, 1.0),
+        arms={
+            "P": None,
+            "N": merge.ArmSource("attention_gates", tmp_path / "ta05"),
+            "G": merge.ArmSource("attention_gates", dirs[0]),
+        },
+    )
     path = tmp_path / "spec.json"
     path.write_text(json.dumps(spec.to_json()))
     loaded = load_merged_model(tmp_path / "ta05", path, "PNG", lambda _: None)

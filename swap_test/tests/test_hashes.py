@@ -13,6 +13,7 @@ def make_tree(root):
     (root / "swaptest.egg-info" / "PKG-INFO").write_bytes(b"x")
     (root / "README.md").write_bytes(b"readme\n")
     (root / "PREREG.md").write_bytes(b"blank\n")
+    (root / "PREREG_phase2.md").write_bytes(b"blank\n")
 
 
 def test_tree_hash_is_the_hash_of_sorted_sha256sum_lines(tmp_path):
@@ -29,6 +30,7 @@ def test_filling_in_prereg_or_caches_leaves_the_hash_unchanged(tmp_path, capsys)
     make_tree(tmp_path)
     before = hashes.tree_sha256(tmp_path)
     (tmp_path / "PREREG.md").write_bytes(b"filled in\n")
+    (tmp_path / "PREREG_phase2.md").write_bytes(b"filled in\n")
     (tmp_path / "swaptest" / "__pycache__" / "b.pyc").write_bytes(b"\1")
     assert hashes.tree_sha256(tmp_path) == before
     (tmp_path / "swaptest" / "a.py").write_bytes(b"print(2)\n")
