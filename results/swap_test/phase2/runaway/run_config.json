@@ -1,0 +1,11 @@
+{
+ "checkpoint_config_sha256": "878bf7fdac8ab14aeabe3e0cc346549012921d84183d1fea71182a6434e78eb0",
+ "patch_sha256": null,
+ "merge_spec_sha256": "2950042a5085ce68285ddaa2a5edc92c6caeaf5122c761301c1b85335aa04cf0",
+ "prompts_sha256": "126d243cd139ee57e9c66ec4df95e7296fdf035ecb7da7ac125fd5b106e8b0d2",
+ "prompts_used": 48,
+ "arms": "PNG",
+ "cap": 4096,
+ "seed": 9984,
+ "temperature": 1.0
+}

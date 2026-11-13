@@ -1,0 +1,100 @@
+{
+ "load": {
+  "arms": "PNG",
+  "spec_sha256": "2950042a5085ce68285ddaa2a5edc92c6caeaf5122c761301c1b85335aa04cf0",
+  "memory": {
+   "weights_gib": 124.94416809082031,
+   "measured": true,
+   "rss": 125.29467391967773,
+   "peak_rss": 125.8143196105957,
+   "total": 247.71857833862305,
+   "available": 119.65460968017578,
+   "min_free_gib": 60.0
+  }
+ },
+ "kv": {
+  "planned_gib": {
+   "runaway": 23.707809448242188,
+   "capability": 75.0640869140625
+  },
+  "spare_gib": {
+   "runaway": 95.90036010742188,
+   "capability": 44.54408264160156
+  }
+ },
+ "template": "prompts render as expected",
+ "cached": {
+  "positions": 2600,
+  "top1_agreement": 0.983846127986908,
+  "max_abs_diff": 13.5,
+  "nan": false
+ },
+ "mixed": {
+  "positions": 33,
+  "top1_agreement": 1.0,
+  "max_abs_diff": 6.0,
+  "nan": false,
+  "other_arms_max_abs_diff_from_P": {
+   "N": 18.0,
+   "G": 51.0
+  }
+ },
+ "speed": {
+  "timings": [
+   {
+    "batch": 1,
+    "prefill_s": 0.9422833320004429,
+    "prefill_tokens": 74,
+    "step_s": 0.08755689489998986,
+    "tokens_per_s": 11.42114508677164
+   },
+   {
+    "batch": 16,
+    "prefill_s": 3.0765954590006004,
+    "prefill_tokens": 1239,
+    "step_s": 0.41657375624999987,
+    "tokens_per_s": 38.40856453376257
+   },
+   {
+    "batch": 64,
+    "prefill_s": 13.505767071999799,
+    "prefill_tokens": 5244,
+    "step_s": 0.8462690282000039,
+    "tokens_per_s": 75.62606909545848
+   },
+   {
+    "batch": 144,
+    "prefill_s": 45.66212093700051,
+    "prefill_tokens": 12642,
+    "step_s": 1.300279726650024,
+    "tokens_per_s": 110.745401199936
+   }
+  ],
+  "bandwidth_GBps": 33.226174920950356,
+  "per_expert_call_ms": -0.3936785556237972,
+  "prefill_tokens_per_s": 402.71787971840666,
+  "projected_hours": {
+   "P_runs_away": 1.1181174768090074,
+   "nothing_runs_away": 0.5783090116586992
+  },
+  "projected_task_hours": {
+   "1_arm": 3.021590132135961,
+   "2_arms": 5.707576977295325
+  },
+  "task_reply_model": {
+   "median": 481.0,
+   "sigma": 0.8,
+   "assumed": true
+  }
+ },
+ "memory_after_checks": "memory: process holds 128.5 GiB (peak 131.4 GiB); machine has 116.4 of 247.7 GiB available",
+ "passed": {
+  "load": true,
+  "kv": true,
+  "template": true,
+  "cached": true,
+  "mixed": true,
+  "speed": true
+ },
+ "exit_code": 0
+}

@@ -1,0 +1,36 @@
+{
+ "base": {
+  "path": "/data/b",
+  "widen": {}
+ },
+ "donors": [
+  {
+   "path": "/data/e",
+   "widen": {
+    "model\\.layers\\.[0-9]+\\.mlp\\.router\\.bias": "bfloat16"
+   }
+  },
+  {
+   "path": "/data/e2",
+   "widen": {
+    "model\\.layers\\.[0-9]+\\.mlp\\.router\\.bias": "bfloat16"
+   }
+  }
+ ],
+ "coefficients": [
+  1.0,
+  1.0
+ ],
+ "tensor_coefficients": {},
+ "arms": {
+  "P": null,
+  "N": {
+   "group": "attention_gates",
+   "source": "/data/merge-ta0.5"
+  },
+  "G": {
+   "group": "attention_gates",
+   "source": "/data/b"
+  }
+ }
+}

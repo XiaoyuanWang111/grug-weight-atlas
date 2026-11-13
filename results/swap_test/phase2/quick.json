@@ -1,0 +1,11 @@
+{
+ "replies": 18,
+ "stopped": 18,
+ "median_length": 481.0,
+ "correct": {
+  "cruxeval_input": 5,
+  "cruxeval_output": 4,
+  "mmlu_pro": 3
+ },
+ "problems": []
+}

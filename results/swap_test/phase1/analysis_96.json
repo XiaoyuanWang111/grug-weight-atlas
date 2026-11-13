@@ -1,0 +1,127 @@
+{
+ "reference": "A",
+ "prompts": 96,
+ "missing": {
+  "A": 0,
+  "B": 0,
+  "D": 0
+ },
+ "arms": {
+  "A": {
+   "n": 96,
+   "capped": 0,
+   "rate": 0.0,
+   "accuracy": 0.90625,
+   "stop_reasons": {
+    "128001": 89,
+    "128009": 7
+   },
+   "end_think": 63,
+   "length_quartiles": [
+    "132",
+    "212",
+    "332"
+   ],
+   "distinct4_median": 0.9260423786739576,
+   "zlib_median": 0.44507764570552144,
+   "distinct4_median_capped": null,
+   "zlib_median_capped": null,
+   "identical_to_reference": 96,
+   "first_divergence_median": null
+  },
+  "B": {
+   "n": 96,
+   "capped": 6,
+   "rate": 0.0625,
+   "accuracy": 0.8854166666666666,
+   "stop_reasons": {
+    "128009": 44,
+    "128001": 46,
+    "cap": 6
+   },
+   "end_think": 81,
+   "length_quartiles": [
+    "224",
+    "352",
+    "766"
+   ],
+   "distinct4_median": 0.9169199004395361,
+   "zlib_median": 0.4183557649992665,
+   "distinct4_median_capped": 0.9627815866797258,
+   "zlib_median_capped": 0.4073486328125,
+   "identical_to_reference": 0,
+   "first_divergence_median": 6.0
+  },
+  "D": {
+   "n": 96,
+   "capped": 5,
+   "rate": 0.052083333333333336,
+   "accuracy": 0.8541666666666666,
+   "stop_reasons": {
+    "128009": 63,
+    "cap": 5,
+    "128001": 28
+   },
+   "end_think": 79,
+   "length_quartiles": [
+    "212",
+    "376",
+    "812"
+   ],
+   "distinct4_median": 0.907370740017303,
+   "zlib_median": 0.40568416121536127,
+   "distinct4_median_capped": 0.8873653281096964,
+   "zlib_median_capped": 0.355712890625,
+   "identical_to_reference": 0,
+   "first_divergence_median": 5.0
+  }
+ },
+ "v1": {
+  "rate": 0.0,
+  "accuracy": 0.90625,
+  "passed": true
+ },
+ "comparisons": {
+  "B": {
+   "diff": 0.0625,
+   "p_value": 0.014417348725941272,
+   "newcombe95": [
+    0.01145565105451337,
+    0.12970946506441486
+   ],
+   "outcome": "no effect"
+  },
+  "D": {
+   "diff": 0.052083333333333336,
+   "p_value": 0.029626859469791406,
+   "newcombe95": [
+    0.0035186446783265907,
+    0.11618478031492638
+   ],
+   "outcome": "no effect"
+  }
+ },
+ "teacher_forced": {
+  "A": {
+   "prompts": 96,
+   "nll_mean": 0.3191118165563043,
+   "stop_logprob_median": -7.324747850001535e-05,
+   "any_stop_logprob_median": -6.539181744785622e-05,
+   "stop_logprob_minus_reference_mean": 0.0
+  },
+  "B": {
+   "prompts": 96,
+   "nll_mean": 0.3766369778972612,
+   "stop_logprob_median": -0.005055188383503754,
+   "any_stop_logprob_median": -0.005042648353420607,
+   "stop_logprob_minus_reference_mean": -0.17167681135591814
+  },
+  "D": {
+   "prompts": 96,
+   "nll_mean": 0.3885480854825603,
+   "stop_logprob_median": -0.0037680905228794953,
+   "any_stop_logprob_median": -0.0035322207651911058,
+   "stop_logprob_minus_reference_mean": -0.22595661580806156
+  }
+ }
+}

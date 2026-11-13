@@ -1,0 +1,23 @@
+reference arm A; 96 prompts; missing pairs {'A': 0, 'B': 0, 'D': 0}
+
+arm  n   capped  R      accuracy  </think>  length quartiles (censored >=)  stop reasons
+A    96  0       0.000  0.906     63        132 / 212 / 332                 {'128001': 89, '128009': 7}
+B    96  6       0.062  0.885     81        224 / 352 / 766                 {'128009': 44, '128001': 46, 'cap': 6}
+D    96  5       0.052  0.854     79        212 / 376 / 812                 {'128009': 63, 'cap': 5, '128001': 28}
+
+arm  distinct-4 (all / capped)  zlib (all / capped)  identical to ref  first divergence (median)
+A    0.926 / -               0.445 / -          96               -
+B    0.917 / 0.963           0.418 / 0.407      0                6
+D    0.907 / 0.887           0.406 / 0.356      0                5
+
+V1: R_A = 0.000 (<= 0.15), accuracy = 0.906 (>= 0.8): passed
+
+arm vs A  R diff   one-sided Fisher p  Newcombe 95%       decision
+B          +0.062   0.0144              [+0.011, +0.130]  no effect
+D          +0.052   0.0296              [+0.004, +0.116]  no effect
+
+teacher-forced on arm A's replies
+arm  prompts  mean NLL  median stop logp  median any-stop logp  mean stop logp - reference
+A    96       0.3191    -0.000            -0.000                +0.000
+B    96       0.3766    -0.005            -0.005                -0.172
+D    96       0.3885    -0.004            -0.004                -0.226

@@ -1,0 +1,166 @@
+{
+ "reference": "A",
+ "prompts": 48,
+ "missing": {
+  "A": 0,
+  "B": 0,
+  "C": 0,
+  "D": 0
+ },
+ "arms": {
+  "A": {
+   "n": 48,
+   "capped": 0,
+   "rate": 0.0,
+   "accuracy": 0.9166666666666666,
+   "stop_reasons": {
+    "128001": 45,
+    "128009": 3
+   },
+   "end_think": 31,
+   "length_quartiles": [
+    "162",
+    "224",
+    "326"
+   ],
+   "distinct4_median": 0.9241966326197473,
+   "zlib_median": 0.42956055301194,
+   "distinct4_median_capped": null,
+   "zlib_median_capped": null,
+   "identical_to_reference": 48,
+   "first_divergence_median": null
+  },
+  "B": {
+   "n": 48,
+   "capped": 3,
+   "rate": 0.0625,
+   "accuracy": 0.875,
+   "stop_reasons": {
+    "128009": 22,
+    "128001": 23,
+    "cap": 3
+   },
+   "end_think": 38,
+   "length_quartiles": [
+    "227",
+    "396",
+    "875"
+   ],
+   "distinct4_median": 0.9188146201419073,
+   "zlib_median": 0.40995675333426274,
+   "distinct4_median_capped": 0.9578844270323212,
+   "zlib_median_capped": 0.39501953125,
+   "identical_to_reference": 0,
+   "first_divergence_median": 5.0
+  },
+  "C": {
+   "n": 48,
+   "capped": 0,
+   "rate": 0.0,
+   "accuracy": 0.8958333333333334,
+   "stop_reasons": {
+    "128001": 40,
+    "128009": 8
+   },
+   "end_think": 26,
+   "length_quartiles": [
+    "139",
+    "228",
+    "320"
+   ],
+   "distinct4_median": 0.932792467948718,
+   "zlib_median": 0.4468760497144777,
+   "distinct4_median_capped": null,
+   "zlib_median_capped": null,
+   "identical_to_reference": 1,
+   "first_divergence_median": 45
+  },
+  "D": {
+   "n": 48,
+   "capped": 3,
+   "rate": 0.0625,
+   "accuracy": 0.8541666666666666,
+   "stop_reasons": {
+    "128009": 30,
+    "cap": 3,
+    "128001": 15
+   },
+   "end_think": 40,
+   "length_quartiles": [
+    "222",
+    "424",
+    "1107"
+   ],
+   "distinct4_median": 0.9045053868756121,
+   "zlib_median": 0.39951264161834193,
+   "distinct4_median_capped": 0.8873653281096964,
+   "zlib_median_capped": 0.355712890625,
+   "identical_to_reference": 0,
+   "first_divergence_median": 5.0
+  }
+ },
+ "v1": {
+  "rate": 0.0,
+  "accuracy": 0.9166666666666666,
+  "passed": true
+ },
+ "comparisons": {
+  "B": {
+   "diff": 0.0625,
+   "p_value": 0.12105263157894737,
+   "newcombe95": [
+    -0.02219477197078258,
+    0.16835438054946347
+   ],
+   "outcome": "inconclusive"
+  },
+  "C": {
+   "diff": 0.0,
+   "p_value": 1.0,
+   "newcombe95": [
+    -0.07410012966611745,
+    0.07410012966611745
+   ],
+   "outcome": "no effect"
+  },
+  "D": {
+   "diff": 0.0625,
+   "p_value": 0.12105263157894737,
+   "newcombe95": [
+    -0.02219477197078258,
+    0.16835438054946347
+   ],
+   "outcome": "inconclusive"
+  }
+ },
+ "teacher_forced": {
+  "A": {
+   "prompts": 48,
+   "nll_mean": 0.33395918525706225,
+   "stop_logprob_median": -2.3249415166982614e-05,
+   "any_stop_logprob_median": -2.269968323466678e-05,
+   "stop_logprob_minus_reference_mean": 0.0
+  },
+  "B": {
+   "prompts": 48,
+   "nll_mean": 0.39198223829808754,
+   "stop_logprob_median": -0.00397565968502973,
+   "any_stop_logprob_median": -0.003873934255501985,
+   "stop_logprob_minus_reference_mean": -0.2553052664566931
+  },
+  "C": {
+   "prompts": 48,
+   "nll_mean": 0.3364695696694569,
+   "stop_logprob_median": -5.090599817327742e-05,
+   "any_stop_logprob_median": -5.070175719599563e-05,
+   "stop_logprob_minus_reference_mean": 0.01611986705964643
+  },
+  "D": {
+   "prompts": 48,
+   "nll_mean": 0.39845527518159046,
+   "stop_logprob_median": -0.00267954014161896,
+   "any_stop_logprob_median": -0.002264882843985151,
+   "stop_logprob_minus_reference_mean": -0.2726391163845296
+  }
+ }
+}
