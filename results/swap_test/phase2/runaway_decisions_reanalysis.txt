@@ -1,0 +1,13 @@
+v1 passed
+v2 pass
+rate_P 0.6250
+candidate G
+task_arms G
+vs_A_P effect
+vs_A_N inconclusive
+vs_A_G no_effect
+necessity_N partial
+necessity_G necessary
+eligible_P no
+eligible_N no
+eligible_G yes
