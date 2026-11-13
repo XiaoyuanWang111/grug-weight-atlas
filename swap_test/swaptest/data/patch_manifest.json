@@ -1,0 +1,185 @@
+{
+  "file": "gates_full_strength.safetensors",
+  "sha256": "e8c7387ac84f01f3f1b1569397db07f99b9a4221ec78d411e86d84aa022b5946",
+  "bytes": 70831936,
+  "tensors": 104,
+  "groups": {
+    "attention_gates": [
+      "model.layers.0.attn_gated_norm.down_proj.weight",
+      "model.layers.0.attn_gated_norm.up_proj.weight",
+      "model.layers.0.self_attn.attn_gate.weight",
+      "model.layers.1.attn_gated_norm.down_proj.weight",
+      "model.layers.1.attn_gated_norm.up_proj.weight",
+      "model.layers.1.self_attn.attn_gate.weight",
+      "model.layers.10.attn_gated_norm.down_proj.weight",
+      "model.layers.10.attn_gated_norm.up_proj.weight",
+      "model.layers.10.self_attn.attn_gate.weight",
+      "model.layers.11.attn_gated_norm.down_proj.weight",
+      "model.layers.11.attn_gated_norm.up_proj.weight",
+      "model.layers.11.self_attn.attn_gate.weight",
+      "model.layers.12.attn_gated_norm.down_proj.weight",
+      "model.layers.12.attn_gated_norm.up_proj.weight",
+      "model.layers.12.self_attn.attn_gate.weight",
+      "model.layers.13.attn_gated_norm.down_proj.weight",
+      "model.layers.13.attn_gated_norm.up_proj.weight",
+      "model.layers.13.self_attn.attn_gate.weight",
+      "model.layers.14.attn_gated_norm.down_proj.weight",
+      "model.layers.14.attn_gated_norm.up_proj.weight",
+      "model.layers.14.self_attn.attn_gate.weight",
+      "model.layers.15.attn_gated_norm.down_proj.weight",
+      "model.layers.15.attn_gated_norm.up_proj.weight",
+      "model.layers.15.self_attn.attn_gate.weight",
+      "model.layers.16.attn_gated_norm.down_proj.weight",
+      "model.layers.16.attn_gated_norm.up_proj.weight",
+      "model.layers.16.self_attn.attn_gate.weight",
+      "model.layers.17.attn_gated_norm.down_proj.weight",
+      "model.layers.17.attn_gated_norm.up_proj.weight",
+      "model.layers.17.self_attn.attn_gate.weight",
+      "model.layers.18.attn_gated_norm.down_proj.weight",
+      "model.layers.18.attn_gated_norm.up_proj.weight",
+      "model.layers.18.self_attn.attn_gate.weight",
+      "model.layers.19.attn_gated_norm.down_proj.weight",
+      "model.layers.19.attn_gated_norm.up_proj.weight",
+      "model.layers.19.self_attn.attn_gate.weight",
+      "model.layers.2.attn_gated_norm.down_proj.weight",
+      "model.layers.2.attn_gated_norm.up_proj.weight",
+      "model.layers.2.self_attn.attn_gate.weight",
+      "model.layers.20.attn_gated_norm.down_proj.weight",
+      "model.layers.20.attn_gated_norm.up_proj.weight",
+      "model.layers.20.self_attn.attn_gate.weight",
+      "model.layers.21.attn_gated_norm.down_proj.weight",
+      "model.layers.21.attn_gated_norm.up_proj.weight",
+      "model.layers.21.self_attn.attn_gate.weight",
+      "model.layers.22.attn_gated_norm.down_proj.weight",
+      "model.layers.22.attn_gated_norm.up_proj.weight",
+      "model.layers.22.self_attn.attn_gate.weight",
+      "model.layers.23.attn_gated_norm.down_proj.weight",
+      "model.layers.23.attn_gated_norm.up_proj.weight",
+      "model.layers.23.self_attn.attn_gate.weight",
+      "model.layers.24.attn_gated_norm.down_proj.weight",
+      "model.layers.24.attn_gated_norm.up_proj.weight",
+      "model.layers.24.self_attn.attn_gate.weight",
+      "model.layers.25.attn_gated_norm.down_proj.weight",
+      "model.layers.25.attn_gated_norm.up_proj.weight",
+      "model.layers.25.self_attn.attn_gate.weight",
+      "model.layers.3.attn_gated_norm.down_proj.weight",
+      "model.layers.3.attn_gated_norm.up_proj.weight",
+      "model.layers.3.self_attn.attn_gate.weight",
+      "model.layers.4.attn_gated_norm.down_proj.weight",
+      "model.layers.4.attn_gated_norm.up_proj.weight",
+      "model.layers.4.self_attn.attn_gate.weight",
+      "model.layers.5.attn_gated_norm.down_proj.weight",
+      "model.layers.5.attn_gated_norm.up_proj.weight",
+      "model.layers.5.self_attn.attn_gate.weight",
+      "model.layers.6.attn_gated_norm.down_proj.weight",
+      "model.layers.6.attn_gated_norm.up_proj.weight",
+      "model.layers.6.self_attn.attn_gate.weight",
+      "model.layers.7.attn_gated_norm.down_proj.weight",
+      "model.layers.7.attn_gated_norm.up_proj.weight",
+      "model.layers.7.self_attn.attn_gate.weight",
+      "model.layers.8.attn_gated_norm.down_proj.weight",
+      "model.layers.8.attn_gated_norm.up_proj.weight",
+      "model.layers.8.self_attn.attn_gate.weight",
+      "model.layers.9.attn_gated_norm.down_proj.weight",
+      "model.layers.9.attn_gated_norm.up_proj.weight",
+      "model.layers.9.self_attn.attn_gate.weight"
+    ],
+    "router_weights": [
+      "model.layers.0.mlp.router.weight",
+      "model.layers.1.mlp.router.weight",
+      "model.layers.10.mlp.router.weight",
+      "model.layers.11.mlp.router.weight",
+      "model.layers.12.mlp.router.weight",
+      "model.layers.13.mlp.router.weight",
+      "model.layers.14.mlp.router.weight",
+      "model.layers.15.mlp.router.weight",
+      "model.layers.16.mlp.router.weight",
+      "model.layers.17.mlp.router.weight",
+      "model.layers.18.mlp.router.weight",
+      "model.layers.19.mlp.router.weight",
+      "model.layers.2.mlp.router.weight",
+      "model.layers.20.mlp.router.weight",
+      "model.layers.21.mlp.router.weight",
+      "model.layers.22.mlp.router.weight",
+      "model.layers.23.mlp.router.weight",
+      "model.layers.24.mlp.router.weight",
+      "model.layers.25.mlp.router.weight",
+      "model.layers.3.mlp.router.weight",
+      "model.layers.4.mlp.router.weight",
+      "model.layers.5.mlp.router.weight",
+      "model.layers.6.mlp.router.weight",
+      "model.layers.7.mlp.router.weight",
+      "model.layers.8.mlp.router.weight",
+      "model.layers.9.mlp.router.weight"
+    ]
+  },
+  "formula": "bfloat16(float32(B) + 1.0 * (float32(E) - float32(B)) + 1.0 * (float32(E2) - float32(B)))",
+  "sources": {
+    "B": {
+      "repo": "open-athena/Snowball-67B-A2B-10T-Mixed-RLVR-Sync-Step92",
+      "revision": "80975627aebeaec3ef946ad609d9c1d95458ebd8"
+    },
+    "E": {
+      "repo": "open-athena/Snowball-67B-A2B-CruxEval-Expert-E-Step272",
+      "revision": "2eb988bb5df70378950d983ac8e70dae550cf6d5"
+    },
+    "E2": {
+      "repo": "open-athena/Snowball-67B-A2B-MMLUPro-Expert-E2-Step254",
+      "revision": "0f22c03aff076f46c292196cf0d03a9bc4ab81c5"
+    }
+  },
+  "apply_to": {
+    "repo": "open-athena/Snowball-67B-A2B-Merge-TA0.5",
+    "revision": "cd0605de0ab76473b2262a9545596436e726b27d"
+  },
+  "check": {
+    "attn_gated_norm.down_proj.weight": {
+      "scalars": 8519680,
+      "recomputed_TA0.5_values_that_differ_from_public": 0,
+      "recomputed_TIES_values_that_differ_from_public": 236537,
+      "displacement_percent": {
+        "E": 2.8737,
+        "E2": 2.7854,
+        "TA": 2.3152,
+        "TIES": 3.264,
+        "FULL": 4.6141
+      }
+    },
+    "attn_gated_norm.up_proj.weight": {
+      "scalars": 8519680,
+      "recomputed_TA0.5_values_that_differ_from_public": 0,
+      "recomputed_TIES_values_that_differ_from_public": 232205,
+      "displacement_percent": {
+        "E": 3.4486,
+        "E2": 3.4341,
+        "TA": 2.8708,
+        "TIES": 3.9216,
+        "FULL": 5.7289
+      }
+    },
+    "self_attn.attn_gate.weight": {
+      "scalars": 1331200,
+      "recomputed_TA0.5_values_that_differ_from_public": 0,
+      "recomputed_TIES_values_that_differ_from_public": 66162,
+      "displacement_percent": {
+        "E": 1.3268,
+        "E2": 1.3325,
+        "TA": 1.1216,
+        "TIES": 1.5133,
+        "FULL": 2.2178
+      }
+    },
+    "mlp.router.weight": {
+      "scalars": 17039360,
+      "recomputed_TA0.5_values_that_differ_from_public": 0,
+      "recomputed_TIES_values_that_differ_from_public": 1173940,
+      "displacement_percent": {
+        "E": 0.1662,
+        "E2": 0.153,
+        "TA": 0.132,
+        "TIES": 0.191,
+        "FULL": 0.2388
+      }
+    }
+  }
+}

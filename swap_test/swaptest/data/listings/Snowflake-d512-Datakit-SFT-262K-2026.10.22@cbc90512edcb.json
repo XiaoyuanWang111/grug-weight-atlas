@@ -1,0 +1,26 @@
+{
+  "repo": "open-athena/Snowflake-d512-Datakit-SFT-262K-2026.10.22",
+  "repo_type": "model",
+  "revision": "cbc90512edcb5e38bad11e82d46bb69c3ef98afa",
+  "source": "Hub API repository listing with file metadata, saved while the experiment was planned",
+  "files": {
+    ".gitattributes": [1570, null],
+    "LICENSE": [2619, null],
+    "README.md": [9484, null],
+    "chat_template.jinja": [4427, null],
+    "config.json": [1039, null],
+    "export_complete.json": [13471, null],
+    "generation_config.json": [58, null],
+    "model-00001-of-00002.safetensors": [945583280, "5d3448fb1ed1e510e8b043b6cb1d93d3093488a43031ee089d26b1720bd28c37"],
+    "model-00002-of-00002.safetensors": [547645040, "e4f860cab6a84862ddba2df5b69c786c5ae7b20da99c03c7bf87020a63c25240"],
+    "model.safetensors.index.json": [9847, null],
+    "pretraining_replay_mix.json": [58936, null],
+    "tokenizer.json": [17209859, "6a61ca2105a54e9984169b409581f31cc50330d1b47104af13c221b05e462e45"],
+    "tokenizer_config.json": [4903, null],
+    "training_chat_template.jinja": [4423, null],
+    "training_data_mix.json": [34196, null],
+    "training_recipe_sources.tar.gz": [34659, "66949710677d1bd3bf09fb361b867210285d41b40d97d8e3a39a4ae811cf0067"],
+    "training_schedule.json": [3456, null],
+    "vllm_validation.json": [9927, null]
+  }
+}

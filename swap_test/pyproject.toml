@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swaptest"
+version = "0.1.0"
+description = "CPU harness for an attention-gate swap test on Grug / Snowball mixture-of-experts checkpoints."
+requires-python = ">=3.12"
+dependencies = ["torch", "safetensors", "numpy"]
+
+[project.optional-dependencies]
+run = ["transformers==5.16.1", "huggingface_hub[hf_xet]", "pyarrow", "loguru"]
+test = ["pytest", "jinja2", "pyarrow"]
+
+[tool.setuptools.packages.find]
+include = ["swaptest*"]
+
+[tool.setuptools.package-data]
+swaptest = ["data/*.json", "data/listings/*.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["A", "B", "E", "F", "I", "NPY", "RUF", "UP", "W", "N805", "PLR0124", "PLR1722", "RET502", "RET503",
+          "SIM115", "TID252", "ICN001"]
+ignore = ["B008", "UP015", "A005", "E741"]
