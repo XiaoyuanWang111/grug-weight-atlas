@@ -7,3 +7,6 @@ __pycache__/
 /index/
 # Attached to the release instead; see README.md.
 /patch_2x2/gates_full_strength.safetensors
+# Written by an editable install of swap_test/.
+*.egg-info/
+/swap_test/build/

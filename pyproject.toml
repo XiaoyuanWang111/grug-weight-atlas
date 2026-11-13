@@ -10,10 +10,13 @@ dependencies = ["numpy"]
 
 [tool.pytest.ini_options]
 # The scripts in atlas/ import each other as top-level modules, the way they run from the command line.
+# swap_test/ is a separate package with its own pyproject.toml; its tests need torch and run with
+# "python -m pytest swap_test", which takes the settings of that file.
 pythonpath = ["atlas"]
 testpaths = ["tests"]
 
 [tool.ruff]
+# Files under swap_test/ take the settings of swap_test/pyproject.toml.
 line-length = 121
 target-version = "py312"
 src = ["atlas"]
