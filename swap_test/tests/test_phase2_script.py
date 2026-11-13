@@ -4,8 +4,10 @@ B, E and E2 are tiny float32 checkpoints whose router biases follow the 67B layo
 experts, frozen during fine-tuning); Merge-TA0.5 is their half-strength merge with B's router biases kept, so the
 first merge check must fail on the router biases alone and the pre-registered rebuild with router-bias
 coefficients 0 must pass. Every byte token is a stop token, so no arm runs away: P is not reproduced as a
-runaway (V2 fails), N, G and P are eligible, N is the candidate and P is scored too; the made-up replies cannot be
-correct, so V3 fails at the end (exit code 43). The script is run three times, stopping at the two pauses.
+runaway (V2 fails). With 40 GSM8K prompts, 0 of 40 against 0 of 40 is "no effect" (the upper end of the Newcombe
+interval is 0.088; with 4 prompts it is 0.49, "inconclusive"), so N, G and P are eligible, N is the candidate and P
+is scored too; the made-up replies cannot be correct, so V3 fails at the end (exit code 43). The script is run
+three times, stopping at the two pauses.
 """
 
 import json
@@ -80,7 +82,7 @@ def make_data(root: Path) -> None:
     (phase1 / "main").mkdir(parents=True)
     gsm8k = root / "gsm8k.jsonl"
     gsm8k.write_text(
-        "".join(json.dumps({"question": f"What is {i} + 1?", "answer": f"#### {i + 1}"}) + "\n" for i in range(4))
+        "".join(json.dumps({"question": f"What is {i} + 1?", "answer": f"#### {i + 1}"}) + "\n" for i in range(40))
     )
     gsm8k_prompts.main(
         [
@@ -91,7 +93,7 @@ def make_data(root: Path) -> None:
             "--out",
             str(phase1 / "prompts.jsonl"),
             "--count",
-            "4",
+            "40",
         ],
         tokenizer=FakeTokenizer(),
     )
@@ -180,8 +182,8 @@ def test_run_phase2_flow(tmp_path):
     assert run(TASKS_APPROVED="1") == 44  # pause before the capability runs
     prereg = (out / "prereg_phase2.md").read_text()
     assert "____" not in prereg and "(merge_spec_sha256)" in prereg
-    assert len(read_jsonl(out / "runaway" / "replies.jsonl")) == 12
-    assert len(read_jsonl(out / "teacher_forced.jsonl")) == 12
+    assert len(read_jsonl(out / "runaway" / "replies.jsonl")) == 120
+    assert len(read_jsonl(out / "teacher_forced.jsonl")) == 120
     decisions = dict(line.split(" ", 1) for line in (out / "runaway_decisions.txt").read_text().splitlines())
     assert decisions["v1"] == "passed" and decisions["v2"] == "fail" and decisions["task_arms"] == "N,P"
 
