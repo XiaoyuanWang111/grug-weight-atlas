@@ -115,7 +115,7 @@ def analyze_runaway(
         arm: bool(
             summary["v1"]["passed"]
             and arms[arm]["rate"] <= ELIGIBLE_MAX_RATE
-            and summary["comparisons"][arm]["outcome"] != "effect"
+            and summary["comparisons"][arm]["outcome"] == "no effect"
         )
         for arm in ("P", "N", "G")
         if arm in arms

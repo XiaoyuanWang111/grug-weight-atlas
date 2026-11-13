@@ -46,3 +46,12 @@ run, the same prompts, seed and noise are run once more at batch size 96 instead
 numbers the two runs can differ only through this arithmetic noise, so the replicate shows how far it moves
 each arm's share of capped replies. The decision rule is applied to the main run; the replicate is reported
 beside it.
+
+## 3. Eligibility for capability scoring (phase 2), corrected before any capability reply was sampled
+
+PREREG_phase2.md says an arm is eligible when V1 passed, its R is at most 0.15 and it shows no effect against A.
+The code of `analyze_phase2.py` tested "outcome is not effect" instead, so in the run of 2026-11-13 it reported
+arm N (3 of 48 capped, inconclusive against A) as eligible and as the candidate. By the pre-registered text N
+is not eligible and the candidate is G (0 of 48 capped, no effect against A). The code now tests "no effect".
+The runaway decisions (V2, the comparisons and the necessity outcomes) do not depend on this line. Found on
+2026-11-13 22:15 UTC, before step 22.

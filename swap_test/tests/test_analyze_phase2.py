@@ -56,7 +56,9 @@ def test_runaway_without_reproduction_scores_p_too():
     summary = a2.analyze_runaway(gsm8k_rows(), runaway_replies({"A": 1, "P": 5, "N": 1, "G": 2}), None)
     p2 = summary["phase2"]
     assert p2["v2"]["outcome"] == "fail" and set(p2["necessity"].values()) == {"not_tested"}
-    assert p2["task_arms"] == ["N", "P"]
+    assert p2["task_arms"] == ["N"]  # P, 5 of 48 against 1 of 48, is inconclusive against A: not eligible
+    quiet = a2.analyze_runaway(gsm8k_rows(), runaway_replies({"A": 1, "P": 1, "N": 1, "G": 2}), None)
+    assert quiet["phase2"]["task_arms"] == ["N", "P"]
     partial = a2.analyze_runaway(gsm8k_rows(), runaway_replies({"A": 1, "P": 18, "N": 1, "G": 1}), None)
     assert partial["phase2"]["v2"]["outcome"] == "partial"
 
