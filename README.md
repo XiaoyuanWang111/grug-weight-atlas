@@ -1,13 +1,15 @@
 # Grug weight atlas
 
 This repository measures how public checkpoints of the Snowball / Grug 67B-A2B family (Hugging Face organisation
-`open-athena`) differ from each other, tensor family by tensor family. The scripts read single tensors, single routed
-experts or single expert rows of the safetensors files over HTTP range requests, so no checkpoint is downloaded. The
-tables in `results/` are the scripts' outputs at the commits listed below, and the atlas tables can be recomputed
-offline from the per-unit records stored next to them.
+`open-athena`) differ from each other, tensor family by tensor family, and tests on CPU whether the tensors that moved
+most cause the failure of a merge reported in marin#9984. The scripts in `atlas/` read single tensors, single routed
+experts or single expert rows of the safetensors files over HTTP range requests, so they download no checkpoint; the
+swap test in `swap_test/` downloads whole checkpoints and generates with them (section 1). The tables in `results/`
+are the scripts' outputs at the commits listed below, and the atlas tables can be recomputed offline from the
+per-unit records stored next to them.
 
 Contents: [layout](#layout), [checkpoints](#checkpoints), [atlas runs](#atlas-runs),
-[1. the experts and merges of marin#9984](#1-what-moved-in-the-experts-and-merges-of-marin9984-and-a-2-x-2-swap-test),
+[1. the experts and merges of marin#9984](#1-what-moved-in-the-experts-and-merges-of-marin9984-and-a-swap-test-of-the-attention-gates),
 [2. the two training lines](#2-distances-between-the-two-training-lines),
 [3. `dare-ties-02`](#3-what-campaign-2s-dare-ties-02-stores),
 [4. BF16 rounding](#4-the-bf16-rounding-rule-and-its-check-against-marin10700), [reproduce](#reproduce).
@@ -20,7 +22,7 @@ Contents: [layout](#layout), [checkpoints](#checkpoints), [atlas runs](#atlas-ru
 | `atlas/atlas2.py` | records an atlas run: per unit, the parent's norm and the Gram matrix of the children's deltas |
 | `atlas/pairwise.py`, `atlas/ta_full_strength.py`, `atlas/gate_layers.py`, `atlas/expert_units.py` | tables computed from an atlas run, offline |
 | `atlas/family_probe.py` | displacement by tensor family between a parent and its children |
-| `atlas/gate_patch.py`, `atlas/make_blocks.py` | the 2 x 2 test of marin#9984 (section 1) |
+| `atlas/gate_patch.py`, `atlas/make_blocks.py` | the full-strength patch and the merge recipes of section 1 |
 | `atlas/dare_probe_wide.py`, `atlas/v01_probe.py` | what the Campaign 2 merge `dare-ties-02` stores, and whether the released models still hold it (section 3) |
 | `atlas/grid_probe.py`, `atlas/grid_fit.py`, `atlas/ladder_check.py` | the BF16 rounding rule (section 4) |
 | `atlas/pin_check.py`, `results/pin_check.txt` | the weight files at the commits Marin's issues pin against those read here |
@@ -29,8 +31,10 @@ Contents: [layout](#layout), [checkpoints](#checkpoints), [atlas runs](#atlas-ru
 | `results/dare_probe/` | outputs of `dare_probe_wide.py` and `v01_probe.py`, and the recipe parameters with the 27 rows read |
 | `results/rounding/ladder_check.txt` | output of `ladder_check.py` |
 | `patch_2x2/` | `manifest.json` and `build_log.txt` of the full-strength patch; the patch file is attached to the release |
-| `recipes_2x2/` | `tensor_coefficients` blocks that build the two missing cells of the 2 x 2 as new merges |
-| `tests/` | offline unit tests |
+| `recipes_2x2/` | `tensor_coefficients` blocks that build arms N and B of the swap test as new merges |
+| `swap_test/` | the swap test of section 1: package `swaptest`, its tests and scripts, the pre-registrations `PREREG.md` and `PREREG_phase2.md`, `DEVIATIONS.md`, and its own `README.md` and `pyproject.toml` |
+| `results/swap_test/` | the swap test's prompts, replies, teacher-forced rows, analyses and filled pre-registrations; `PROVENANCE.md` names the code that ran each phase |
+| `tests/` | offline unit tests of `atlas/` |
 
 ## Checkpoints
 
@@ -111,13 +115,13 @@ parent-to-child entries are measured. In `results/atlas_lce/pairwise.txt` the co
 labelled `open-athena/snow`, because their repository names do not match the name-shortening rule of `pairwise.py`;
 they appear in the order of `meta.json`, skew8 first.
 
-## 1. What moved in the experts and merges of marin#9984, and a 2 x 2 swap test
+## 1. What moved in the experts and merges of marin#9984, and a swap test of the attention gates
 
 **Question.** marin#9984 merged B + a (E - B) + b (E2 - B) with B = Step92 and two expert fine-tunes of it, E and E2
 (full SFT with AdamH at learning rate 1e-5). It published Merge-TA0.5 (a = b = 0.5) and Merge-TIES-d0.5 (density 0.5,
 a = b = 1), and withheld the merge at a = b = 1.0, which scored GSM8K 50.0, GPQA-D 30.0 and IFEval 73.3 with unusually
 long outputs (median 85k to 95k characters). Which tensor families did E and E2 move, where do the three merges sit,
-and how can the moved families be swapped between the merges?
+and do the families that moved most cause the long outputs?
 
 **Method.** `atlas_step92` holds every tensor outside the routed experts in full and 8 of 256 routed experts per
 layer, for Step92 and ten children. `ta_full_strength.py` sums the units per tensor family and gives |x - B| / |B| for
@@ -161,22 +165,14 @@ Displacement |x - B| / |B| in percent of Step92's norm in each family (selected 
   updates by their coefficient mass, so where both experts agree it holds the mean of the two deltas, and where one
   survives it holds that delta in full: 3.92% / 3.26% / 1.51%. In the attention and expert matrices a = b = 1.0 sits
   0.07% to 0.12% from B, no farther than MOPD-Step100 (0.10% to 0.13%).
-- Not established: that the displacement of these three families causes the long outputs of the withheld merge.
 
-**The 2 x 2 test.** Two swaps between the merges of #9984 separate the three families from the rest:
-
-| | rest of the model at 0.5 | rest of the model at 1.0 |
-|---|---|---|
-| three families at 0.5 | Merge-TA0.5 (public) | cell C: the withheld merge with the 78 tensors of Merge-TA0.5 |
-| three families at 1.0 | cell D: Merge-TA0.5 with the 78 tensors of the patch | the withheld merge (`ta-a1.0-b1.0`) |
-
-`gate_patch.py` reads the 78 tensors of the three families and the 26 router weights (another 2-D family of the
-plain-Adam group) from B, E, E2, Merge-TA0.5 and Merge-TIES-d0.5. It recomputes the half-strength merge with the
-arithmetic of `marin.merging.arithmetic.merge_tensor` (float32, each update scaled, then summed, base added last, cast
-to bfloat16): in all 35,409,920 stored values of the 104 tensors it equals the public Merge-TA0.5. The recomputed TIES
-merge differs from the public Merge-TIES-d0.5 in some values; that is expected, because the top-k cut has ties among
-bfloat16 differences and `torch.topk` breaks them in its own order. It then writes the 104 tensors at a = b = 1.0.
-Its output is `patch_2x2/build_log.txt`; the displacement columns are for the stored, rounded values:
+**The patch.** `gate_patch.py` reads the 78 tensors of the three families and the 26 router weights (another 2-D
+family of the plain-Adam group) from B, E, E2, Merge-TA0.5 and Merge-TIES-d0.5. It recomputes the half-strength merge
+with the arithmetic of `marin.merging.arithmetic.merge_tensor` (float32, each update scaled, then summed, base added
+last, cast to bfloat16): in all 35,409,920 stored values of the 104 tensors it equals the public Merge-TA0.5. The
+recomputed TIES merge differs from the public Merge-TIES-d0.5 in some values; that is expected, because the top-k cut
+has ties among bfloat16 differences and `torch.topk` breaks them in its own order. It then writes the 104 tensors at
+a = b = 1.0. Its output is `patch_2x2/build_log.txt`; the displacement columns are for the stored, rounded values:
 
 ```
 family                                  scalars  TA0.5 differ  TIES differ |      E     E2  TA0.5   TIES   full   worst layer
@@ -190,20 +186,96 @@ The patch file `gates_full_strength.safetensors` is attached to the release of t
 104 bfloat16 tensors, 70,831,936 bytes, SHA-256
 `e8c7387ac84f01f3f1b1569397db07f99b9a4221ec78d411e86d84aa022b5946`. Each tensor is
 bfloat16(float32(B) + 1.0 (float32(E) - float32(B)) + 1.0 (float32(E2) - float32(B))). `patch_2x2/manifest.json`
-lists the source commits, the tensor names in two groups (`attention_gates`, 78 tensors, for cell D;
-`router_weights`, 26 tensors, to swap the router weights as well) and the checks above. Cell D is Merge-TA0.5 at
-commit `cd0605de0ab76473b2262a9545596436e726b27d` with every tensor of the `attention_gates` group replaced by the
-patch's tensor of the same name. To rebuild the file:
+lists the source commits, the tensor names in two groups (`attention_gates`, 78 tensors; `router_weights`, 26
+tensors) and the checks above. To rebuild the file:
 
 ```
 python atlas/gate_patch.py > patch_2x2/build_log.txt
 sha256sum patch_2x2/gates_full_strength.safetensors
 ```
 
-`recipes_2x2/gate_half.json` (cell C) and `recipes_2x2/gate_full.json` (cell D) build the two cells as new merges
-instead: each is the value of the recipe key `tensor_coefficients` of the #9974 tools (coefficients over the donors
+`recipes_2x2/gate_half.json` and `recipes_2x2/gate_full.json` build arms N and B of the swap test below as new
+merges: each is the value of the recipe key `tensor_coefficients` of the #9974 tools (coefficients over the donors
 E, E2 for the 78 tensors), to be added to the recipe of the two existing merges with default coefficients [1.0, 1.0]
-(cell C) or [0.5, 0.5] (cell D). `python atlas/make_blocks.py` writes them.
+(arm N) or [0.5, 0.5] (arm B). `python atlas/make_blocks.py` writes them.
+
+**The swap test.** `swap_test/` generates with the 67B on CPU from public weights and compares arms that differ only
+in the 78 tensors of the three families (the attention gates below) or in the 26 router weights. Phase 1 keeps the
+rest of the model at a = b = 0.5, phase 2 at a = b = 1.0. All arms answer the same 48 GSM8K test prompts, drawn with
+a fixed seed and rendered as one user message with Merge-TA0.5's chat template, thinking on. Tokens are sampled at
+temperature 1.0 with Gumbel noise seeded by prompt and position, so the arms share their random numbers, and a reply
+ends at token 128001 or 128009 or at 4,096 new tokens. The arms of a phase share one copy of the weights and run in
+mixed batches, in bfloat16.
+
+The primary statistic is the share of replies that reach the cap without a stop token, here called capped. An arm
+shows an **effect** against arm A when the difference in capped shares is at least 0.25 and the one-sided Fisher
+exact p is below 0.01, and **no effect** when the upper end of the Newcombe 95% interval of the difference is below
+0.15; otherwise it is **inconclusive**, and in phase 1 arm A and the inconclusive arms get 48 more prompts once. No
+arm counts unless arm A caps at most 15% of its replies and answers at least 80% correctly (V1), and the outcomes of
+phase 2 count only if the full-strength merge caps at least 50% (V2, from #9984's median output length).
+`swap_test/PREREG.md` and `swap_test/PREREG_phase2.md` fix these rules; the copies filled in before the main runs,
+with their SHA-256, are in `results/swap_test/`. `swap_test/DEVIATIONS.md` records three deviations: thresholds of
+the stand-in validation and of the 67B self-check, relaxed before any reply was sampled, and the eligibility rule for
+capability scoring, corrected before any capability reply was sampled.
+
+Phase 2 builds the full-strength merge in memory with the arithmetic of `merge_tensor`. The same code at
+a = b = 0.5 equals the downloaded Merge-TA0.5 in every stored value of all 502 tensors (67,078,882,816 values;
+`results/swap_test/phase2/merge_check.json`).
+
+**Results.** Per arm, on the 48 prompts (`results/swap_test/phase1/analysis.txt`, `phase2/runaway.txt`); a capped
+reply is graded on its text and counts as 4,096 or more tokens, and arm B is not the checkpoint B:
+
+| arm | weights | GSM8K accuracy | new tokens: quartiles |
+|---|---|---:|---|
+| A | Merge-TA0.5 as published | 0.917 | 162 / 224 / 326 |
+| B | A with the 78 attention-gate tensors of the patch | 0.875 | 227 / 396 / 875 |
+| C | A with the 26 router weights of the patch | 0.896 | 139 / 228 / 320 |
+| D | A with all 104 tensors of the patch | 0.854 | 222 / 424 / 1,107 |
+| P | B + 1.0 (E - B) + 1.0 (E2 - B), rebuilt from B, E and E2 | 0.458 | 646 / >= 4,096 / >= 4,096 |
+| N | P with the 78 attention-gate tensors of Merge-TA0.5 | 0.833 | 236 / 333 / 655 |
+| G | P with the 78 attention-gate tensors of B | 0.958 | 162 / 256 / 414 |
+
+Capped replies of 48, by the strength of the attention gates and of the rest of the model (the counts of 96 are
+from the extension, `results/swap_test/phase1/analysis_96.txt`):
+
+| rest of the model | attention gates at B | attention gates at 0.5 | attention gates at 1.0 |
+|---|---|---|---|
+| at 0.5 | not run | arm A: 0 (0 of 96) | arm B: 3 (6 of 96) |
+| at 1.0 | arm G: 0 | arm N: 3 | arm P: 30 |
+
+Arm C capped 0 of 48, and arm D 3 of 48, then 5 of 96. The comparisons under the pre-registered rule:
+
+| comparison | prompts | difference in capped share | one-sided Fisher p | Newcombe 95% interval | outcome |
+|---|---:|---:|---:|---|---|
+| B against A | 48 | +0.062 | 0.121 | -0.022 to +0.168 | inconclusive |
+| B against A | 96 | +0.062 | 0.0144 | +0.011 to +0.130 | no effect |
+| C against A | 48 | 0.000 | 1 | -0.074 to +0.074 | no effect |
+| D against A | 48 | +0.062 | 0.121 | -0.022 to +0.168 | inconclusive |
+| D against A | 96 | +0.052 | 0.0296 | +0.004 to +0.116 | no effect |
+| P against A | 48 | +0.625 | 1.06e-12 | +0.465 to +0.748 | effect |
+| N against A | 48 | +0.062 | 0.121 | -0.022 to +0.168 | inconclusive |
+| G against A | 48 | 0.000 | 1 | -0.074 to +0.074 | no effect |
+| P against N | 48 | +0.562 | 2.28e-9 | +0.386 to +0.692 | effect |
+| P against G | 48 | +0.625 | 1.06e-12 | +0.465 to +0.748 | effect |
+
+- V1 and V2 passed: rebuilt from public weights and run in this harness with Merge-TA0.5's tokenizer, chat template
+  and stop tokens, the full-strength merge fails to stop, as in #9984.
+- With the rest of the model at full strength, the attention gates are necessary for the failure. At B's values it
+  is gone: G shows no effect against A and P an effect against G, the pre-registered outcome "necessary". At half
+  strength some replies still cap; P shows an effect against N, but N is inconclusive against A, so the outcome for
+  N is "partial". The capped share rises with the strength of the gates, from 0 at B's values to 0.062 at half and
+  0.625 at full strength.
+- The attention gates are not sufficient on their own. With the rest at half strength, arm B shows no effect by the
+  rule, because the upper end of its interval over 96 prompts is below 0.15, although the interval excludes zero. Its
+  replies are longer (quartiles over the 96 prompts 224 / 352 / 766 against 132 / 212 / 332 for arm A), and on arm
+  A's replies its mean log-probability of the stop token where A stopped is 0.172 lower than A's.
+- The router weights at full strength show no effect (arm C), and adding them to the attention gates (arm D) caps no
+  more replies than the attention gates alone.
+- bfloat16 results depend slightly on the composition of the batch (deviation 2). A replicate of phase 1 at batch
+  size 96 instead of 192, with the same seed and noise, capped the same numbers of replies: 0, 3, 0 and 3 for arms A
+  to D (`results/swap_test/phase1_rep96/analysis.txt`).
+
+`results/swap_test/PROVENANCE.md` names the commit of `swap_test/` that ran each phase and what changed afterwards.
 
 **Commands.**
 
@@ -219,11 +291,50 @@ python atlas/gate_layers.py results/atlas_step92 > results/atlas_step92/gate_lay
 python atlas/pairwise.py results/atlas_step92 > results/atlas_step92/pairwise.txt
 ```
 
+The swap test is written for a machine with 256 GiB of memory and a CPU with AMX and AVX512-BF16. Phase 1
+downloads about 136 GB (Merge-TA0.5, the patch, GSM8K and a small stand-in model), phase 2 another 402.5 GB (B, E
+and E2) and the CRUXEval and MMLU-Pro files. `swap_test/README.md` gives every step, the settings, the exit codes and
+the pauses for reading; in short, with the data in `/data`:
+
+```
+bash swap_test/scripts/bootstrap.sh
+bash swap_test/scripts/download.sh /data small
+bash swap_test/scripts/download.sh /data large
+DATA_DIR=/data bash swap_test/scripts/run_phase1.sh
+bash swap_test/scripts/download_phase2.sh /data
+DATA_DIR=/data bash swap_test/scripts/run_phase2.sh
+```
+
+The analyses follow from the committed replies with the dependencies of `swap_test/` installed
+(`python -m pip install -e "swap_test[test]"`, which brings torch), from `swap_test/`:
+
+```
+R=../results/swap_test
+python -m swaptest.analyze --prompts $R/phase1/prompts.jsonl --replies $R/phase1/main/replies.jsonl \
+  --teacher-forced $R/phase1/teacher_forced.jsonl --json $R/phase1/analysis.json > $R/phase1/analysis.txt
+cat $R/phase1/teacher_forced.jsonl $R/phase1/teacher_forced_ext.jsonl > /tmp/teacher_forced_96.jsonl
+python -m swaptest.analyze --prompts $R/phase1/prompts.jsonl $R/phase1/prompts_ext.jsonl \
+  --replies $R/phase1/main/replies.jsonl $R/phase1/main_ext/replies.jsonl \
+  --teacher-forced /tmp/teacher_forced_96.jsonl --arms ABD --json $R/phase1/analysis_96.json > $R/phase1/analysis_96.txt
+python -m swaptest.analyze --prompts $R/phase1/prompts.jsonl --replies $R/phase1_rep96/main/replies.jsonl \
+  --json $R/phase1_rep96/analysis.json > $R/phase1_rep96/analysis.txt
+python -m swaptest.analyze_phase2 runaway --prompts $R/phase1/prompts.jsonl \
+  --replies $R/phase1/main/replies.jsonl $R/phase2/runaway/replies.jsonl \
+  --teacher-forced $R/phase2/teacher_forced.jsonl --json $R/phase2/runaway_reanalysis.json \
+  --decisions $R/phase2/runaway_decisions_reanalysis.txt > $R/phase2/runaway_reanalysis.txt
+```
+
+The output of each command equals the committed file.
+
 **Limits.** Routed experts are a sample of 8 of 256 per layer; every other tensor is read in full. The a = b = 1.0
 column of the first table is computed from the expert deltas before rounding; the patch holds the stored, rounded
-values. The patch holds the values of the withheld merge in these tensors only if that merge was built with the same
-arithmetic, which #9984 states ("#9974 tools, B anchor"); its weights are not public. Neither swap of the 2 x 2 has been
-run, so the link between the three families and the long outputs is untested.
+values. The patch and arm P hold the values of the withheld merge only if that merge was built with the arithmetic
+that reproduces Merge-TA0.5, which #9984 states ("#9974 tools, B anchor"); its weights are not public. The swap test
+used 48 GSM8K prompts (96 for arms A, B and D), one seed, one pair of experts, a cap of 4,096 new tokens where #9984
+allowed 30,720, and this CPU harness in bfloat16, not Marin's vLLM serving stack. N against A was not extended to 96
+prompts, which the pre-registration allows, and the attention gates at B's values with the rest at half strength
+were not run. The capability comparison of G with Merge-TA0.5 on CRUXEval and MMLU-Pro, pre-registered in
+`swap_test/PREREG_phase2.md`, was not run, so how much of the experts' skills G keeps is not measured.
 
 ## 2. Distances between the two training lines
 
@@ -454,10 +565,10 @@ of Step92, not from the checkpoints of #10700, and fits sigma to a single report
 
 ## Reproduce
 
-Python 3.12 or later; the scripts need only `numpy`, and the tests need `pytest`. The offline tables were recomputed
-with Python 3.12 and numpy 2.5. Run every command from the repository root. The scripts that read the network write
-their tensor indexes to `index/` (not in git) and start at most one request every 0.2 s; the first index of a
-repository costs one API request and two range requests per safetensors file.
+Python 3.12 or later; the scripts in `atlas/` need only `numpy`, and their tests need `pytest`. The offline tables were
+recomputed with Python 3.12 and numpy 2.5. Unless a block says otherwise, run every command from the repository root.
+The scripts that read the network write their tensor indexes to `index/` (not in git) and start at most one request
+every 0.2 s; the first index of a repository costs one API request and two range requests per safetensors file.
 
 | script | network read | reading time in `log.txt` |
 |---|---|---|
@@ -491,10 +602,22 @@ python atlas/ladder_check.py > results/rounding/ladder_check.txt
 python -m pytest
 ```
 
-The output of each command equals the committed file. The tests check the bfloat16 encoder against an exact
-reference, the task arithmetic and TIES of `gate_patch.py` on hand-checked arrays, the safetensors writer, and the
-distance arithmetic of `pairwise.py`. Lint: `ruff check` and `ruff format --check` with the settings in
-`pyproject.toml`.
+The output of each command equals the committed file. `python -m pytest` runs the tests in `tests/`, which check the
+bfloat16 encoder against an exact reference, the task arithmetic and TIES of `gate_patch.py` on hand-checked arrays,
+the safetensors writer, and the distance arithmetic of `pairwise.py`. Lint: `ruff check` and `ruff format --check`
+with the settings in `pyproject.toml`; the files under `swap_test/` take the settings of `swap_test/pyproject.toml`.
+
+The swap test is a separate package, `swaptest`, with its own `swap_test/pyproject.toml`, and `python -m pytest` at
+the root does not collect its tests. They need `torch`, `safetensors`, `numpy`, `pytest`, `jinja2` and `pyarrow`, but
+neither network access nor model weights:
+
+```
+python -m pip install -e "swap_test[test]"
+python -m pytest swap_test -p no:cacheprovider
+```
+
+The smoke test of `run_phase2.sh`, `test_phase2_script.py::test_run_phase2_flow`, needs `bash` and takes most of the
+suite's time; `--deselect tests/test_phase2_script.py::test_run_phase2_flow` leaves it out.
 
 ## License
 
