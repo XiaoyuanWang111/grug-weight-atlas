@@ -34,7 +34,8 @@ Contents: [layout](#layout), [checkpoints](#checkpoints), [atlas runs](#atlas-ru
 | `recipes_2x2/` | `tensor_coefficients` blocks that build arms N and B of the swap test as new merges |
 | `swap_test/` | the swap test of section 1: package `swaptest`, its tests and scripts, the pre-registrations `PREREG.md` and `PREREG_phase2.md`, `DEVIATIONS.md`, and its own `README.md` and `pyproject.toml` |
 | `results/swap_test/` | the swap test's prompts, replies, teacher-forced rows, analyses and filled pre-registrations; `PROVENANCE.md` names the code that ran each phase |
-| `tests/` | offline unit tests of `atlas/` |
+| `probes/assistant_prefix/` | a CPU probe of the prompt that Marin's assistant-prefix harness renders, sampled with `swap_test/`: prompts, replies, grades and its own `README.md` |
+| `tests/` | offline unit tests of `atlas/` and of the probe's statistics |
 
 ## Checkpoints
 
