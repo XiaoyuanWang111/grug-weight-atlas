@@ -15,7 +15,9 @@ prompts and noise:
     score, candidate first.
 
 `capability` grades the replies of arm A and of the scored arms on the task prompts (`swaptest.taskprompts`) and
-compares each arm with A on the same prompts:
+compares each arm with A on the same prompts (replies to prompts that the prompt file does not hold are left out,
+so reply files of an earlier run can be given whole when only some of their prompts are analysed again; --arms
+limits the comparison to the listed arms):
   - per target (CRUXEval input, CRUXEval output, MMLU-Pro) the paired accuracy difference, its 95% interval from a
     bootstrap that resamples the prompt groups (CRUXEval problems, shared by both directions; MMLU-Pro question
     texts) within each domain, and the exact two-sided McNemar p;
@@ -31,8 +33,8 @@ compares each arm with A on the same prompts:
     "not_interpreted_stopping" when those conditions fail. `extend_X` says whether D's upper end reaches +0.02.
 
 `quicklook` grades arm A's replies to a few prompts of each task and prints them for reading; it fails (exit code
-3) when more than --max-capped replies reach the cap, the median length exceeds --max-median tokens, or a task has
-fewer than --min-correct correct replies (a sign of a broken template, extraction or grader).
+3) when more than --max-capped replies reach the cap, the median length exceeds --max-median tokens, or a task of
+the prompt file has fewer than --min-correct correct replies (a sign of a broken template, extraction or grader).
 
 Outputs: a report on stdout, --json (the full summary) and --decisions (one "key value" line per decision, read
 by the run script). Grades are kept in --grades, so a rerun does not execute the CRUXEval programs again. Exit
@@ -42,7 +44,7 @@ Usage: python -m swaptest.analyze_phase2 runaway --prompts PROMPTS --replies FIL
        [--teacher-forced FILE] [--json OUT] [--decisions OUT]
        python -m swaptest.analyze_phase2 capability --prompts TASK_PROMPTS --replies FILE [FILE ...]
        --runaway RUNAWAY.json --grades GRADES.jsonl [--json OUT] [--decisions OUT] [--level 0.95]
-       [--draws 10000] [--seed 9984] [--workers 8] [--timeout 10]
+       [--draws 10000] [--seed 9984] [--workers 8] [--timeout 10] [--arms G]
        python -m swaptest.analyze_phase2 quicklook --prompts QUICK_PROMPTS --replies FILE --grades GRADES.jsonl
        [--json OUT] [--max-capped 2] [--max-median 2000] [--min-correct 2]
 """
@@ -434,7 +436,8 @@ def analyze_quicklook(
     """Arm A's quick-look replies: stopped count, median length and correct answers per task, against the limits."""
     rows = list(grades.values())
     lengths = [g["n_new"] for g in rows]
-    correct = {t: sum(g["correct"] for g in rows if g["task"] == t) for t in TASKS}
+    tasks = [t for t in TASKS if any(p["task"] == t for p in prompts.values())]
+    correct = {t: sum(g["correct"] for g in rows if g["task"] == t) for t in tasks}
     stopped = sum(not g["capped"] for g in rows)
     median = statistics.median(lengths)
     problems = []
@@ -484,6 +487,7 @@ def main(argv: list[str] | None = None) -> int:
     cap.add_argument("--level", type=float, default=0.95)
     cap.add_argument("--draws", type=int, default=10000)
     cap.add_argument("--seed", type=int, default=9984)
+    cap.add_argument("--arms", help="comma-separated arms to compare with A [every arm of the reply files]")
     for p in (cap, quick):
         p.add_argument("--grades", type=Path, required=True, help="grades file (created, reused, appended)")
         p.add_argument("--workers", type=int, default=8)
@@ -523,6 +527,13 @@ def main(argv: list[str] | None = None) -> int:
         decisions = runaway_decisions(summary)
     else:
         prompts_by_id = {p["idx"]: p for p in read_jsonl(args.prompts)}
+        if args.arms is not None:
+            wanted = {"A", *filter(None, args.arms.split(","))}
+            replies = {key: r for key, r in replies.items() if key[0] in wanted}
+        outside = sum(pid not in prompts_by_id for _, pid in replies)
+        if outside:
+            print(f"{outside} replies to prompts outside the prompt file are left out")
+            replies = {key: r for key, r in replies.items() if key[1] in prompts_by_id}
         arms = sorted({a for a, _ in replies})
         missing = [(a, i) for a in arms for i in prompts_by_id if (a, i) not in replies]
         if missing:

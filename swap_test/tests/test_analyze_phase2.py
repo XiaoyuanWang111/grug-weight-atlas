@@ -208,6 +208,36 @@ def test_quicklook_limits():
     limits = argparse.Namespace(max_capped=0, max_median=50, min_correct=2)
     problems = a2.analyze_quicklook(prompts, replies, grades, limits)["problems"]
     assert len(problems) == 2 + len(a2.TASKS)
+    # a prompt file of one task is judged on that task only
+    one = {pid: p for pid, p in prompts.items() if p["task"] == "mmlu_pro"}
+    summary = a2.analyze_quicklook(
+        one, {k: r for k, r in replies.items() if k[1] in one}, {k: g for k, g in grades.items() if k[1] in one}, limits
+    )
+    assert list(summary["correct"]) == ["mmlu_pro"] and len(summary["problems"]) == 2
+
+
+def test_capability_leaves_out_replies_outside_the_prompt_file(tmp_path, capsys):
+    prompts = [
+        {"idx": 400000 + i, "task": "mmlu_pro", "group": f"mmlu:{i}", "pool": "all", "gold": "A"} for i in range(40)
+    ]
+    rows = []
+    for i in range(40):
+        rows.append(reply("A", 400000 + i, False, "The answer is (A)." if i < 30 else "The answer is (B)."))
+        rows.append(reply("X", 400000 + i, False, "The answer is (A)."))
+        rows.append(reply("A", 300000 + i, False, "The answer is (B)."))  # another prompt form of the same documents
+        rows.append(reply("X", 300000 + i, False, "The answer is (B)."))
+    files = {"prompts": prompts, "replies": rows, "runaway": {"phase2": {"eligible": {"X": True}}}}
+    for name, content in files.items():
+        lines = [content] if name == "runaway" else content
+        (tmp_path / name).write_text("".join(json.dumps(r) + chr(10) for r in lines), encoding="utf-8")
+    args = ["capability", "--prompts", str(tmp_path / "prompts"), "--replies", str(tmp_path / "replies")]
+    args += ["--runaway", str(tmp_path / "runaway"), "--grades", str(tmp_path / "grades"), "--draws", "200"]
+    assert a2.main([*args, "--json", str(tmp_path / "out.json")]) == 0
+    assert "80 replies to prompts outside the prompt file are left out" in capsys.readouterr().out
+    summary = json.loads((tmp_path / "out.json").read_text())
+    scores = summary["scores"]["A"]["mmlu_pro"]
+    assert scores["n"] == 40 and scores["accuracy"] == pytest.approx(0.75)
+    assert summary["comparisons"]["X"]["pairs"] == 40 and set(summary["scores"]) == {"A", "X"}
 
 
 def test_jsonfield_prints_strings_and_json(tmp_path, capsys):
