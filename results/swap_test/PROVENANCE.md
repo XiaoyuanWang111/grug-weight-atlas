@@ -12,7 +12,7 @@ pre-registration before its main run, and its run script stops if the tree chang
 | `09fbae2901d2da97e274226b9fef0be81393a3fa7dd47021fa059b6e2e4431a9` | `phase2/prereg_phase2.md` | phase 2: arms P, N and G on the same prompts (`phase2/runaway/`) and the steps before it | `2c309e6c42676d2771508de938bc99c1e974718e` |
 | `88d7b7e9ba2de51433cf0b8f4c0428885f1c6fdd05e41ce1a32c82955e9833f6` | no run | nothing: the phase-2 tree with deviation 3 | `7adc2a1ddeb4eb5cfdb059fe813dcdfd11291164` |
 | `f3f10e1aa86657f932b77de9fe2adbc8dd61caf25fa5fdd1679e93f60d3658a4` | `phase2/deviation4.md` | phase 2's capability runs: arms A and G on the task prompts (`phase2/tasks_A/`, `phase2/tasks_merge/`) and the capability analysis, issued by `phase2/run_phase2b.sh` | `d5def3aa5d0424d9be85e5f5e57b9f3410e03761` to `12f2727ff362b0a19c26512940ad92f2b18bf81a` |
-| `25db15cc128b97b987aa1122e5380163efe77bfd5ced36486553ce533e85c6fc` | `phase2c/prereg_phase2c.md`, once phase 2c runs | nothing yet: the tree with phase 2c (deviation 5) | `549cfd6eaee94c07bfbb9c4b7652a083231b9669` and later |
+| `25db15cc128b97b987aa1122e5380163efe77bfd5ced36486553ce533e85c6fc` | `phase2c/prereg_phase2c.md` | phase 2c (deviation 5): the quick look and arms A and G on the zero-shot MMLU-Pro prompts (`phase2c/quick_A/`, `phase2c/tasks_A/`, `phase2c/tasks_merge/`) and the capability analysis, run from commit `7a04ec2051079711c35119c13b30073251b59a13` | `549cfd6eaee94c07bfbb9c4b7652a083231b9669` and later |
 
 To check a tree, extract it and hash it with the published `hashes.py`, from the repository root:
 
@@ -70,8 +70,9 @@ only).
 
 The published code reproduces `phase1/analysis.txt`, `phase1/analysis.json`, `phase1/analysis_96.txt`,
 `phase1/analysis_96.json`, `phase1_rep96/analysis.txt`, `phase1_rep96/analysis.json`, `phase2/capability.txt`,
-`phase2/capability.json` and `phase2/capability_decisions.txt` byte for byte from the replies, teacher-forced rows
-and grades here (commands in `README.md`, section 1).
+`phase2/capability.json`, `phase2/capability_decisions.txt`, `phase2c/capability.txt`, `phase2c/capability.json`
+and `phase2c/capability_decisions.txt` byte for byte from the replies, teacher-forced rows and grades here
+(commands in `README.md`, section 1).
 
 ## Files
 
@@ -93,6 +94,10 @@ The files are copied unchanged from the runs, with these notes:
 - `phase2/run_phase2b.sh` is the driver of the capability runs as it ran; its paths are those of the run.
 - `phase2/SHA256SUMS` was written at the last step of the capability runs. It also lists run logs and
   `merge_spec_widened_bias.json`, which are not here. Every listed file that is here matches.
+- `phase2c/` holds phase 2c as `run_phase2c.sh` wrote it, with the setting `RUNAWAY` naming
+  `phase2/runaway_reanalysis.json`. `phase2c/task_prompts.jsonl` holds phase 2's 540 CRUXEval prompts unchanged
+  and the 270 zero-shot MMLU-Pro prompts; `run_prompts.jsonl` is those 270 alone, the file the two runs read.
+  `phase2c/SHA256SUMS` also lists run logs, which are not here; every listed file that is here matches.
 
 Not included: the run logs (`logs/`, the `run.log` of each run and the output of the run scripts), the step
 markers, the download logs, `phase1/logs/step10_check.txt` (its 20 lines are the first 20 lines of

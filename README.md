@@ -276,26 +276,36 @@ Arm C capped 0 of 48, and arm D 3 of 48, then 5 of 96. The comparisons under the
   size 96 instead of 192, with the same seed and noise, capped the same numbers of replies: 0, 3, 0 and 3 for arms A
   to D (`results/swap_test/phase1_rep96/analysis.txt`).
 
-**The capability comparison is not interpreted.** Phase 2 also pre-registered a comparison of G with Merge-TA0.5 on
-#9984's targets, 270 prompts each, behind a gate V3: arm A must score within 10 points of #9984's Merge-TA0.5 on
-every target and reach the cap in at most 10% of its replies. Arm A reached the cap in 46 of its 810 replies.
-Accuracy in the runs (`results/swap_test/phase2/capability.txt`):
+**Capability comparison: G is not better than Merge-TA0.5.** Phase 2 pre-registered a comparison of G with
+Merge-TA0.5 on #9984's targets, 270 prompts each, behind a gate V3: arm A must score within 10 points of #9984's
+Merge-TA0.5 on every target and reach the cap in at most 10% of its replies. Accuracy
+(`results/swap_test/phase2c/capability.txt`):
 
 | arm | CRUXEval input | CRUXEval output | MMLU-Pro |
 |---|---:|---:|---:|
-| A | 0.715 | 0.719 | 0.381 |
-| G | 0.726 | 0.744 | 0.567 |
+| A | 0.715 | 0.719 | 0.570 |
+| G | 0.726 | 0.744 | 0.574 |
+| G - A (95% interval) | +0.011 (-0.048 to +0.070) | +0.026 (-0.037 to +0.089) | +0.004 (-0.052 to +0.059) |
 | lowest score V3 allows arm A | 0.665 | 0.576 | 0.518 |
 
-Arm A is below the MMLU-Pro floor, so V3 failed, and by the rule these numbers show neither that G is a better
-merge nor that it is a worse one. The cause is the MMLU-Pro prompt of phase 2. It held up to five worked examples
-and the question in one user message, as Marin's canonical task builds it. Marin's Evalchemy config for the task
-`mmlu-pro`, which #9984's record ids name, runs the task with no examples. The one-message layout lowers the
-scores of other Grug checkpoints too: our
+V3 passed. The composite difference, with each expert's domain weighted one half, is +0.011 (95% interval -0.025
+to +0.047), and G reaches the cap about as often as A (37 against 32 of 810 replies). The pre-registered outcome
+is "not better": the design detects a composite gain of about 5 points with 80% power, and the interval does not
+exclude a gain up to 4.7 points. With the two expert updates at full strength and the attention gates at B's
+values, G keeps Merge-TA0.5's scores on the three targets and adds nothing measurable to them.
+
+The MMLU-Pro column is the second measurement of that target (phase 2c). The first
+(`results/swap_test/phase2/capability.txt`) failed V3 and is not interpreted: arm A scored 0.381 and G 0.567. Its
+prompt held up to five worked examples and the question in one user message, as Marin's canonical task builds it.
+Marin's Evalchemy config for the task `mmlu-pro`, which #9984's record ids name, runs the task with no examples,
+and the one-message layout lowers the scores of other Grug checkpoints too: our
 [comment on marin#10828](https://github.com/marin-community/marin/issues/10828#issuecomment-6629293113) reports
-28.8% and 41.3% for two of them with it, against 77.0% and 75.6% zero-shot.
-`swap_test/PREREG_phase2c.md` fixes a second measurement of the MMLU-Pro target with the zero-shot prompt, with
-phase 2's arms, sampling, grading, statistics and rules; it had not run when this was written.
+28.8% and 41.3% for two of them with it, against 77.0% and 75.6% zero-shot. `swap_test/PREREG_phase2c.md` fixed
+the second measurement before any of its replies was sampled: the zero-shot prompt, with phase 2's arms,
+sampling, grading, statistics and rules, and phase 2's CRUXEval replies. In its quick look arm A answered 30 of 48
+zero-shot prompts correctly and 5 replies reached 4,096 new tokens, so by the pre-registered cap rule both arms
+ran with a cap of 8,192. The 18.5-point difference between the arms on the five-example prompt is +0.4 points on
+the zero-shot prompt: it was specific to that prompt.
 
 `results/swap_test/PROVENANCE.md` names the commit of `swap_test/` that ran each phase and what changed afterwards.
 
@@ -348,10 +358,15 @@ python -m swaptest.analyze_phase2 capability --prompts $R/phase2/task_prompts.js
   --replies $R/phase2/tasks_A/replies.jsonl $R/phase2/tasks_merge/replies.jsonl \
   --runaway $R/phase2/runaway_reanalysis.json --grades $R/phase2/grades.jsonl \
   --json $R/phase2/capability.json --decisions $R/phase2/capability_decisions.txt > $R/phase2/capability.txt
+python -m swaptest.analyze_phase2 capability --prompts $R/phase2c/task_prompts.jsonl --arms G \
+  --replies $R/phase2/tasks_A/replies.jsonl $R/phase2/tasks_merge/replies.jsonl \
+  $R/phase2c/tasks_A/replies.jsonl $R/phase2c/tasks_merge/replies.jsonl \
+  --runaway $R/phase2/runaway_reanalysis.json --grades $R/phase2c/grades.jsonl \
+  --json $R/phase2c/capability.json --decisions $R/phase2c/capability_decisions.txt > $R/phase2c/capability.txt
 ```
 
-The output of each command equals the committed file. The last command reuses the committed grades; without
-`grades.jsonl` it runs the CRUXEval answers again.
+The output of each command equals the committed file. The last two commands reuse the committed grades; without
+`grades.jsonl` they run the CRUXEval answers again.
 
 **Limits.** Routed experts are a sample of 8 of 256 per layer; every other tensor is read in full. The a = b = 1.0
 column of the first table is computed from the expert deltas before rounding; the patch holds the stored, rounded
@@ -360,8 +375,8 @@ that reproduces Merge-TA0.5, which #9984 states ("#9974 tools, B anchor"); its w
 used 48 GSM8K prompts (96 for arms A, B and D), one seed, one pair of experts, a cap of 4,096 new tokens where #9984
 allowed 30,720, and this CPU harness in bfloat16, not Marin's vLLM serving stack. N against A was not extended to 96
 prompts, which the pre-registration allows, and the attention gates at B's values with the rest at half strength
-were not run. The capability comparison of G with Merge-TA0.5 failed its validity gate on MMLU-Pro (above), so how
-much of the experts' skills G keeps is not measured yet.
+were not run. The capability comparison used 270 prompts per target, one seed, and a cap of 4,096 new tokens on
+CRUXEval and 8,192 on MMLU-Pro; its null does not exclude a composite gain below 4.7 points.
 
 ## 2. Distances between the two training lines
 
