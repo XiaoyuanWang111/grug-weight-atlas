@@ -1,0 +1,140 @@
+{
+ "mmlu_pro_pool": "all",
+ "scores": {
+  "A": {
+   "cruxeval_input": {
+    "n": 270,
+    "accuracy": 0.7148148148148148,
+    "capped": 20,
+    "no_answer": 10,
+    "length_median": 281.5
+   },
+   "cruxeval_output": {
+    "n": 270,
+    "accuracy": 0.7185185185185186,
+    "capped": 2,
+    "no_answer": 0,
+    "length_median": 200.0
+   },
+   "mmlu_pro": {
+    "n": 270,
+    "accuracy": 0.3814814814814815,
+    "capped": 24,
+    "no_answer": 1,
+    "length_median": 826.0
+   },
+   "all": {
+    "n": 810,
+    "capped": 46
+   }
+  },
+  "G": {
+   "cruxeval_input": {
+    "n": 270,
+    "accuracy": 0.725925925925926,
+    "capped": 20,
+    "no_answer": 9,
+    "length_median": 362.0
+   },
+   "cruxeval_output": {
+    "n": 270,
+    "accuracy": 0.7444444444444445,
+    "capped": 3,
+    "no_answer": 5,
+    "length_median": 265.5
+   },
+   "mmlu_pro": {
+    "n": 270,
+    "accuracy": 0.5666666666666667,
+    "capped": 35,
+    "no_answer": 0,
+    "length_median": 804.0
+   },
+   "all": {
+    "n": 810,
+    "capped": 58
+   }
+  }
+ },
+ "v3": {
+  "floors": {
+   "cruxeval_input": 0.665,
+   "cruxeval_output": 0.5760000000000001,
+   "mmlu_pro": 0.5183
+  },
+  "capped_share": 0.056790123456790124,
+  "passed": false
+ },
+ "comparisons": {
+  "G": {
+   "pairs": 810,
+   "weights": {
+    "cruxeval_input": 0.25,
+    "cruxeval_output": 0.25,
+    "mmlu_pro": 0.5
+   },
+   "targets": {
+    "cruxeval_input": {
+     "n": 270,
+     "diff": 0.011111111111111112,
+     "ci95": [
+      -0.04814814814814815,
+      0.07037037037037037
+     ],
+     "arm_right_reference_wrong": 33,
+     "arm_wrong_reference_right": 30,
+     "mcnemar_p": 0.8013064925040662
+    },
+    "cruxeval_output": {
+     "n": 270,
+     "diff": 0.025925925925925925,
+     "ci95": [
+      -0.037037037037037035,
+      0.08888888888888889
+     ],
+     "arm_right_reference_wrong": 40,
+     "arm_wrong_reference_right": 33,
+     "mcnemar_p": 0.4827885568440213
+    },
+    "mmlu_pro": {
+     "n": 270,
+     "diff": 0.18518518518518517,
+     "ci95": [
+      0.1111111111111111,
+      0.25925925925925924
+     ],
+     "arm_right_reference_wrong": 79,
+     "arm_wrong_reference_right": 29,
+     "mcnemar_p": 1.5969470643854734e-06
+    }
+   },
+   "composite": {
+    "diff": 0.10185185185185185,
+    "interval": [
+     0.05925925925925926,
+     0.14351851851851852
+    ],
+    "level": 0.95
+   },
+   "capped": {
+    "arm": 58,
+    "reference": 46,
+    "newcombe95": [
+     -0.009238252800934654,
+     0.03907490374934788
+    ]
+   },
+   "stops_normally": true,
+   "decision": "not_interpreted_v3",
+   "extend": false
+  }
+ },
+ "reference_9984": {
+  "cruxeval_input": 0.765,
+  "cruxeval_output": 0.676,
+  "mmlu_pro": {
+   "all": 0.6183,
+   "listed": 0.632
+  }
+ }
+}

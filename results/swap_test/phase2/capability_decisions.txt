@@ -1,0 +1,5 @@
+v3 failed
+decision_G not_interpreted_v3
+composite_G +0.1019 [+0.0593,+0.1435]
+stops_G yes
+extend_G no

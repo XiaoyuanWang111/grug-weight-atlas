@@ -1,0 +1,19 @@
+MMLU-Pro pool: all
+
+arm  task              n    accuracy  capped  no answer  median length
+A    cruxeval_input    270  0.715     20      10         282
+A    cruxeval_output   270  0.719     2       0          200
+A    mmlu_pro          270  0.381     24      1          826
+G    cruxeval_input    270  0.726     20      9          362
+G    cruxeval_output   270  0.744     3       5          266
+G    mmlu_pro          270  0.567     35      0          804
+
+V3 (arm A): cruxeval_input >= 0.665, cruxeval_output >= 0.576, mmlu_pro >= 0.518; capped share 0.057 (<= 0.1): FAILED - no capability claim
+
+arm G against A on 810 paired prompts
+  cruxeval_input    diff +0.011  95% [-0.048, +0.070]  discordant 33/30  McNemar p 0.801
+  cruxeval_output   diff +0.026  95% [-0.037, +0.089]  discordant 40/33  McNemar p 0.483
+  mmlu_pro          diff +0.185  95% [+0.111, +0.259]  discordant 79/29  McNemar p 1.6e-06
+  composite D +0.1019  95.0% [+0.0593, +0.1435]  (weights {'cruxeval_input': 0.25, 'cruxeval_output': 0.25, 'mmlu_pro': 0.5})
+  capped 58 vs 46, Newcombe 95% upper +0.039 (< 0.05); stops normally: True
+  decision: not_interpreted_v3; extension worthwhile: False
