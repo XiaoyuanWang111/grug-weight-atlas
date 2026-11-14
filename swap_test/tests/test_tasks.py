@@ -194,3 +194,71 @@ def test_task_prompt_file(tmp_path):
     mmlu = [p for p in read_jsonl(listed) if p["task"] == "mmlu_pro"]
     assert {p["source_id"] for p in mmlu} <= {71, 73, 75, 77} and {p["pool"] for p in mmlu} == {"listed"}
     assert taskprompts.main([*args, "--check-data"]) == 1  # made-up files do not have the published row counts
+
+
+def test_zero_shot_mmlu_pro_prompt_file(tmp_path):
+    crux, test, validation = write_task_data(tmp_path / "data")
+    args = ["--cruxeval", str(crux), "--mmlu-pro-test", str(test), "--mmlu-pro-validation", str(validation)]
+    args += ["--checkpoint", str(tmp_path), "--count", "3"]
+    fitted, full, only = tmp_path / "fitted.jsonl", tmp_path / "full.jsonl", tmp_path / "only.jsonl"
+    assert taskprompts.main([*args, "--out", str(fitted)], tokenizer=FakeTokenizer()) == 0
+    assert taskprompts.main([*args, "--out", str(full), "--mmlu-pro-zero-shot"], tokenizer=FakeTokenizer()) == 0
+    assert (
+        taskprompts.main(
+            [*args, "--out", str(only), "--mmlu-pro-zero-shot", "--tasks", "mmlu_pro"], tokenizer=FakeTokenizer()
+        )
+        == 0
+    )
+
+    def by_task(path, mmlu):
+        return [p for p in read_jsonl(path) if (p["task"] == "mmlu_pro") == mmlu]
+
+    assert by_task(full, False) == by_task(fitted, False)  # the CRUXEval prompts do not change
+    zero = by_task(full, True)
+    assert sorted(zero, key=lambda p: p["idx"]) == sorted(read_jsonl(only), key=lambda p: p["idx"])
+    assert {p["source_id"] for p in zero} == {p["source_id"] for p in by_task(fitted, True)}  # the same documents
+    for p in zero:
+        assert p["idx"] == taskprompts.MMLU_PRO_ZERO_SHOT_BASE + p["source_id"] and p["shots"] == 0
+        assert taskprompts.task_of(p["idx"]) == "mmlu_pro"
+        assert p["user_text"].count("Question:\n") == 1 and p["user_text"].count("Let's think step by step.") == 1
+    assert not {p["idx"] for p in zero} & {p["idx"] for p in read_jsonl(fitted)}
+    # a draw past the last CRUXEval row is possible when only MMLU-Pro is written
+    tail = tmp_path / "tail.jsonl"
+    tail_args = [*args[:-2], "--count", "2", "--offset", str(len(CRUX_ROWS)), "--out", str(tail)]
+    with pytest.raises(ValueError, match="cannot take"):
+        taskprompts.main(tail_args, tokenizer=FakeTokenizer())
+    assert taskprompts.main([*tail_args, "--tasks", "mmlu_pro"], tokenizer=FakeTokenizer()) == 0
+    assert [p["task"] for p in read_jsonl(tail)] == ["mmlu_pro"] * 2
+    with pytest.raises(SystemExit):
+        taskprompts.main([*args, "--out", str(tail), "--tasks", "mmlu"], tokenizer=FakeTokenizer())
+
+
+def test_sameprompts_compares_the_records_of_the_listed_tasks(tmp_path, capsys):
+    from swaptest import sameprompts
+
+    crux, test, validation = write_task_data(tmp_path / "data")
+    args = ["--cruxeval", str(crux), "--mmlu-pro-test", str(test), "--mmlu-pro-validation", str(validation)]
+    args += ["--checkpoint", str(tmp_path), "--count", "3"]
+    fitted, zero, only = tmp_path / "fitted.jsonl", tmp_path / "zero.jsonl", tmp_path / "only.jsonl"
+    taskprompts.main([*args, "--out", str(fitted)], tokenizer=FakeTokenizer())
+    taskprompts.main([*args, "--out", str(zero), "--mmlu-pro-zero-shot"], tokenizer=FakeTokenizer())
+    taskprompts.main(
+        [*args, "--out", str(only), "--mmlu-pro-zero-shot", "--tasks", "mmlu_pro"], tokenizer=FakeTokenizer()
+    )
+    crux_tasks = "cruxeval_input,cruxeval_output"
+    assert sameprompts.main(["--reference", str(fitted), "--file", str(zero), "--tasks", crux_tasks]) == 0
+    assert "6 records equal" in capsys.readouterr().out
+    assert sameprompts.main(["--reference", str(zero), "--file", str(only), "--tasks", "mmlu_pro"]) == 0
+    # the two MMLU-Pro prompt forms have different ids; a file without CRUXEval prompts is not "the same"
+    assert sameprompts.main(["--reference", str(fitted), "--file", str(zero), "--tasks", "mmlu_pro"]) == 1
+    assert sameprompts.main(["--reference", str(fitted), "--file", str(only), "--tasks", crux_tasks]) == 1
+    assert "NOT the same prompts" in capsys.readouterr().out
+    changed = read_jsonl(fitted)
+    changed[0]["user_text"] += " "
+    edited = tmp_path / "edited.jsonl"
+    edited.write_text("".join(json.dumps(p) + chr(10) for p in changed), encoding="utf-8")
+    assert (
+        sameprompts.main(["--reference", str(fitted), "--file", str(edited), "--tasks", ",".join(taskprompts.TASKS)])
+        == 1
+    )
+    assert "1 differ" in capsys.readouterr().out

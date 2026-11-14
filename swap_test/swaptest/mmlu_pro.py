@@ -12,6 +12,13 @@ same category from the validation split, in file order; then the question, its o
 whose prompt text has fewer than 32,768 - 30,720 = 2,048 tokens (the task's fit-the-context rule with #9984's
 context and generation cap), else 0. Each prompt is one user message; thinking stays on, as in #9984.
 
+Zero-shot prompt (`build_prompt` with 0 examples: the instruction, the question, its options and "Answer: Let's
+think step by step."): the form in which Marin's `mmlu-pro` evaluation config runs the task
+(`experiments/evaluation/configs/evalchemy/mmlu-pro.yaml` at marin 89a267e03: `num_fewshot: 0`, thinking on).
+Evalchemy ae362881, #9984's evaluator, builds the same text for 0 examples
+(`eval/chat_benchmarks/MMLUPro/eval_instruct.py`, `generate_cot_prompt`); its class default of five examples is
+what the canonical task above follows. Phase 2c uses the zero-shot form (`PREREG_phase2c.md`).
+
 Answer, with the same task's extractor (#9984 describes its evaluator's extraction the same way): in the text after
 the last end-of-reasoning marker, the first match of `answer is \\(?([A-J])\\)?`, else the first match of
 `Answer:\\s*([A-J])`, both ignoring case and upper-cased; else the last standalone capital letter A-J, matched with

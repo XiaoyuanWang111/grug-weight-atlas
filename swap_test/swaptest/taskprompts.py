@@ -8,14 +8,20 @@ takes the next `count` numbers of the same shuffles (--offset), so it never repe
 
 Records (one JSON line per prompt, sorted by prompt length so that a wave of the run holds prompts of similar
 length and little padding): idx, unique across the tasks and GSM8K (100000 + N for input prediction of CRUXEval
-problem sample_N, 200000 + N for its output prediction, 300000 + question_id for MMLU-Pro); task (cruxeval_input,
-cruxeval_output or mmlu_pro); group, the unit that the paired bootstrap resamples (the CRUXEval problem, shared by
-its two directions, or the MMLU-Pro question text); source_id; user_text, prompt_text and prompt_ids (rendered
-and checked as the GSM8K prompts are); gold; and the task's fields (code, input, output; or category, shots, pool).
+problem sample_N, 200000 + N for its output prediction, 300000 + question_id for MMLU-Pro with worked examples,
+400000 + question_id for MMLU-Pro without them); task (cruxeval_input, cruxeval_output or mmlu_pro); group, the
+unit that the paired bootstrap resamples (the CRUXEval problem, shared by its two directions, or the MMLU-Pro
+question text); source_id; user_text, prompt_text and prompt_ids (rendered and checked as the GSM8K prompts are);
+gold; and the task's fields (code, input, output; or category, shots, pool).
+
+--mmlu-pro-zero-shot writes the MMLU-Pro prompts without worked examples, as Marin's `mmlu-pro` evaluation
+config runs the task (`num_fewshot: 0`, see `swaptest.mmlu_pro`); the documents drawn are the same, and the ids
+differ, so replies to both prompt forms of a document can be kept apart. --tasks limits the file to some of the
+three tasks.
 
 Usage: python -m swaptest.taskprompts --cruxeval test.jsonl --mmlu-pro-test test.parquet
        --mmlu-pro-validation validation.parquet --checkpoint DIR --out prompts.jsonl [--count 270] [--offset 0]
-       [--seed 9984] [--mmlu-pro-ids ids.txt]
+       [--seed 9984] [--mmlu-pro-ids ids.txt] [--mmlu-pro-zero-shot] [--tasks mmlu_pro]
        python -m swaptest.taskprompts --check-data --cruxeval ... --mmlu-pro-test ... --mmlu-pro-validation ...
 --check-data only checks the three files' row counts (800, 12,032, 70) and fields; exit code 1 if they differ.
 """
@@ -34,6 +40,7 @@ from swaptest.prompts import check_prompt, select_indices
 from swaptest.records import write_jsonl_atomic
 
 IDX_BASE = {"cruxeval_input": 100000, "cruxeval_output": 200000, "mmlu_pro": 300000}
+MMLU_PRO_ZERO_SHOT_BASE = 400000
 TASKS = tuple(IDX_BASE)
 
 
@@ -80,14 +87,19 @@ def mmlu_pro_prompts(
     support: list[dict[str, Any]],
     tokenizer: ChatTokenizer,
     pool: str,
+    zero_shot: bool = False,
 ) -> list[dict[str, Any]]:
+    base = MMLU_PRO_ZERO_SHOT_BASE if zero_shot else IDX_BASE["mmlu_pro"]
     prompts = []
     for i in indices:
         row = rows[i]
-        user_text, shots = mmlu_pro.fit_prompt(support, row, tokenizer)
+        if zero_shot:
+            user_text, shots = mmlu_pro.build_prompt(support, row, 0), 0
+        else:
+            user_text, shots = mmlu_pro.fit_prompt(support, row, tokenizer)
         prompts.append(
             {
-                "idx": IDX_BASE["mmlu_pro"] + int(row["question_id"]),
+                "idx": base + int(row["question_id"]),
                 "task": "mmlu_pro",
                 "group": "mmlu_pro:" + hashlib.sha256(row["question"].encode("utf-8")).hexdigest()[:16],
                 "source_id": int(row["question_id"]),
@@ -129,6 +141,8 @@ def main(argv: list[str] | None = None, tokenizer: ChatTokenizer | None = None) 
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--seed", type=int, default=9984)
     parser.add_argument("--mmlu-pro-ids", type=Path, help="question_id per line: draw MMLU-Pro only from these")
+    parser.add_argument("--mmlu-pro-zero-shot", action="store_true", help="MMLU-Pro prompts without worked examples")
+    parser.add_argument("--tasks", default=",".join(TASKS), help="comma-separated tasks to write [all three]")
     parser.add_argument("--check-data", action="store_true")
     args = parser.parse_args(argv)
     crux = cruxeval.read_rows(args.cruxeval)
@@ -147,6 +161,9 @@ def main(argv: list[str] | None = None, tokenizer: ChatTokenizer | None = None) 
         return 1
     if args.checkpoint is None or args.out is None:
         parser.error("--checkpoint and --out are required unless --check-data is given")
+    tasks = tuple(t for t in TASKS if t in args.tasks.split(","))
+    if not tasks or set(args.tasks.split(",")) - set(TASKS):
+        parser.error(f"--tasks takes names from {', '.join(TASKS)}")
     tokenizer = tokenizer or load_tokenizer(args.checkpoint)
     pool, candidates = "all", test
     if args.mmlu_pro_ids is not None:
@@ -156,23 +173,27 @@ def main(argv: list[str] | None = None, tokenizer: ChatTokenizer | None = None) 
             print(f"{len(wanted) - len(candidates)} listed question ids are not in the test split", file=sys.stderr)
             return 1
         pool = "listed"
-    crux_indices = select_indices(len(crux), args.count, args.offset, args.seed)
-    mmlu_indices = select_indices(len(candidates), args.count, args.offset, args.seed)
-    prompts = cruxeval_prompts(crux, crux_indices, tokenizer)
-    prompts += mmlu_pro_prompts(candidates, mmlu_indices, validation, tokenizer, pool)
+    prompts = []
+    if any(task.startswith("cruxeval") for task in tasks):
+        crux_indices = select_indices(len(crux), args.count, args.offset, args.seed)
+        prompts += [p for p in cruxeval_prompts(crux, crux_indices, tokenizer) if p["task"] in tasks]
+    if "mmlu_pro" in tasks:
+        mmlu_indices = select_indices(len(candidates), args.count, args.offset, args.seed)
+        prompts += mmlu_pro_prompts(candidates, mmlu_indices, validation, tokenizer, pool, args.mmlu_pro_zero_shot)
     prompts.sort(key=lambda p: (len(p["prompt_ids"]), p["idx"]))
     write_jsonl_atomic(args.out, prompts)
-    for task in TASKS:
+    for task in tasks:
         lengths = [len(p["prompt_ids"]) for p in prompts if p["task"] == task]
         print(
             f"{task}: {len(lengths)} prompts, prompt tokens min {min(lengths)}, max {max(lengths)}, "
             f"mean {sum(lengths) / len(lengths):.0f}"
         )
-    shots = [p["shots"] for p in prompts if p["task"] == "mmlu_pro"]
-    print(
-        f"MMLU-Pro pool {pool}; worked examples per prompt: "
-        + ", ".join(f"{k}: {shots.count(k)}" for k in range(mmlu_pro.MAX_SHOTS, -1, -1))
-    )
+    if "mmlu_pro" in tasks:
+        shots = [p["shots"] for p in prompts if p["task"] == "mmlu_pro"]
+        print(
+            f"MMLU-Pro pool {pool}; worked examples per prompt: "
+            + ", ".join(f"{k}: {shots.count(k)}" for k in range(mmlu_pro.MAX_SHOTS, -1, -1))
+        )
     print(f"wrote {len(prompts)} prompts to {args.out}")
     return 0
 
