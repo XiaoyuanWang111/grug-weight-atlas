@@ -214,9 +214,10 @@ exact p is below 0.01, and **no effect** when the upper end of the Newcombe 95% 
 arm counts unless arm A caps at most 15% of its replies and answers at least 80% correctly (V1), and the outcomes of
 phase 2 count only if the full-strength merge caps at least 50% (V2, from #9984's median output length).
 `swap_test/PREREG.md` and `swap_test/PREREG_phase2.md` fix these rules; the copies filled in before the main runs,
-with their SHA-256, are in `results/swap_test/`. `swap_test/DEVIATIONS.md` records three deviations: thresholds of
-the stand-in validation and of the 67B self-check, relaxed before any reply was sampled, and the eligibility rule for
-capability scoring, corrected before any capability reply was sampled.
+with their SHA-256, are in `results/swap_test/`. `swap_test/DEVIATIONS.md` records five deviations: thresholds of
+the stand-in validation and of the 67B self-check, relaxed before any reply was sampled; the eligibility rule for
+capability scoring, corrected before any capability reply was sampled; the driver that issued the capability runs
+from the published code; and the second MMLU-Pro measurement described below.
 
 Phase 2 builds the full-strength merge in memory with the arithmetic of `merge_tensor`. The same code at
 a = b = 0.5 equals the downloaded Merge-TA0.5 in every stored value of all 502 tensors (67,078,882,816 values;
@@ -275,6 +276,27 @@ Arm C capped 0 of 48, and arm D 3 of 48, then 5 of 96. The comparisons under the
   size 96 instead of 192, with the same seed and noise, capped the same numbers of replies: 0, 3, 0 and 3 for arms A
   to D (`results/swap_test/phase1_rep96/analysis.txt`).
 
+**The capability comparison is not interpreted.** Phase 2 also pre-registered a comparison of G with Merge-TA0.5 on
+#9984's targets, 270 prompts each, behind a gate V3: arm A must score within 10 points of #9984's Merge-TA0.5 on
+every target and reach the cap in at most 10% of its replies. Arm A reached the cap in 46 of its 810 replies.
+Accuracy in the runs (`results/swap_test/phase2/capability.txt`):
+
+| arm | CRUXEval input | CRUXEval output | MMLU-Pro |
+|---|---:|---:|---:|
+| A | 0.715 | 0.719 | 0.381 |
+| G | 0.726 | 0.744 | 0.567 |
+| lowest score V3 allows arm A | 0.665 | 0.576 | 0.518 |
+
+Arm A is below the MMLU-Pro floor, so V3 failed, and by the rule these numbers show neither that G is a better
+merge nor that it is a worse one. The cause is the MMLU-Pro prompt of phase 2. It held up to five worked examples
+and the question in one user message, as Marin's canonical task builds it. Marin's Evalchemy config for the task
+`mmlu-pro`, which #9984's record ids name, runs the task with no examples. The one-message layout lowers the
+scores of other Grug checkpoints too: our
+[comment on marin#10828](https://github.com/marin-community/marin/issues/10828#issuecomment-6629293113) reports
+28.8% and 41.3% for two of them with it, against 77.0% and 75.6% zero-shot.
+`swap_test/PREREG_phase2c.md` fixes a second measurement of the MMLU-Pro target with the zero-shot prompt, with
+phase 2's arms, sampling, grading, statistics and rules; it had not run when this was written.
+
 `results/swap_test/PROVENANCE.md` names the commit of `swap_test/` that ran each phase and what changed afterwards.
 
 **Commands.**
@@ -322,9 +344,14 @@ python -m swaptest.analyze_phase2 runaway --prompts $R/phase1/prompts.jsonl \
   --replies $R/phase1/main/replies.jsonl $R/phase2/runaway/replies.jsonl \
   --teacher-forced $R/phase2/teacher_forced.jsonl --json $R/phase2/runaway_reanalysis.json \
   --decisions $R/phase2/runaway_decisions_reanalysis.txt > $R/phase2/runaway_reanalysis.txt
+python -m swaptest.analyze_phase2 capability --prompts $R/phase2/task_prompts.jsonl \
+  --replies $R/phase2/tasks_A/replies.jsonl $R/phase2/tasks_merge/replies.jsonl \
+  --runaway $R/phase2/runaway_reanalysis.json --grades $R/phase2/grades.jsonl \
+  --json $R/phase2/capability.json --decisions $R/phase2/capability_decisions.txt > $R/phase2/capability.txt
 ```
 
-The output of each command equals the committed file.
+The output of each command equals the committed file. The last command reuses the committed grades; without
+`grades.jsonl` it runs the CRUXEval answers again.
 
 **Limits.** Routed experts are a sample of 8 of 256 per layer; every other tensor is read in full. The a = b = 1.0
 column of the first table is computed from the expert deltas before rounding; the patch holds the stored, rounded
@@ -333,8 +360,8 @@ that reproduces Merge-TA0.5, which #9984 states ("#9974 tools, B anchor"); its w
 used 48 GSM8K prompts (96 for arms A, B and D), one seed, one pair of experts, a cap of 4,096 new tokens where #9984
 allowed 30,720, and this CPU harness in bfloat16, not Marin's vLLM serving stack. N against A was not extended to 96
 prompts, which the pre-registration allows, and the attention gates at B's values with the rest at half strength
-were not run. The capability comparison of G with Merge-TA0.5 on CRUXEval and MMLU-Pro, pre-registered in
-`swap_test/PREREG_phase2.md`, was not run, so how much of the experts' skills G keeps is not measured.
+were not run. The capability comparison of G with Merge-TA0.5 failed its validity gate on MMLU-Pro (above), so how
+much of the experts' skills G keeps is not measured yet.
 
 ## 2. Distances between the two training lines
 
