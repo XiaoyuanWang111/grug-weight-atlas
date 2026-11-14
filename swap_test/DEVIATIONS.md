@@ -55,3 +55,53 @@ arm N (3 of 48 capped, inconclusive against A) as eligible and as the candidate.
 is not eligible and the candidate is G (0 of 48 capped, no effect against A). The code now tests "no effect".
 The runaway decisions (V2, the comparisons and the necessity outcomes) do not depend on this line. Found on
 2026-11-13 22:15 UTC, before step 22.
+
+## 4. Capability runs issued from the published tree by a driver (phase 2), fixed before any capability reply was sampled
+
+`run_phase2.sh` stops when the harness tree differs from the one recorded in the filled pre-registration of
+phase 2 (`09fbae2901d2da97e274226b9fef0be81393a3fa7dd47021fa059b6e2e4431a9`). That tree holds the eligibility
+condition that deviation 3 corrects, and with it the scored arm would be N. Steps 22 to 24 therefore run from
+the published tree (commit `12f2727ff362b0a19c26512940ad92f2b18bf81a`, tree
+`f3f10e1aa86657f932b77de9fe2adbc8dd61caf25fa5fdd1679e93f60d3658a4`) through a driver, `run_phase2b.sh`, that
+issues the commands of steps 22 to 24 of `run_phase2.sh` with that script's default settings and the scored arm
+G, the candidate by the pre-registered text.
+
+Before the first capability run the driver checks, and stops otherwise, that:
+
+- the two trees differ in `swaptest/` only in the one eligibility line of `analyze_phase2.py`, so every module
+  that generates or grades replies is byte-identical to the pre-registered tree;
+- the task prompts and the merge spec have the SHA-256 recorded in `prereg_hashes.txt`, and the filled
+  pre-registration has the SHA-256 recorded beside it;
+- the runaway summary given to the capability analysis, `runaway_reanalysis.json` (the published code on the
+  replies and teacher-forced rows of the runaway run), is byte-identical to the published file.
+
+No other setting changes: 270 prompts per task, a cap of 4,096 new tokens, batch size 384, seed 9984,
+10,000 bootstrap draws, level 0.95. Written on 2026-11-14 before step 22.
+
+## 5. MMLU-Pro measured again with the zero-shot prompt (phase 2c), fixed before any phase-2c reply was sampled
+
+Phase 2's capability runs ended with V3 failed: arm A answered 103 of 270 MMLU-Pro prompts correctly (0.381)
+against a floor of 0.518, so the comparison of arm G with arm A was not interpreted
+(`results/swap_test/phase2/capability.txt`). That result stands.
+
+The cause is the MMLU-Pro prompt. Phase 2 put up to five worked examples and the question into one user message,
+as Marin's canonical task does. Marin's Evalchemy config for `mmlu-pro`, the task that #9984's record ids name,
+runs it with no examples (`num_fewshot: 0`). `PREREG_phase2c.md` gives the evidence and fixes a second
+measurement of this one target with the zero-shot prompt. Arms, sampling, grading, statistics, V3 and the
+decision rule are phase 2's, and phase 2's CRUXEval replies enter the analysis unchanged.
+
+Code added for it:
+
+- `taskprompts.py`: `--mmlu-pro-zero-shot` (prompt ids 400000 + question_id) and `--tasks`;
+- `sameprompts.py`: checks that two prompt files hold the same records for some tasks;
+- `analyze_phase2.py`: the capability analysis leaves out replies to prompts that its prompt file does not
+  hold and takes `--arms`; the quick look judges only the tasks of its prompt file;
+- `scripts/run_phase2c.sh`: the steps of phase 2c.
+
+`run.py` and the modules it imports are unchanged, and so are the grading rules (`mmlu_pro.py` changes in its
+docstring only). On phase 2's prompt file and reply files the changed capability analysis writes the same
+`capability.json`, `capability_decisions.txt` and report as the run did.
+
+Phase 2c reads phase 2's runaway summary from `runaway_reanalysis.json`, the output of the published code
+(deviation 3), through the setting `RUNAWAY`. Written on 2026-11-14, after phase 2's capability analysis and
+before phase 2c's quick look.

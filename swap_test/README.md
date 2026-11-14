@@ -25,6 +25,7 @@ cache. The tests check it against Marin's Levanter oracle and a transcription of
 pyproject.toml          package metadata, the extras "run" and "test", pytest and ruff settings
 PREREG.md               the pre-registration
 PREREG_phase2.md        the draft pre-registration of phase 2
+PREREG_phase2c.md       the draft pre-registration of phase 2c
 swaptest/
   config.py             model configuration from config.json; stop tokens from generation_config.json
   checkpoint.py         shards loaded into memory; expected tensor names, shapes and dtypes
@@ -52,6 +53,7 @@ swaptest/
   cruxeval.py           phase 2: CRUXEval prompts, answer reading and grading by execution
   mmlu_pro.py           phase 2: MMLU-Pro chain-of-thought prompts and answer extraction
   taskprompts.py        phase 2: the capability prompt file (seeded draw, rendering, checks)
+  sameprompts.py        phase 2c: whether two prompt files hold the same records for some tasks
   selfcheck_phase2.py   phase 2, plan step 17: checks, memory and timing on the merge built in memory
   analyze_phase2.py     phase 2: quick look, runaway decisions (necessity) and the capability comparison
   jsonfield.py          one field of a JSON file, for the scripts
@@ -62,6 +64,7 @@ scripts/
   run_phase1.sh         plan steps 5 to 12, resumable, one exit code per stop condition
   download_phase2.sh    phase 2's pinned downloads (B, E, E2, CRUXEval, MMLU-Pro) and their verification
   run_phase2.sh         phase 2, plan steps 14 to 24, resumable, one exit code per stop condition
+  run_phase2c.sh        phase 2c, steps c1 to c7, resumable, one exit code per stop condition
 tests/                  unit and end-to-end tests on tiny random checkpoints and made-up data, and their fixtures
 ```
 
@@ -302,3 +305,40 @@ PY=~/.venvs/swaptest/bin/python
 $PY -m swaptest.merge --spec /data/phase2/merge_spec.json --coefficients 0.5,0.5 --check-against /data/merge-ta0.5 \
     --json /data/phase2/merge_check.json
 ```
+
+## Phase 2c: the MMLU-Pro target with the zero-shot prompt
+
+Phase 2's MMLU-Pro prompts held up to five worked examples in one user message, while Marin's Evalchemy config
+for the task, which marin#9984's record ids name, runs it with none. Arm A scored far below #9984's Merge-TA0.5 on
+those prompts, so phase 2's validity gate V3 failed. Phase 2c samples arm A and the scored arm G again on the same
+270 MMLU-Pro documents with the zero-shot prompt and repeats phase 2's capability analysis with phase 2's CRUXEval
+replies. `PREREG_phase2c.md` fixes the rules.
+Phase 2 must have finished its capability runs on the same data directory, and B, E, E2 and Merge-TA0.5 must
+still be there.
+
+```
+DATA_DIR=/data nohup bash ~/harness/scripts/run_phase2c.sh > /data/run_phase2c.out 2>&1 &
+```
+
+| step | what the script does | output under `/data/phase2c` |
+|---|---|---|
+| c1 | task prompts (phase 2's CRUXEval prompts and 270 zero-shot MMLU-Pro prompts), the run file and 48 quick-look prompts; checks them against phase 2's prompt file | `task_prompts.jsonl`, `run_prompts.jsonl`, `quick_prompts.jsonl` |
+| c2 | fills in `PREREG_phase2c.md` and records the SHA-256 of the filled copy | `prereg_phase2c.md`, `prereg_hashes.txt` |
+| c3 | arm A on the quick-look prompts, graded; chooses the cap of the main runs | `quick_review.txt`, `quick.json`, `cap.txt` |
+| c4 | arm A on the 270 prompts | `tasks_A/replies.jsonl` |
+| c5 | V3 on arm A, from its CRUXEval replies of phase 2 and its new replies | `v3_arm_A.txt`, `v3_arm_A.json` |
+| c6 | arm G on the 270 prompts | `tasks_merge/replies.jsonl` |
+| c7 | grading and the capability decision; checksums | `capability.txt`, `capability.json`, `capability_decisions.txt`, `grades.jsonl`, `SHA256SUMS` |
+
+| exit | meaning | what to do |
+|---:|---|---|
+| 0 | all steps done, V3 passed | read `capability.txt` |
+| 1 | unexpected error or a crashed program | read the step's log, fix the cause, run the same command again |
+| 2 | missing input or bad setting, or an input changed after step c2 | fix it; a change after step c2 is a deviation |
+| 41 | a sampling run not finished | run the same command again; it resumes |
+| 42 | an analysis failed | read the file the message names |
+| 43 | V3 failed | after step c5 arm G is not sampled; no capability claim |
+| 51 | stop S7: fewer than 21 of 48 quick-look replies correct | read `quick_review.txt`; arm A is again far below #9984's score |
+
+Settings are environment variables listed at the top of `scripts/run_phase2c.sh`. `RUNAWAY` names the JSON
+summary of phase 2's runaway analysis (default `/data/phase2/runaway.json`).

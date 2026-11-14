@@ -8,6 +8,11 @@ runaway (V2 fails). With 40 GSM8K prompts, 0 of 40 against 0 of 40 is "no effect
 interval is 0.088; with 4 prompts it is 0.49, "inconclusive"), so N, G and P are eligible, N is the candidate and P
 is scored too; the made-up replies cannot be correct, so V3 fails at the end (exit code 43). The script is run
 three times, stopping at the two pauses.
+
+run_phase2c.sh then runs on the same data directory with arm N as the scored arm (phase 2 has no task replies of
+G here): stop S7 with one correct quick-look reply required; with none required, the raised cap (the limit is set
+to 0 replies at the cap) and the stop after V3 fails on arm A, before the scored arm is sampled. To reach the last
+two steps the test then rewrites the decision of step c5 to "passed", which the script itself never does.
 """
 
 import json
@@ -157,9 +162,9 @@ def test_run_phase2_flow(tmp_path):
         "GRADE_WORKERS": "2",
     }
 
-    def run(**extra: str) -> int:
+    def run(script: str = "run_phase2.sh", **extra: str) -> int:
         done = subprocess.run(
-            [BASH, (HARNESS / "scripts" / "run_phase2.sh").as_posix()],
+            [BASH, (HARNESS / "scripts" / script).as_posix()],
             env=env | extra,
             capture_output=True,
             text=True,
@@ -194,3 +199,33 @@ def test_run_phase2_flow(tmp_path):
     assert not capability["v3"]["passed"] and set(capability["comparisons"]) == {"N", "P"}
     assert (out / "SHA256SUMS").is_file()
     assert run(TASKS_APPROVED="1", CAPABILITY_APPROVED="1") == 43  # resumes with every step done
+
+    out_c = data / "phase2c"
+    knobs = {"SCORED": "N", "QUICK_N": "2", "QUICK_CAP_LIMIT": "0", "CAP_RAISED": "12"}
+    assert run("run_phase2c.sh", **knobs, QUICK_MIN_CORRECT="1") == 51, (out_c / "logs" / "run_phase2c.log").read_text()
+    assert not (out_c / "tasks_A").exists()  # stop S7 comes before the main runs
+    prereg = (out_c / "prereg_phase2c.md").read_text()
+    assert "____" not in prereg and "(phase2_replies_g_sha256)" in prereg
+    tasks_c = read_jsonl(out_c / "task_prompts.jsonl")
+    assert [p for p in tasks_c if p["task"] != "mmlu_pro"] == [p for p in tasks if p["task"] != "mmlu_pro"]
+    zero_shot = [p for p in tasks_c if p["task"] == "mmlu_pro"]
+    assert len(zero_shot) == 3 and all(p["idx"] >= 400000 and p["shots"] == 0 for p in zero_shot)
+    assert sorted(p["idx"] for p in read_jsonl(out_c / "run_prompts.jsonl")) == sorted(p["idx"] for p in zero_shot)
+    assert len(read_jsonl(out_c / "quick_prompts.jsonl")) == 2
+
+    assert run("run_phase2c.sh", **knobs, QUICK_MIN_CORRECT="0") == 43  # V3 fails on arm A
+    assert (out_c / "cap.txt").read_text().strip() == "12"
+    assert json.loads((out_c / "tasks_A" / "run_config.json").read_text())["cap"] == 12
+    assert len(read_jsonl(out_c / "tasks_A" / "replies.jsonl")) == 3
+    assert not (out_c / "tasks_merge").exists() and not (out_c / "capability.json").exists()
+    # arm A's three replies to phase 2's MMLU-Pro prompts with worked examples do not enter the analysis
+    assert "3 replies to prompts outside the prompt file are left out" in (out_c / "v3_arm_A.txt").read_text()
+
+    (out_c / "v3_arm_A_decisions.txt").write_text("v3 passed" + chr(10))
+    assert run("run_phase2c.sh", **knobs, QUICK_MIN_CORRECT="0") == 43  # V3 fails again in the full analysis
+    assert sorted({r["arm"] for r in read_jsonl(out_c / "tasks_merge" / "replies.jsonl")}) == ["N"]
+    capability = json.loads((out_c / "capability.json").read_text())
+    assert set(capability["comparisons"]) == {"N"} and capability["comparisons"]["N"]["pairs"] == 9
+    assert capability["scores"]["A"]["mmlu_pro"]["n"] == 3 and (out_c / "SHA256SUMS").is_file()
+    (data / "phase2" / "merge_spec.json").write_text("{}")
+    assert run("run_phase2c.sh", **knobs, QUICK_MIN_CORRECT="0") == 2  # an input changed after the pre-registration
