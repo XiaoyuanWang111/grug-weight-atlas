@@ -1,0 +1,50 @@
+{
+ "mmlu_pro_pool": "all",
+ "scores": {
+  "A": {
+   "cruxeval_input": {
+    "n": 270,
+    "accuracy": 0.7148148148148148,
+    "capped": 20,
+    "no_answer": 10,
+    "length_median": 281.5
+   },
+   "cruxeval_output": {
+    "n": 270,
+    "accuracy": 0.7185185185185186,
+    "capped": 2,
+    "no_answer": 0,
+    "length_median": 200.0
+   },
+   "mmlu_pro": {
+    "n": 270,
+    "accuracy": 0.5703703703703704,
+    "capped": 10,
+    "no_answer": 9,
+    "length_median": 345.5
+   },
+   "all": {
+    "n": 810,
+    "capped": 32
+   }
+  }
+ },
+ "v3": {
+  "floors": {
+   "cruxeval_input": 0.665,
+   "cruxeval_output": 0.5760000000000001,
+   "mmlu_pro": 0.5183
+  },
+  "capped_share": 0.03950617283950617,
+  "passed": true
+ },
+ "comparisons": {},
+ "reference_9984": {
+  "cruxeval_input": 0.765,
+  "cruxeval_output": 0.676,
+  "mmlu_pro": {
+   "all": 0.6183,
+   "listed": 0.632
+  }
+ }
+}

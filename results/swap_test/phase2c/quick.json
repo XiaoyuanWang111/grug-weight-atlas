@@ -1,0 +1,9 @@
+{
+ "replies": 48,
+ "stopped": 43,
+ "median_length": 346.5,
+ "correct": {
+  "mmlu_pro": 30
+ },
+ "problems": []
+}

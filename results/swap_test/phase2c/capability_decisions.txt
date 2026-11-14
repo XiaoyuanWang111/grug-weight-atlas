@@ -1,0 +1,5 @@
+v3 passed
+decision_G not_better
+composite_G +0.0111 [-0.0250,+0.0472]
+stops_G yes
+extend_G yes

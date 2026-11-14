@@ -1,0 +1,20 @@
+540 replies to prompts outside the prompt file are left out
+MMLU-Pro pool: all
+
+arm  task              n    accuracy  capped  no answer  median length
+A    cruxeval_input    270  0.715     20      10         282
+A    cruxeval_output   270  0.719     2       0          200
+A    mmlu_pro          270  0.570     10      9          346
+G    cruxeval_input    270  0.726     20      9          362
+G    cruxeval_output   270  0.744     3       5          266
+G    mmlu_pro          270  0.574     14      6          344
+
+V3 (arm A): cruxeval_input >= 0.665, cruxeval_output >= 0.576, mmlu_pro >= 0.518; capped share 0.040 (<= 0.1): passed
+
+arm G against A on 810 paired prompts
+  cruxeval_input    diff +0.011  95% [-0.048, +0.070]  discordant 33/30  McNemar p 0.801
+  cruxeval_output   diff +0.026  95% [-0.037, +0.089]  discordant 40/33  McNemar p 0.483
+  mmlu_pro          diff +0.004  95% [-0.052, +0.059]  discordant 33/32  McNemar p 1
+  composite D +0.0111  95.0% [-0.0250, +0.0472]  (weights {'cruxeval_input': 0.25, 'cruxeval_output': 0.25, 'mmlu_pro': 0.5})
+  capped 37 vs 32, Newcombe 95% upper +0.026 (< 0.05); stops normally: True
+  decision: not_better; extension worthwhile: True
